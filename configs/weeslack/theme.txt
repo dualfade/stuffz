@@ -1,0 +1,43 @@
+# chris.downs@reticulipictures.com
+# manually add Solorized Theme
+# Run in weechat or just install the theme.
+
+
+/script install perlexec.pl buffer_autoclose.py go.py colorize_nicks.py autosort.py zerotab.py urlserver.py
+/set weechat.bar.status.color_bg 0
+/set weechat.bar.title.color_bg 0
+/set weechat.color.chat_nick_colors 1,2,3,4,5,6
+/set weechat.color.chat_highlight 7
+/set buflist.format.hotlist_message "${color:7}"
+/set buflist.format.buffer_current "${color:,8}${format_buffer}"
+/set weechat.bar.buflist.position top
+/set weechat.bar.buflist.items "buflist"
+/autosort replacements add ## #
+/autosort rules add irc.server.*.&* = 0
+/autosort rules add irc.server.*.#* = 1
+/autosort rules add irc.server.*.\*status = 2
+/set irc.look.server_buffer independent
+/set weechat.look.hotlist_add_conditions "${away} || ${buffer} != ${window.buffer}"
+/set weechat.look.prefix_same_nick "⤷"
+/set weechat.look.prefix_error "⚠"
+/set weechat.look.prefix_network "ℹ "
+/set weechat.look.prefix_action "⚡"
+/set weechat.look.bar_more_down "▼▼"
+/set weechat.look.bar_more_left "◀◀"
+/set weechat.look.bar_more_right "▶▶"
+/set weechat.look.bar_more_up "▲▲"
+/set weechat.look.prefix_suffix "╡"
+/set weechat.look.prefix_align_max 15
+/trigger addreplace windowswitch signal window_switch "" "" "/perlexec weechat::buffer_set(weechat::window_get_pointer('${tg_signal_data}','buffer'), 'hotlist', -1);"
+/trigger add bufferswitch signal "buffer_switch" "" "" "/perlexec weechat::buffer_set(weechat::hdata_get_list(weechat::hdata_get('buffer'),'gui_buffer_last_displayed'), 'unread', 0)\;"
+/trigger add force_redraw signal "window_switch;buffer_switch" "" "" "/wait 1ms /redraw"
+/trigger addreplace detach timer 10000;0;0 "" "" "/allchan /eval /perlexec weechat::command('', '/command -buffer irc.\${server}.\${channel} core /buffer hide') if ((${date:%s} - \${buffer[\${info:irc_buffer,\${server},\${channel}}].lines.last_line.data.date}) > 100 && '\${window.buffer.full_name}' !~ 'irc.\${server}.\${channel}' && '\${buffer[\${info:irc_buffer,\${server},\${channel}}].hotlist}' eq '0x0')"
+/trigger addreplace reattach print "" "${buffer.hidden} == 1 && ${tg_tag_notify} == message" "" "/command -buffer irc.$server.$channel core /buffer unhide"
+/trigger addreplace reattach_on_switch signal buffer_switch "${buffer[${tg_signal_data}].hidden} == 1" "" "/command -buffer ${buffer[${tg_signal_data}].full_name} core /buffer unhide"
+/set weechat.look.buffer_notify_default message
+/set irc.look.smart_filter on
+/filter add irc_smart * irc_smart_filter *
+/filter add irc_join_names * irc_366,irc_332,irc_333,irc_329,irc_324 *
+/key bind meta-g /go
+/set logger.file.auto_log on
+

