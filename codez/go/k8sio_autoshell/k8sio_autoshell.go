@@ -7,6 +7,9 @@ Kubernetes backdoor:
 remote exec to unauthenticated kubelet Api.
 exec reverse shell from container of choice.
 
+note: obviously a container running as root will
+drop a root shell --
+
 Example:
 ➜ go run k8sio_autoshell.go -t 10.10.201.179
 target url: https://10.10.201.179:10250
