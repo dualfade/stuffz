@@ -226,7 +226,7 @@ func k8sio_WscatExec_Uri() {
 
 }
 
-// Start Ncat Listener  --
+// start listener  --
 func k8sio_ExecListener(lport string) {
 	host := strings.Join([]string{"127.0.0.1:", lport}, "")
 
