@@ -194,6 +194,8 @@ func k8sio_PostPayload_Command(url string, jsfile string) {
 }
 
 // http Post data --
+// note --
+// https://github.com/kubernetes/apimachinery/blob/master/pkg/util/remotecommand/constants.go
 func k8sio_HttpPost_UriExec(payload string) {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	client := &http.Client{}
@@ -228,6 +230,7 @@ func k8sio_WscatExec_Uri() {
 
 // start listener  --
 func k8sio_ExecListener(lport string) {
+	fmt.Println("\n-> Starting listener:\n")
 	host := strings.Join([]string{"127.0.0.1:", lport}, "")
 
 	sock := host
