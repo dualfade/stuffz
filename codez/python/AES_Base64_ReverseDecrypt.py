@@ -1,3 +1,5 @@
+# special thanks to hades.akm
+# dualfade
 import base64
 import hashlib
 from Crypto import Random
