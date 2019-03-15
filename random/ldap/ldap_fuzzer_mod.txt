@@ -8,6 +8,8 @@
 *)(cn=*
 ldap*)(pager=*
 ldap%2A%29%28pager%3D%2A
+ldap*)cn=*
+ldap%2A%29%28cn%3D%2A
 ldap*)(otp=*
 *)(uid=*))(|(uid=*
 */*
