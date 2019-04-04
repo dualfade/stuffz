@@ -1,14 +1,179 @@
 [global_config]
-  borderless = True
   dbus = False
-  enabled_plugins = CustomCommandsMenu, InactivityWatch, TerminatorThemes, ActivityWatch, TerminalShot, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
   focus = mouse
+  borderless = True
+  title_transmit_bg_color = "#555753"
   inactive_color_offset = 0.704225352113
+  enabled_plugins = CustomCommandsMenu, InactivityWatch, TerminatorThemes, ActivityWatch, TerminalShot, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
   suppress_multiple_term_dialog = True
   title_font = Nimbus Sans L Bold Condensed 7
-  title_transmit_bg_color = "#555753"
 [keybindings]
   next_profile = <Shift><Alt>p
+[profiles]
+  [[default]]
+    background_darkness = 0.35
+    background_type = transparent
+    cursor_color = "#f0cc09"
+    font = mononoki Nerd Font 8
+    foreground_color = "#ffffff"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#ff0000:#38de21:#ffe50a:#1460d2:#ff005d:#00bbbb:#bbbbbb:#555555:#f40e17:#3bd01d:#edc809:#5555ff:#ff55ff:#6ae3fa:#ffffff"
+    use_system_font = False
+  [[3024 Night]]
+    background_color = "#090300"
+    cursor_color = "#a5a2a2"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#a5a2a2"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#090300:#db2d20:#01a252:#fded02:#01a0e4:#a16a94:#b5e4f4:#a5a2a2:#5c5855:#e8bbd0:#3a3432:#4a4543:#807d7c:#d6d5d4:#cdab53:#f7f7f7"
+    use_system_font = False
+  [[Afterglow]]
+    background_color = "#212121"
+    cursor_color = "#d0d0d0"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#d0d0d0"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#151515:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#d0d0d0:#505050:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#f5f5f5"
+    use_system_font = False
+  [[Atom]]
+    background_color = "#161719"
+    background_darkness = 0.7
+    cursor_color = "#d0d0d0"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#c5c8c6"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#fd5ff1:#87c38a:#ffd7b1:#85befd:#b9b6fc:#85befd:#e0e0e0:#000000:#fd5ff1:#94fa36:#f5ffa8:#96cbfe:#b9b6fc:#85befd:#e0e0e0"
+    use_system_font = False
+  [[C64]]
+    background_color = "#40318d"
+    background_darkness = 0.7
+    cursor_color = "#7869c4"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#7869c4"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#090300:#883932:#55a049:#bfce72:#40318d:#8b3f96:#67b6bd:#ffffff:#000000:#883932:#55a049:#bfce72:#40318d:#8b3f96:#67b6bd:#f7f7f7"
+    use_system_font = False
+  [[Cobalt Neon]]
+    background_color = "#142838"
+    cursor_color = "#c4206f"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#8ff586"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#142631:#ff2320:#3ba5ff:#e9e75c:#8ff586:#781aa0:#8ff586:#ba46b2:#fff688:#d4312e:#8ff586:#e9f06d:#3c7dd2:#8230a7:#6cbc67:#8ff586"
+  [[Cobalt2]]
+    background_color = "#132738"
+    cursor_color = "#f0cc09"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#ffffff"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#ff0000:#38de21:#ffe50a:#1460d2:#ff005d:#00bbbb:#bbbbbb:#555555:#f40e17:#3bd01d:#edc809:#5555ff:#ff55ff:#6ae3fa:#ffffff"
+    use_system_font = False
+  [[Dark Pastel]]
+    background_darkness = 0.75
+    cursor_color = "#bbbbbb"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#ffffff"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#ffffff"
+    use_system_font = False
+  [[Darkside]]
+    background_color = "#222324"
+    cursor_color = "#bbbbbb"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#bababa"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#e8341c:#68c256:#f2d42c:#1c98e8:#8e69c9:#1c98e8:#bababa:#000000:#e05a4f:#77b869:#efd64b:#387cd3:#957bbe:#3d97e2:#bababa"
+    use_system_font = False
+  [[IC_Green_PPL]]
+    background_color = "#3a3d3f"
+    cursor_color = "#42ff58"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#d9efd3"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#1f1f1f:#fb002a:#339c24:#659b25:#149b45:#53b82c:#2cb868:#e0ffef:#032710:#a7ff3f:#9fff6d:#d2ff6d:#72ffb5:#50ff3e:#22ff71:#daefd0"
+    use_system_font = False
+  [[Molokai]]
+    background_color = "#121212"
+    cursor_color = "#bbbbbb"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#bbbbbb"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#121212:#fa2573:#98e123:#dfd460:#1080d0:#8700ff:#43a8d0:#bbbbbb:#555555:#f6669d:#b1e05f:#fff26d:#00afff:#af87ff:#51ceff:#ffffff"
+    use_system_font = False
+  [[Monokai Vivid]]
+    background_color = "#121212"
+    background_darkness = 0.8
+    cursor_color = "#fb0007"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#f9f9f9"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#121212:#fa2934:#98e123:#fff30a:#0443ff:#f800f8:#01b6ed:#ffffff:#838383:#f6669d:#b1e05f:#fff26d:#0443ff:#f200f6:#51ceff:#ffffff"
+    use_system_font = False
+  [[SpaceGray Eighties]]
+    background_color = "#222222"
+    cursor_color = "#bbbbbb"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#bdbaae"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#15171c:#ec5f67:#81a764:#fec254:#5486c0:#bf83c1:#57c2c1:#efece7:#555555:#ff6973:#93d493:#ffd256:#4d84d1:#ff55ff:#83e9e4:#ffffff"
+    use_system_font = False
+  [[Zenburn]]
+    background_color = "#3f3f3f"
+    cursor_color = "#73635a"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#dcdccc"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#4d4d4d:#705050:#60b48a:#f0dfaf:#506070:#dc8cc3:#8cd0d3:#dcdccc:#709080:#dca3a3:#c3bf9f:#e0cf9f:#94bff3:#ec93d3:#93e0e3:#ffffff"
+    use_system_font = False
+  [[solarized-dark]]
+    background_color = "#002b36"
+    background_darkness = 0.1
+    cursor_color = "#eee8d5"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#eee8d5"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#586e75:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
+    use_system_font = False
+  [[solarized-light]]
+    background_color = "#eee8d5"
+    cursor_color = "#002b36"
+    font = Nimbus Mono L Bold 8
+    foreground_color = "#002b36"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
+    use_system_font = False
 [layouts]
   [[default]]
     [[[child0]]]
@@ -21,137 +186,3 @@
       size = 900, 350
       type = Window
 [plugins]
-[profiles]
-  [[default]]
-    background_darkness = 0.7
-    background_type = transparent
-    cursor_color = "#f0cc09"
-    font = mononoki Nerd Font 8
-    foreground_color = "#ffffff"
-    palette = "#000000:#ff0000:#38de21:#ffe50a:#1460d2:#ff005d:#00bbbb:#bbbbbb:#555555:#f40e17:#3bd01d:#edc809:#5555ff:#ff55ff:#6ae3fa:#ffffff"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[3024 Night]]
-    background_color = "#090300"
-    cursor_color = "#a5a2a2"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#a5a2a2"
-    palette = "#090300:#db2d20:#01a252:#fded02:#01a0e4:#a16a94:#b5e4f4:#a5a2a2:#5c5855:#e8bbd0:#3a3432:#4a4543:#807d7c:#d6d5d4:#cdab53:#f7f7f7"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Afterglow]]
-    background_color = "#212121"
-    cursor_color = "#d0d0d0"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#d0d0d0"
-    palette = "#151515:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#d0d0d0:#505050:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#f5f5f5"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Atom]]
-    background_color = "#161719"
-    background_darkness = 0.7
-    cursor_color = "#d0d0d0"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#c5c8c6"
-    palette = "#000000:#fd5ff1:#87c38a:#ffd7b1:#85befd:#b9b6fc:#85befd:#e0e0e0:#000000:#fd5ff1:#94fa36:#f5ffa8:#96cbfe:#b9b6fc:#85befd:#e0e0e0"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[C64]]
-    background_color = "#40318d"
-    background_darkness = 0.7
-    cursor_color = "#7869c4"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#7869c4"
-    palette = "#090300:#883932:#55a049:#bfce72:#40318d:#8b3f96:#67b6bd:#ffffff:#000000:#883932:#55a049:#bfce72:#40318d:#8b3f96:#67b6bd:#f7f7f7"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Cobalt Neon]]
-    background_color = "#142838"
-    cursor_color = "#c4206f"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#8ff586"
-    palette = "#142631:#ff2320:#3ba5ff:#e9e75c:#8ff586:#781aa0:#8ff586:#ba46b2:#fff688:#d4312e:#8ff586:#e9f06d:#3c7dd2:#8230a7:#6cbc67:#8ff586"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-  [[Cobalt2]]
-    background_color = "#132738"
-    cursor_color = "#f0cc09"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#ffffff"
-    palette = "#000000:#ff0000:#38de21:#ffe50a:#1460d2:#ff005d:#00bbbb:#bbbbbb:#555555:#f40e17:#3bd01d:#edc809:#5555ff:#ff55ff:#6ae3fa:#ffffff"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-  [[Darkside]]
-    background_color = "#222324"
-    cursor_color = "#bbbbbb"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#bababa"
-    palette = "#000000:#e8341c:#68c256:#f2d42c:#1c98e8:#8e69c9:#1c98e8:#bababa:#000000:#e05a4f:#77b869:#efd64b:#387cd3:#957bbe:#3d97e2:#bababa"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Molokai]]
-    background_color = "#121212"
-    cursor_color = "#bbbbbb"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#bbbbbb"
-    palette = "#121212:#fa2573:#98e123:#dfd460:#1080d0:#8700ff:#43a8d0:#bbbbbb:#555555:#f6669d:#b1e05f:#fff26d:#00afff:#af87ff:#51ceff:#ffffff"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Monokai Vivid]]
-    background_color = "#121212"
-    background_darkness = 0.8
-    cursor_color = "#fb0007"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#f9f9f9"
-    palette = "#121212:#fa2934:#98e123:#fff30a:#0443ff:#f800f8:#01b6ed:#ffffff:#838383:#f6669d:#b1e05f:#fff26d:#0443ff:#f200f6:#51ceff:#ffffff"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[SpaceGray Eighties]]
-    background_color = "#222222"
-    cursor_color = "#bbbbbb"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#bdbaae"
-    palette = "#15171c:#ec5f67:#81a764:#fec254:#5486c0:#bf83c1:#57c2c1:#efece7:#555555:#ff6973:#93d493:#ffd256:#4d84d1:#ff55ff:#83e9e4:#ffffff"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[solarized-dark]]
-    background_color = "#002b36"
-    background_darkness = 0.1
-    cursor_color = "#eee8d5"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#eee8d5"
-    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#586e75:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[solarized-light]]
-    background_color = "#eee8d5"
-    cursor_color = "#002b36"
-    font = Nimbus Mono L Bold 8
-    foreground_color = "#002b36"
-    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
-    scrollback_infinite = True
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
