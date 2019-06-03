@@ -8,12 +8,18 @@
 from pwn import *
 
 # ssh --
-s = ssh('margo', '10.10.10.139', password='xxxxxxx')
+s = ssh('margo', '10.10.10.139', password='iamgod$08')
 p = s.process("/usr/bin/garbage") # start the vuln binary
 
 #p = process("/usr/bin/garbage") # start the vuln binary
 elf = ELF("/usr/bin/garbage") # Extract data from binary
 rop = ROP(elf) # Find ROP gadgets
+
+# gdb / term --
+#context.terminal = ['tmux', 'splitw', '-v']
+#p = gdb.debug('/usr/bin/garbage','b main')
+context(os="linux", arch="amd64")
+context.log_level = 'DEBUG'
 
 # https://github.com/niklasb/libc-database
 libc = ELF("libc-2.27.so")
