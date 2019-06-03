@@ -8,7 +8,7 @@
 from pwn import *
 
 # ssh --
-s = ssh('margo', '10.10.10.139', password='iamgod$08')
+s = ssh('margo', '10.10.10.139', password='xxxxxxx')
 p = s.process("/usr/bin/garbage") # start the vuln binary
 
 #p = process("/usr/bin/garbage") # start the vuln binary
