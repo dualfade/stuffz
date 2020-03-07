@@ -116,7 +116,7 @@ def Golang_Shell_Template():
         srand1=go_impo, srand2=go_main, srand3=go_func, Payload=msf_Payload)
 
     # random name --
-    goShell_fName = '/tmp/' + (str(go_rnam) + ".go")
+    goShell_fName = "".join(['/tmp/', str(go_rname], '.go']) 
 
     # write --
     print("[+] Writing golang shell: -> %s" % goShell_fName)
@@ -131,7 +131,7 @@ def Golang_Shell_Template():
 
 def Create_msfconsole_rcScript():
     """ https://metasploit.help.rapid7.com/docs/resource-scripts -- """
-    """ quick msf rc script -- """
+    """ create msfconsole rc script -- """
 
     rcScript = ("""
     use exploit/multi/handler
