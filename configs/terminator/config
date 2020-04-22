@@ -11,7 +11,6 @@
   next_profile = <Shift><Alt>p
 [profiles]
   [[default]]
-    background_darkness = 0.65
     background_type = transparent
     cursor_color = "#f0cc09"
     font = Hack Nerd Font 8
@@ -72,6 +71,7 @@
     scrollbar_position = hidden
     scrollback_infinite = True
     palette = "#142631:#ff2320:#3ba5ff:#e9e75c:#8ff586:#781aa0:#8ff586:#ba46b2:#fff688:#d4312e:#8ff586:#e9f06d:#3c7dd2:#8230a7:#6cbc67:#8ff586"
+    use_system_font = False
   [[Cobalt2]]
     background_color = "#132738"
     cursor_color = "#f0cc09"
@@ -173,6 +173,45 @@
     scrollbar_position = hidden
     scrollback_infinite = True
     palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
+    use_system_font = False
+  [[AlienBlood]]
+    background_color = "#0f1610"
+    cursor_color = "#73fa91"
+    font = Hack Nerd Font 8
+    foreground_color = "#637d75"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#112616:#7f2b27:#2f7e25:#717f24:#2f6a7f:#47587f:#327f77:#647d75:#3c4812:#e08009:#18e000:#bde000:#00aae0:#0058e0:#00e0c4:#73fa91"
+    use_system_font = False
+  [[Argonaut]]
+    background_color = "#0e1019"
+    cursor_color = "#ff0018"
+    font = Hack Nerd Font 8
+    foreground_color = "#fffaf4"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#232323:#ff000f:#8ce10b:#ffb900:#008df8:#6d43a6:#00d8eb:#ffffff:#444444:#ff2740:#abe15b:#ffd242:#0092ff:#9a5feb:#67fff0:#ffffff"
+    use_system_font = False
+  [[Chalkboard]]
+    background_color = "#29262f"
+    cursor_color = "#d9e6f2"
+    font = Hack Nerd Font 8
+    foreground_color = "#d9e6f2"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#c37372:#72c373:#c2c372:#7372c3:#c372c2:#72c2c3:#d9d9d9:#323232:#dbaaaa:#aadbaa:#dadbaa:#aaaadb:#dbaada:#aadadb:#ffffff"
+    use_system_font = False
+  [[Bloody]]
+    background_color = "#1e1f29"
+    cursor_color = "#f9dc5c"
+    font = Hack Nerd Font 8
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#2e3436:#ff512f:#b2ffa9:#fffd82:#3185fc:#dd2476:#66d7d1:#f2efea:#555753:#ff512f:#b2ffa9:#fffd82:#3185fc:#dd2476:#66d7d1:#f2efea"
     use_system_font = False
 [layouts]
   [[default]]
