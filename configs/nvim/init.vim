@@ -19,6 +19,7 @@ Plug 'nightsense/nemo'
 Plug 'yuttie/hydrangea-vim'
 Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
 Plug 'rhysd/vim-color-spring-night'
+Plug 'joshdick/onedark.vim'
 
 " Functionalities
 Plug 'tpope/vim-fugitive'
