@@ -16,7 +16,7 @@ helix :: /tmp »
 
 Start Setup -- 
 - mkdir -p ~/.config/nvim
-- yain neovim python3 python3-pip git curl exuberant-ctags python2-neovim python-pynvim python2-pynvim
+- yain neovim python3 python3-pip git curl exuberant-ctags python2-neovim python-pynvim python2-pynvim ruby-neovim
 - python3 -m pip install virtualenv
 - python3 -m virtualenv -p python3 ~/.config/nvim/env
 - source ~/.config/nvim/env/bin/activate
