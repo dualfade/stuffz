@@ -41,5 +41,18 @@ Commands --
 https://github.com/Optixal/neovim-init.vim/blob/master/README.md
 https://github.com/Optixal/.vim/blob/master/reference/commands_vim.txt
 
+Other Deps ( language autocompletion ) --
+sudo npm install -g neovim
+:CheckHealth
+
+Make sure all is fine and mcdadny --
+
+Install Laguage packs --
+ref: 
+https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+
+:CocInstall coc-python
+:CocInstall coc-solargraph 
+
 
 
