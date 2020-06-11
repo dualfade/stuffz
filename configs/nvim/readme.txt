@@ -53,6 +53,7 @@ https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
 :CocInstall coc-python
 :CocInstall coc-solargraph 
+:CocInstall coc-go
 
 
 
