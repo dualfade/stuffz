@@ -16,7 +16,7 @@ helix :: /tmp »
 
 Start Setup -- 
 - mkdir -p ~/.config/nvim
-- yain neovim python3 python3-pip git curl exuberant-ctags python2-neovim python-pynvim python2-pynvim ruby-neovim
+- yain neovim python3 python-pip git curl python2-neovim python-pynvim python2-pynvim ruby-neovim xclip
 - python3 -m pip install virtualenv
 - python3 -m virtualenv -p python3 ~/.config/nvim/env
 - source ~/.config/nvim/env/bin/activate
@@ -30,10 +30,10 @@ Install vundle --
 - git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim  
 
 Fetch init.vim --
-- curl -sk 'https://raw.githubusercontent.com/cdowns71/stuffz/master/configs/nvim/init.vim' -O ~/.config/nvim/init.vim
+- curl -sk 'https://raw.githubusercontent.com/cdowns71/stuffz/master/configs/nvim/init.vim' -o ~/.config/nvim/init.vim
 
 - nvim +PlugInstall +UpdateRemotePlugins +qall
-- cp init.vim init.vim.save
+- cp ~/.config/nvim/init.vim ~/.config/nvim/init.vim.save
 
 Anything else ?
 Commands --
@@ -43,7 +43,12 @@ https://github.com/Optixal/.vim/blob/master/reference/commands_vim.txt
 
 Other Deps ( language autocompletion ) --
 sudo npm install -g neovim
+
+Make sure node is symlinked to nodejs --
+sudo ln -sf /usr/bin/node /usr/bin/nodejs
+
 :CheckHealth
+:PluginUpdate
 
 Make sure all is fine and mcdadny --
 
