@@ -91,5 +91,11 @@ Most custom commands expand off my map leader, keeping nvim as vanilla as possib
 <Shift-Tab> - Previous buffer
 <Ctl>-w - next tab
 
-Working with tabs neovim --
+Working with neovim --
+https://neovim.io/doc/user/quickref.html
 https://neovim.io/doc/user/tabpage.html
+
+NERDtree --
+https://github.com/jistr/vim-nerdtree-tabs
+
+
