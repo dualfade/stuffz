@@ -89,4 +89,7 @@ Most custom commands expand off my map leader, keeping nvim as vanilla as possib
 <Alt-r> - Toggle RGB color picker
 <Tab> - Next buffer
 <Shift-Tab> - Previous buffer
+<Ctl>-w - next tab
 
+Working with tabs neovim --
+https://neovim.io/doc/user/tabpage.html
