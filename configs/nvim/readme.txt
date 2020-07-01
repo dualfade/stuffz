@@ -98,4 +98,5 @@ https://neovim.io/doc/user/tabpage.html
 NERDtree --
 https://github.com/jistr/vim-nerdtree-tabs
 
-
+Android --
+If you are doing android dev / rev eng make sure you have the sdk's installed.
