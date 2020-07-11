@@ -56,9 +56,8 @@ Install Laguage packs --
 ref: 
 https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
-:CocInstall coc-python
-:CocInstall coc-solargraph 
-:CocInstall coc-go
+- install support ( python / ruby / golang / json / html / javascript ) by default
+:CocInstall coc-python coc-solargraph coc-go coc-json coc-html coc-tsserver
 
 Commands --
 Most custom commands expand off my map leader, keeping nvim as vanilla as possible.
