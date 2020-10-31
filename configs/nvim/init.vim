@@ -13,6 +13,8 @@ Plug 'junegunn/vim-journal'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'nightsense/forgotten'
 Plug 'zaki/zazen'
+Plug 'neovim/pynvim'
+Plug 'mhinz/vim-startify'
 
 " Aethetics - Additional
 Plug 'nightsense/nemo'
@@ -20,6 +22,9 @@ Plug 'yuttie/hydrangea-vim'
 Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
 Plug 'rhysd/vim-color-spring-night'
 Plug 'joshdick/onedark.vim'
+Plug 'gosukiwi/vim-atom-dark'
+Plug 'arcticicestudio/nord-vim'
+Plug 'drewtempelmeyer/palenight.vim'
 
 " Functionalities
 Plug 'tpope/vim-fugitive'
@@ -28,7 +33,7 @@ Plug 'tpope/vim-surround'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-"Plug 'hsanson/vim-android'
+Plug 'hsanson/vim-android'
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -58,12 +63,13 @@ call plug#end()
 let g:python3_host_prog = expand('~/.config/nvim/env/bin/python')
 
 """ Coloring
-syntax on
-color dracula
+color palenight
+set background=dark
 highlight Pmenu guibg=white guifg=black gui=bold
 highlight Comment gui=bold
 highlight Normal gui=none
 highlight NonText guibg=none
+syntax on
 
 " Opaque Background (Comment out to use terminal's profile)
 set termguicolors
@@ -74,7 +80,7 @@ highlight LineNr guibg=NONE ctermbg=NONE
 
 """ Other Configurations
 filetype plugin indent on
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set tabstop=2 softtabstop=2 shiftwidth=2 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
 set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
@@ -83,6 +89,7 @@ set wrap breakindent
 set encoding=utf-8
 set number
 set title
+set cursorline
 
 """ Plugin Configurations
 
@@ -199,7 +206,6 @@ function! ColorZazen()
 endfunction
 
 """ Custom Mappings
-
 let mapleader=","
 nmap <leader>q :NERDTreeToggle<CR>
 nmap \ <leader>q
