@@ -63,6 +63,7 @@ Commands --
 Most custom commands expand off my map leader, keeping nvim as vanilla as possible.
 
 , - Map leader, nearly all my custom mappings starts with pressing the comma key
+  -> which-keys ( default )
 ,q - Sidebar filetree viewer (NERDTree)
 ,w - Sidebar classes, functions, variables list (TagBar)
 \ - Toggle both NERDTree and TagBar
