@@ -117,6 +117,11 @@ let g:airline_section_z = ' %{strftime("%-I:%M %p")}'
 let g:airline_section_warning = ''
 let g:airline#extensions#tabline#enabled = 1
 
+" limelight
+let g:limelight_conceal_guifg = '#5f5f5f'
+let g:limelight_default_coefficient = 0.7
+let g:limelight_priority = -1
+
 " Neovim :Terminal
 tmap <Esc> <C-\><C-n>
 tmap <C-w> <Esc><C-w>
