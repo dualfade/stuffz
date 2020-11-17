@@ -1,4 +1,4 @@
-""" Vim-Plug
+" Vim-Plug
 call plug#begin()
 
 " Aesthetics - Main
