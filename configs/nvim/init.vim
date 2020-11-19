@@ -109,9 +109,9 @@ set cursorline
 """ Plugin Configurations
 
 " NERDTree
-let NERDTreeShowHidden=1
-let g:NERDTreeDirArrowExpandable = '↠'
-let g:NERDTreeDirArrowCollapsible = '↡'
+"let NERDTreeShowHidden=1
+"let g:NERDTreeDirArrowExpandable = '↠'
+"let g:NERDTreeDirArrowCollapsible = '↡'
 
 " Airline
 let g:airline_powerline_fonts = 1
@@ -197,7 +197,8 @@ endfunction
 
 """ Custom Mappings
 let mapleader=","
-nmap <leader>q :NERDTreeToggle<CR>
+"nmap <leader>q :NERDTreeToggle<CR>
+nmap <leader>q :CocCommand explorer<CR>
 nmap \ <leader>q
 nmap <leader>w :TagbarToggle<CR>
 nmap <leader>ee :Colors<CR>
