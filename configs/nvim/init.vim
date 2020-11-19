@@ -227,7 +227,7 @@ nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 
-" Use alt + hjkl to resize windows
+" Use alt + 6789 to resize windows
 nnoremap <M-6>    :resize -2<CR>
 nnoremap <M-7>    :resize +2<CR>
 nnoremap <M-8>    :vertical resize -2<CR>
