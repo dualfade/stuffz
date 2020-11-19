@@ -228,10 +228,10 @@ nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 
 " Use alt + hjkl to resize windows
-nnoremap <M-j>    :resize -2<CR>
-nnoremap <M-k>    :resize +2<CR>
-nnoremap <M-h>    :vertical resize -2<CR>
-nnoremap <M-l>    :vertical resize +2<CR>
+nnoremap <M-6>    :resize -2<CR>
+nnoremap <M-7>    :resize +2<CR>
+nnoremap <M-8>    :vertical resize -2<CR>
+nnoremap <M-9>    :vertical resize +2<CR>
 
 " which-keys
 source $HOME/.config/nvim/keys/which-key.vim
