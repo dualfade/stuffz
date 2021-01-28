@@ -51,7 +51,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'chrisbra/Colorizer'
 Plug 'heavenshell/vim-pydocstring'
 Plug 'vim-scripts/loremipsum'
-Plug 'SirVer/ultisnips'
+"Plug 'SirVer/ultisnips'
+"Plug 'honza/vim-snippets'
 Plug 'honza/vim-snippets'
 Plug 'metakirby5/codi.vim'
 Plug 'dkarter/bullets.vim'
@@ -109,9 +110,9 @@ set cursorline
 """ Plugin Configurations
 
 " NERDTree
-"let NERDTreeShowHidden=1
-"let g:NERDTreeDirArrowExpandable = '↠'
-"let g:NERDTreeDirArrowCollapsible = '↡'
+let NERDTreeShowHidden=1
+let g:NERDTreeDirArrowExpandable = '↠'
+let g:NERDTreeDirArrowCollapsible = '↡'
 
 " Airline
 let g:airline_powerline_fonts = 1
@@ -197,8 +198,8 @@ endfunction
 
 """ Custom Mappings
 let mapleader=","
-"nmap <leader>q :NERDTreeToggle<CR>
-nmap <leader>q :CocCommand explorer<CR>
+nmap <leader>q :NERDTreeToggle<CR>
+"nmap <leader>q :CocCommand explorer<CR>
 nmap \ <leader>q
 nmap <leader>w :TagbarToggle<CR>
 nmap <leader>ee :Colors<CR>
@@ -235,3 +236,5 @@ nnoremap <M-9>    :vertical resize +2<CR>
 
 " which-keys
 source $HOME/.config/nvim/keys/which-key.vim
+" snippets
+source $HOME/.config/nvim/snippets/snippets.vim
