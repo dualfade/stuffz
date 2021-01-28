@@ -39,6 +39,7 @@ Which-Keys --
 Snippets --
 - mkdir ~/.config/nvim/snippets
 - curl -sk 'https://raw.githubusercontent.com/dualfade/stuffz/master/configs/nvim/snippets/snippets.vim' -o ~/.config/nvim/snippets/snippets.vim
+- cd ~/.config/nvim/ ; git clone https://github.com/Shougo/neosnippet-snippets.git
 
 - nvim +PlugInstall +UpdateRemotePlugins +qall
 - cp ~/.config/nvim/init.vim ~/.config/nvim/init.vim.save
