@@ -33,6 +33,8 @@ let g:which_key_map['S'] = [ ':Startify'                  , 'start screen' ]
 let g:which_key_map['T'] = [ ':Rg'                        , 'search text' ]
 let g:which_key_map['v'] = [ '<C-W>v'                     , 'split right']
 let g:which_key_map['z'] = [ 'Goyo'                       , 'zen' ]
+" prettier --
+let g:which_key_map['P'] = [ ':CocCommand prettier.formatFile' , 'prettier' ]
 
 " s is for search
 let g:which_key_map.s = {
