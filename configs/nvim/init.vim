@@ -37,6 +37,7 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'mattn/vim-goimports'
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -64,7 +65,19 @@ Plug 'dkarter/bullets.vim'
 call plug#end()
 
 """ Python3 VirtualEnv
-let g:python3_host_prog = expand('~/.config/nvim/env/bin/python')
+let g:python3_host_prog = expand('/usr/bin/python3')
+
+""" golang
+""" https://github.com/fatih/vim-go/wiki/Tutorial#quick-setup
+""" https://github.com/mattn/vim-goimports
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+" enable auto format when write (default)
+let g:goimports = 1
+" enable simplify filter
+let g:goimports_simplify = 1
 
 """ Coloring
 " palenight options
