@@ -36,6 +36,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'liuchengxu/vim-which-key'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
