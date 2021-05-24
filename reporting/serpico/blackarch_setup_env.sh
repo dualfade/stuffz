@@ -19,4 +19,4 @@ sudo git clone https://github.com/honze-net/nmap-bootstrap-xsl
 echo "updating nuclei templates"
 nuclei --update-templates
 
-echo "done"
+echo -ne "done\n"
