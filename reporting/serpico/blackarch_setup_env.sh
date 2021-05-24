@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# blackarch_setup_env.sh
+#blackarch_setup_env.sh
 
 cd /opt
 
