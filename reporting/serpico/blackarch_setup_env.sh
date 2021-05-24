@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#blackarch_setup_env.sh
+# https://github.com/r3naissance/Serpico
+# blackarch_setup_env.sh
 
 cd /opt
 
