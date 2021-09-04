@@ -11,8 +11,8 @@ from optparse import OptionParser
 # defs --
 def send():
     """ send payload -- """
-    port = options.port
-    target = options.target
+    port = int(options.port)
+    target = str(options.target)
 
     try:
       print('[+] sending payload')
