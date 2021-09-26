@@ -41,6 +41,7 @@ Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'mattn/vim-goimports'
+Plug 'airblade/vim-gitgutter'
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -193,6 +194,11 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+" vim-gitgutter
+" https://github.com/airblade/vim-gitgutter
+let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_linenrs = 1
 
 """ Filetype-Specific Configurations
 
