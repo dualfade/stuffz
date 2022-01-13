@@ -23,7 +23,6 @@ def tamper(payload, **kwargs):
                 s = str(match.group(1))
                 # urlencodeall --
                 e = "".join("%{0:0>2}".format(format(ord(char), "x")) for char in s)
-                # print(e)
 
                 # urlencode each encoded char --
                 y = "".join("%{0:0>2}".format(format(ord(char), "x")) for char in e)
