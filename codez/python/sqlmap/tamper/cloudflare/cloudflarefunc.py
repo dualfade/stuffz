@@ -6,7 +6,8 @@ import re
 
 def tamper(payload, **kwargs):
     """
-    Replaces 'MYSQL STRING FUNCTION' with encoded payload
+    Replaces 'MYSQL STRING FUNCTIONS' with encoded payload
+    https://bit.ly/33gy5qf
 
     Tested against:
         * MySQL 5.x
@@ -19,7 +20,7 @@ def tamper(payload, **kwargs):
 
     if payload:
         for match in re.finditer(r"\b([A-Z].*?)\b", retVal):
-            if len(match.group(0)) > 1:
+            if len(match.group(0)) >= 3:
                 s = str(match.group(1))
                 # urlencodeall --
                 e = "".join("%{0:0>2}".format(format(ord(char), "x")) for char in s)
