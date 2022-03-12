@@ -27,6 +27,7 @@ Plug 'gosukiwi/vim-atom-dark'
 Plug 'arcticicestudio/nord-vim'
 Plug 'drewtempelmeyer/palenight.vim'
 Plug 'bcicen/vim-vice'
+Plug 'projekt0n/github-nvim-theme'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 
 " Functionalities
@@ -88,7 +89,11 @@ let g:goimports_simplify = 1
 " https://github.com/bcicen/vim-vice
 " https://bit.ly/3i5qnU4
 set background=dark
-colorscheme onedark
+
+" https://github.com/projekt0n/github-nvim-theme
+"colorscheme onedark
+colorscheme github_dark
+
 highlight Pmenu guibg=white guifg=black gui=bold
 highlight Comment gui=bold
 highlight Normal gui=none
@@ -197,8 +202,8 @@ let g:fzf_colors =
 
 " vim-gitgutter
 " https://github.com/airblade/vim-gitgutter
-let g:gitgutter_highlight_lines = 1
-let g:gitgutter_highlight_linenrs = 1
+"let g:gitgutter_highlight_lines = 1
+"let g:gitgutter_highlight_linenrs = 1
 
 """ Filetype-Specific Configurations
 
