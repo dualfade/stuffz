@@ -86,6 +86,8 @@ def error(err):
     """ standard error message -- """
 
     print('[err] application error %s' % err)
+    print('[err] exiting now.')
+    sys.exit(-1)
 
 # main --
 if __name__ == "__main__":
