@@ -56,7 +56,6 @@ def payload_send():
 
     except OSError as err:
         error(err)
-        sys.exit(-1)
 
 def sock_connect(buffer):
     """ socket connect function --"""
