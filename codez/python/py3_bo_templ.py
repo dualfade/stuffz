@@ -96,7 +96,7 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option('-t', '--target', dest='target', help='target ip address')
     parser.add_option('-p', '--port', dest='port', help='port')
-    parser.add_option('-l', '--length', dest='legth', help='payload length')
+    parser.add_option('-l', '--length', dest='length', help='payload length')
     try:
         (options, args) = parser.parse_args()
         if (options.target):
